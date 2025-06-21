@@ -1,0 +1,231 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Tools">
+      <UniqueIdentifier>{7fcb644d-f8df-402a-ad72-7c074258b837}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameTechRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TutorialGame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StateGameObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BehaviourNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BehaviourNodeWithChildren.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BehaviourSelector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BehaviourSequence.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BehaviourAction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="adjacency_graph.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="DOTBaseListener.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="DOTBaseVisitor.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="DOTLexer.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="DOTListener.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="DOTParser.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="DOTVisitor.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="easy_prop.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="evaluateHashes.c">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="flloat_wrapper.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="FLLOATPropBaseListener.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="FLLOATPropBaseVisitor.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="FLLOATPropLexer.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="FLLOATPropListener.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="FLLOATPropParser.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="FLLOATPropVisitor.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="FLLOATSimplePropParser.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="hash_combine.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="hashing.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="ltlf.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="ParseFFLOATDot.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="StateMachineParser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GameTechRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TutorialGame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StateGameObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BehaviourNode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BehaviourNodeWithChildren.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BehaviourSelector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BehaviourSequence.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BehaviourAction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="adjacency_graph.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="DOTBaseListener.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="DOTBaseVisitor.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="DOTLexer.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="DOTListener.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="DOTParser.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="DOTVisitor.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="easy_prop.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="evaluateHashes.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="FlexibleFA.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="FlexibleGraph.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="flloat_wrapper.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="FLLOATPropBaseListener.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="FLLOATPropBaseVisitor.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="FLLOATPropLexer.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="FLLOATPropListener.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="FLLOATPropParser.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="FLLOATPropVisitor.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="FLLOATSimplePropParser.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="hash_combine.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="hashing.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="ltlf.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeLabelBijectionFA.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeLabelBijectionGraph.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="pair_hash.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="ParseFFLOATDot.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="set_operations.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="uset_hash.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="vector_hash.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="StateMachineParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

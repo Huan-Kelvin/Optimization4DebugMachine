@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="NCL::CSC8599::AbstractComponent" Collapsed="true">
+    <Position X="5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAEYAA=</HashCode>
+      <FileName>AbstractComponent.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NCL::CSC8599::AbstractStateMachine" Collapsed="true">
+    <Position X="2.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIQAAAAACAAIAAAAAAAABAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>AbstractStateMachine.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NCL::CSC8599::State" Collapsed="true">
+    <Position X="7.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAhBAEQAA=</HashCode>
+      <FileName>State.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NCL::CSC8599::StateMachine" Collapsed="true">
+    <Position X="4" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQQAIQAIgCAAAIAEAAAAAAAAAAAAAIAQAAAAAQEQAA=</HashCode>
+      <FileName>StateMachine.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NCL::CSC8599::AdaptiveDebugSystem" Collapsed="true">
+    <Position X="9.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAABAAAAIAAAgAAAAAABAAAQAAAgAAIAAAgA=</HashCode>
+      <FileName>AdaptiveDebugSystem.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NCL::CSC8599::DebugStateMachine">
+    <Position X="11.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>DebugStateMachine.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NCL::CSC8599::EventSystem">
+    <Position X="7.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQBAAIBACAABAAAEIAAAAAQAABAAAYAgAAgEAAEQAA=</HashCode>
+      <FileName>EventSystem.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NCL::CSC8599::StateTransition" Collapsed="true">
+    <Position X="11.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAgAAAAIAAAAAAAAAAgQACAABQAAAAAAgAA=</HashCode>
+      <FileName>StateTransition.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NCL::CSC8599::StateMachinePlus" Collapsed="true">
+    <Position X="0.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAEABAAAAAAAAAAAAAAAAEQAA=</HashCode>
+      <FileName>StateMachinePlus.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NCL::CSC8599::Pet" Collapsed="true">
+    <Position X="2.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAEAAAiAAAAgCIAAAAAIgACAgAAAAAAAAMAAA=</HashCode>
+      <FileName>Pet.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NCL::CSC8599::Character" Collapsed="true">
+    <Position X="2.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACUCAQBQEACBCIAAIQQAABAAAAgAQAiAAACYREEkKAA=</HashCode>
+      <FileName>Character.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NCL::CSC8599::Dragon" Collapsed="true">
+    <Position X="2.75" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAAAAABACIAAAAAAAAAAgAAAAADAAAAAA=</HashCode>
+      <FileName>Dragon.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NCL::CSC8599::Monster" Collapsed="true">
+    <Position X="0.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ECQBAADAAAAAAAAAAAiIAAAAAAwAAAgAQgAACgAEABA=</HashCode>
+      <FileName>Monster.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NCL::CSC8599::PetController" Collapsed="true">
+    <Position X="11.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>PetController.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NCL::CSC8599::PlayerAIController" Collapsed="true">
+    <Position X="13.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACACAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>PlalyerAIController.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NCL::CSC8599::Player" Collapsed="true">
+    <Position X="5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ECAAAAAAAAAAAAAAAAgAAAAAAAgAAAgAAAAAAQAEAAI=</HashCode>
+      <FileName>Player.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NCL::CSC8599::PlayerController" Collapsed="true">
+    <Position X="9.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>PlayerController.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NCL::CSC8503::GameWorld" Collapsed="true">
+    <Position X="9.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAnoAAAACgBABABAEAABIEAQAIAAEAEAAQAQAiBAAEA=</HashCode>
+      <FileName>EventSystem.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NCL::GameTimer" Collapsed="true">
+    <Position X="13.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAEAAAAAAAAAAAIAAAEAJADAEAAAAAAAAAAQAA=</HashCode>
+      <FileName>C:\Users\16499\source\repos\CSC8503\Common\GameTimer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="Node" Collapsed="true">
+    <Position X="13.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcQAAAAAEAAAA=</HashCode>
+      <FileName>AdaptiveDebugSystem.cpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="NCL::CSC8599::EVENT" Collapsed="true">
+    <Position X="9.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAQAAAAAAACABAAAAAAAAAAA=</HashCode>
+      <FileName>EventSystem.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="NCL::CSC8599::EVENT_DEFINE" Collapsed="true">
+    <Position X="11.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAkAAAAEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>EventSystem.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Font Name="Microsoft YaHei UI" Size="9" />
+</ClassDiagram>
