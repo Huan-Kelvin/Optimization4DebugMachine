@@ -78,6 +78,9 @@
     <ClInclude Include="AdaptiveDebugSystem.h">
       <Filter>AI</Filter>
     </ClInclude>
+    <ClInclude Include="TestObj.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Character.cpp">
@@ -133,6 +136,9 @@
     </ClCompile>
     <ClCompile Include="AdaptiveDebugSystem.cpp">
       <Filter>AI</Filter>
+    </ClCompile>
+    <ClCompile Include="TestObj.cpp">
+      <Filter>GameObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

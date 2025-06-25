@@ -53,6 +53,12 @@ TutorialGame::TutorialGame() {
 	envB->second.emplace_back(_pet->get_state_machine());
 	envB->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(debug_state_machine->GetComponent("DebugB")));
 	AdaptiveDebugSystem::getInstance()->insert(envB);
+
+	auto envT = new Environment();
+	envT->first = "DebugT";
+	envT->second.emplace_back(test_obj->get_state_machine());
+	envT->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(test_state_machine->GetComponent("DebugT")));
+	AdaptiveDebugSystem::getInstance()->insert(envT);
 }
 
 /*
@@ -113,6 +119,7 @@ TutorialGame::~TutorialGame() {
 
 void TutorialGame::UpdateGame(float dt) {
 	game_state_machine->Update(dt);
+	if (test_obj) test_obj->Update(dt);
 
 	EventSystem::getInstance()->Update(dt);
 
@@ -460,6 +467,8 @@ void TutorialGame::InitGameExamples() {
 	_pet= dynamic_cast<NCL::CSC8599::Pet*>(AddPetToWorld(Vector3(-15, 5, 0), localPlayer));
 	localPlayer->set_pet(_pet);
 	//AddBonusToWorld(Vector3(10, 5, 0));
+
+	test_obj = new TestObj();
 }
 
 GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
@@ -619,6 +628,7 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 			std::vector<std::string> text;
 			text.emplace_back("Scenarios A and B");
 			text.emplace_back("Scenarios C");
+			text.emplace_back("Scenarios Test");
 
 			if (selected < 0)selected = 0;
 			if (selected >= text.size())selected = text.size() - 1;
@@ -636,6 +646,9 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 					break;
 				case 1:
 					gameReset(1);
+					break;
+				case 2:
+					gameReset(2);
 					break;
 				default:
 					break;
@@ -692,6 +705,7 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 			{
 				Debug::Print("(F4)Debug state machine on", Vector2(5, 5));
 				debug_state_machine->Update(dt);
+				test_state_machine->Update(dt);
 			}else
 			{
 				Debug::Print("(F4)Debug state machine off", Vector2(5, 5));
@@ -798,6 +812,16 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 	debug_state_machine->AddComponent("DebugB", DebugB);
 	debug_state_machine->AddComponent("DebugC", DebugC);
 
+
+	test_state_machine = new DebugStateMachine();
+	formula = ltlf::Box(ltlf::Implies(
+			ltlf::And(ltlf::Act("test1"), ltlf::Act("test2")),
+			ltlf::Next(ltlf::Act("test4"))
+		)
+	);
+	sigmaAll = std::unordered_set<std::string>{ "test0","test1" ,"test2","test3" ,"test4" ,"other" };
+	auto DebugT = StateMachineParser::getInstance()->parse2(formula, sigmaAll);
+	test_state_machine->AddComponent("DebugT", DebugT);
 }
 
 void NCL::CSC8503::TutorialGame::gameReset(int model)
@@ -806,15 +830,21 @@ void NCL::CSC8503::TutorialGame::gameReset(int model)
 	EventSystem::getInstance()->Reset();
 	initEventHandler();
 	InitWorld();
-	if(model==0)
+
+	if (model == 0)
 	{
 		localPlayer->set_user_controller(new PlayerAIController(localPlayer));
 		localPlayer->GetTransform().SetPosition(Vector3(-50, 8, 35));
 		_pet->GetTransform().SetPosition(Vector3(-50, 8, 70));
 		_monster->useStateMachine = false;
-	}else if(model==1)
+	}
+	else if (model == 1)
 	{
 		localPlayer->set_user_controller(new PlayerController());
+	}
+	else if (model == 2)
+	{
+
 	}
 	EventSystem::getInstance()->PushEvent("GameStart", 0);
 }

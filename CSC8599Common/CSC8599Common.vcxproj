@@ -169,6 +169,7 @@
     <ClInclude Include="StateMachine.h" />
     <ClInclude Include="StateMachinePlus.h" />
     <ClInclude Include="StateTransition.h" />
+    <ClInclude Include="TestObj.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AbstractComponent.cpp" />
@@ -194,6 +195,7 @@
     <ClCompile Include="StateMachine.cpp" />
     <ClCompile Include="StateMachinePlus.cpp" />
     <ClCompile Include="StateTransition.cpp" />
+    <ClCompile Include="TestObj.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

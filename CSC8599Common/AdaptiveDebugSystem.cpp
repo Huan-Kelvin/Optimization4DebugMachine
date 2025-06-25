@@ -4,6 +4,7 @@
 #include "State.h"
 #include "StateMachine.h"
 #include "StateTransition.h"
+#include <iostream>
 AdaptiveDebugSystem* AdaptiveDebugSystem::instance=nullptr;
 struct Node
 {
@@ -93,6 +94,7 @@ Environment* AdaptiveDebugSystem::find_deadlock_env()
 			}
 			if (!HasOutGoing)
 			{
+				std::cout << "Deadlock found in environment: " << env->first << std::endl;
 				return env;
 			}
 		}

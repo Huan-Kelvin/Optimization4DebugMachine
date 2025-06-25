@@ -5,6 +5,7 @@
 #include "../../CSC8599Common/EventSystem.h"
 #include "../../CSC8599Common/DebugStateMachine.h"
 #include "../../CSC8599Common/AdaptiveDebugSystem.h"
+#include "../../CSC8599Common/TestObj.h"
 
 namespace NCL
 {
@@ -16,6 +17,8 @@ namespace NCL
 		class StateMachine;
 		class Character;
 		class Player;
+
+		class TestObj;
 	}
 }
 
@@ -115,6 +118,9 @@ namespace NCL {
 			//DebugSM
 			bool useDebugSM = false;
 			DebugStateMachine* debug_state_machine = nullptr;
+
+			DebugStateMachine* test_state_machine = nullptr;
+			TestObj* test_obj = nullptr;
 
 			//Game State Machine
 			NCL::CSC8599::StateMachine* game_state_machine = nullptr;

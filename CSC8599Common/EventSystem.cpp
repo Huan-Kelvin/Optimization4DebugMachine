@@ -22,7 +22,11 @@ extern EVENT_DEFINE g_Events[] =
 	{"arrival",true},
 	{"dragon_die",true},
 
-
+	{"test0"},
+	{"test1"},
+	{"test2"},
+	{"test3"},
+	{"test4"},
 };
 NCL::CSC8599::EventSystem::EventSystem()
 {
