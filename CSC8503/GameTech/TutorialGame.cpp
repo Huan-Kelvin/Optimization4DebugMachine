@@ -815,11 +815,11 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 
 	test_state_machine = new DebugStateMachine();
 	formula = ltlf::Box(ltlf::Implies(
-			ltlf::And(ltlf::Act("test1"), ltlf::Act("test2")),
-			ltlf::Next(ltlf::Act("test4"))
+			ltlf::And(ltlf::Act("test0"), ltlf::Act("test1")),
+			ltlf::Next(ltlf::Act("test2"))
 		)
 	);
-	sigmaAll = std::unordered_set<std::string>{ "test0","test1" ,"test2","test3" ,"test4" ,"other" };
+	sigmaAll = std::unordered_set<std::string>{ "test0","test1" ,"test2" ,"other" };
 	auto DebugT = StateMachineParser::getInstance()->parse2(formula, sigmaAll);
 	test_state_machine->AddComponent("DebugT", DebugT);
 }

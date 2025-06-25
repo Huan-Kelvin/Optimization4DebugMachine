@@ -153,6 +153,22 @@ NCL::CSC8599::StateMachine* StateMachineParser::parse(ltlf& formula, std::unorde
 }
 
 #pragma region Expand
+std::string easy_prop_to_string(const easy_prop& prop) {
+    switch (prop.casusu) {
+    case easy_prop::E_P_AND:
+        return "(" + easy_prop_to_string(prop.args[0]) + " && " + easy_prop_to_string(prop.args[1]) + ")";
+    case easy_prop::E_P_OR:
+        return "(" + easy_prop_to_string(prop.args[0]) + " || " + easy_prop_to_string(prop.args[1]) + ")";
+    case easy_prop::E_P_ATOM:
+        return prop.isAtomNegated ? "!" + prop.single_atom_if_any : prop.single_atom_if_any;
+    case easy_prop::E_P_TRUE:
+        return "true";
+    case easy_prop::E_P_FALSE:
+        return "false";
+    default:
+        return "";
+    }
+}
 NCL::CSC8599::StateMachine* StateMachineParser::parse2(ltlf& formula, std::unordered_set<std::string>& sigmaAll)
 {
     std::stringstream s;
@@ -186,9 +202,8 @@ NCL::CSC8599::StateMachine* StateMachineParser::parse2(ltlf& formula, std::unord
         for (const auto& edge : patternGraphToInstantiate.outgoingEdges(nodeId)) {
             // std::cerr << edge.first << std::endl;
             size_t dst = idConv.at(edge.second);
-            for (const std::string& act : evaluate_easy_prop_to_atoms(edge.first/*, bogus_act_to_atom*/, sigmaAll)) {
-                result.addNewEdgeFromId(src, dst, act);
-            }
+            std::string label = "\"" + easy_prop_to_string(edge.first) + "\"";
+            result.addNewEdgeFromId(src, dst, label);
         }
     }
     result.makeDFAAsInTheory(sigmaAll);
