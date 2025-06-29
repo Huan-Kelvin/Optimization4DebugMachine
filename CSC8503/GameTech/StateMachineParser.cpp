@@ -114,7 +114,7 @@ NCL::CSC8599::StateMachine* StateMachineParser::parse(ltlf& formula, std::unorde
             if (j.first == "other"&& startNode!=destNode)temp = "";
             else temp = j.first;
             auto trans = new StateTransition(startNode->second, destNode->second, 
-                [](EVENT*)->bool
+                []()->bool
                 {
 	                return true;
                 }, temp);
@@ -129,7 +129,7 @@ NCL::CSC8599::StateMachine* StateMachineParser::parse(ltlf& formula, std::unorde
            if(!skip)
            {
                auto trans = new StateTransition(destNode->second, startNode->second,
-                   [](EVENT*)->bool
+                   []()->bool
                    {
 	                   return true;
                    }, j.first,false);
@@ -237,7 +237,7 @@ NCL::CSC8599::StateMachine* StateMachineParser::parse2(ltlf& formula)
             if (j.first == easy_prop("other") && startNode != destNode)temp = easy_prop("");
             else temp = j.first;
             auto trans = new StateTransition(startNode->second, destNode->second,
-                [](EVENT*)->bool
+                []()->bool
                 {
                     return true;
                 }, j.first);
@@ -252,7 +252,7 @@ NCL::CSC8599::StateMachine* StateMachineParser::parse2(ltlf& formula)
             if (!skip)
             {
                 auto trans = new StateTransition(destNode->second, startNode->second,
-                    [](EVENT*)->bool
+                    []()->bool
                     {
                         return true;
                     }, j.first, false);

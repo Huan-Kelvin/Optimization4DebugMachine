@@ -19,7 +19,7 @@ NCL::CSC8599::DebugStateMachine::DebugStateMachine()
 	//		if (time_stack > 1.5f)
 	//			EventSystem::getInstance()->PushEvent("Debug_PetTaunt", 0);
 	//	}));
-	//A->AddTransition(new CSC8599::StateTransition(A->GetComponent("0"), A->GetComponent("1"), [this](EVENT* event)->bool
+	//A->AddTransition(new CSC8599::StateTransition(A->GetComponent("0"), A->GetComponent("1"), [this]()->bool
 	//{
 	//		return EventSystem::getInstance()->HasHappened("player_over_threat");
 	//	/*&&
@@ -28,7 +28,7 @@ NCL::CSC8599::DebugStateMachine::DebugStateMachine()
 	//			use LTL_TO_EDGES 
 	//	*/
 	//},""));
-	//A->AddTransition(new CSC8599::StateTransition(A->GetComponent("1"), A->GetComponent("0"), [this](EVENT* event)->bool
+	//A->AddTransition(new CSC8599::StateTransition(A->GetComponent("1"), A->GetComponent("0"), [this]()->bool
 	//{
 	//		return EventSystem::getInstance()->HasHappened("Debug_PetTaunt");
 	//	/*&&
@@ -50,20 +50,20 @@ NCL::CSC8599::DebugStateMachine::DebugStateMachine()
 	//		EventSystem::getInstance()->PushEvent("Debug_PetDie", 0);
 	//	}));
 
-	//B->AddTransition(new CSC8599::StateTransition(B->GetComponent("2"), B->GetComponent("1"), [this](EVENT* event)->bool
+	//B->AddTransition(new CSC8599::StateTransition(B->GetComponent("2"), B->GetComponent("1"), [this]()->bool
 	//	{
 	//	return EventSystem::getInstance()->HasHappened("player_die");
 	//	}, ""));
-	//B->AddTransition(new CSC8599::StateTransition(B->GetComponent("1"), B->GetComponent("2"), [this](EVENT* event)->bool
+	//B->AddTransition(new CSC8599::StateTransition(B->GetComponent("1"), B->GetComponent("2"), [this]()->bool
 	//	{
 	//		return true;
 	//	}, "pet_die"));
 
-	//B->AddTransition(new CSC8599::StateTransition(B->GetComponent("1"), B->GetComponent("0"), [this](EVENT* event)->bool
+	//B->AddTransition(new CSC8599::StateTransition(B->GetComponent("1"), B->GetComponent("0"), [this]()->bool
 	//	{
 	//	return !EventSystem::getInstance()->HasHappened("pet_die");
 	//	}, ""));
-	//B->AddTransition(new CSC8599::StateTransition(B->GetComponent("0"), B->GetComponent("2"), [this](EVENT* event)->bool
+	//B->AddTransition(new CSC8599::StateTransition(B->GetComponent("0"), B->GetComponent("2"), [this]()->bool
 	//	{
 	//		return true;
 	//	}, "pet_die"));

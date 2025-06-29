@@ -27,9 +27,13 @@ void TestObj::init_state_machine()
 	auto init = new State([this](float dt)->void
 		{			
 			//std::cout << "Enter state init" << std::endl;
-			if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUM0))
+			if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM0))
 			{
 				EventSystem::getInstance()->PushEvent("test0", 0);
+			}
+			if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM1))
+			{
+				EventSystem::getInstance()->PushEvent("test1", 0);
 			}
 		});
 	auto stateA = new State([this](float dt)->void
@@ -76,25 +80,29 @@ void TestObj::init_state_machine()
 	state_machine->AddComponent("stateC", stateC);
 	state_machine->AddComponent("end", end);
 
-	state_machine->AddTransition(new CSC8599::StateTransition(init, stateA, [this](EVENT* event)->bool
+	//state_machine->AddTransition(new CSC8599::StateTransition(init, stateA, [this]()->bool
+	//	{
+	//		return true;
+	//	}, easy_prop("test0")));
+	state_machine->AddTransition(new CSC8599::StateTransition(init, stateA, [this]()->bool
 		{
 			return true;
-		}, "test0"));
+		}, easy_prop::And(easy_prop("test0"), easy_prop("test1"))));
 
-	state_machine->AddTransition(new CSC8599::StateTransition(stateA, stateB, [this](EVENT* event)->bool
+	state_machine->AddTransition(new CSC8599::StateTransition(stateA, stateB, [this]()->bool
 		{
 			return true;
 		}, "test1"));
-	state_machine->AddTransition(new CSC8599::StateTransition(stateB, stateA, [this](EVENT* event)->bool
+	state_machine->AddTransition(new CSC8599::StateTransition(stateB, stateA, [this]()->bool
 		{
 			return true;
 		}, "test4"));
-	t2 = new CSC8599::StateTransition(stateB, stateC, [this](EVENT* event)->bool
+	t2 = new CSC8599::StateTransition(stateB, stateC, [this]()->bool
 		{
 			return true;
 		}, "test2");
 	state_machine->AddTransition(t2);
-	t3 = new CSC8599::StateTransition(stateC, stateA, [this](EVENT* event)->bool
+	t3 = new CSC8599::StateTransition(stateC, stateA, [this]()->bool
 		{
 			return true;
 		}, "test3");

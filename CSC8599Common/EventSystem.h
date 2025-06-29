@@ -1,6 +1,7 @@
 #pragma once
 #include "AbstractStateMachine.h"
 #include <list>
+#include <unordered_map>
 #include <functional>
 #include "../CSC8503/GameTech/easy_prop.h"
 namespace NCL
@@ -42,18 +43,18 @@ namespace NCL {
 		public:
 			void Update(float dt) override;
 			std::string Print(int index) override;
-			void GetActiveComponentArr(std::vector<std::string>& arr) override{}
+			void GetActiveComponentArr(std::vector<std::string>& arr) override {}
 			void RegisterEventHandler(const std::string&, const std::function<void(EVENT*)>&);
 			void PushEvent(const std::string&, int n, ...);
 			static EventSystem* getInstance() {
-				if(instance==nullptr)
+				if (instance == nullptr)
 				{
 					instance = new EventSystem();
 				}
 				return instance;
 			}
 			EVENT* HasHappened(const std::string&);
-			EVENT* HasHappened(const easy_prop&);
+			bool HasHappened(const easy_prop&);
 			void Reset();
 		private:
 			static EventSystem* instance;

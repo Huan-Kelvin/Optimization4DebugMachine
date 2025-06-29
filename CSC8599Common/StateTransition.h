@@ -6,7 +6,7 @@ using namespace NCL::CSC8599;
 namespace NCL {
 	namespace CSC8599 {
 		class State;
-		using StateTransitionFunction = std::function<bool(EVENT*)>;
+		using StateTransitionFunction = std::function<bool()>;
 		class StateTransition {
 		public:
 			StateTransition(AbstractComponent* source, AbstractComponent* dest, StateTransitionFunction f, std::string _trigger,

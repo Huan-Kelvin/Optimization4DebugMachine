@@ -734,7 +734,7 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 	game_state_machine->AddTransition(new CSC8599::StateTransition(
 		game_state_machine->GetComponent("init"),
 		game_state_machine->GetComponent("running"),
-		[this](EVENT* p_event)->bool
+		[this]()->bool
 		{
 			InitCamera();
 			return true;
@@ -745,7 +745,7 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 	game_state_machine->AddTransition(new CSC8599::StateTransition(
 		game_state_machine->GetComponent("end"),
 		game_state_machine->GetComponent("running"),
-		[this](EVENT* p_event)->bool
+		[this]()->bool
 		{
 			gameReset(0);
 			localPlayer->set_user_controller(new PlayerAIController(localPlayer));
@@ -757,7 +757,7 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 	game_state_machine->AddTransition(new CSC8599::StateTransition(
 		game_state_machine->GetComponent("end"),
 		game_state_machine->GetComponent("init"),
-		[this](EVENT* p_event)->bool
+		[this]()->bool
 		{
 			lose = 0;
 			win = 0;
@@ -769,7 +769,7 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 	game_state_machine->AddTransition(new CSC8599::StateTransition(
 		game_state_machine->GetComponent("running"),
 		game_state_machine->GetComponent("end"),
-		[this](EVENT* p_event)->bool
+		[this]()->bool
 		{
 			if (EventSystem::getInstance()->HasHappened("player_die"))
 			{
