@@ -119,6 +119,11 @@ EVENT* NCL::CSC8599::EventSystem::HasHappened(const std::string& name)
 	}
 	return nullptr;
 }
+EVENT* NCL::CSC8599::EventSystem::HasHappened(const easy_prop& ep)
+{
+	//todo: implement this function
+	return nullptr;
+}
 
 void EventSystem::Reset()
 {

@@ -169,7 +169,7 @@ std::string easy_prop_to_string(const easy_prop& prop) {
         return "";
     }
 }
-NCL::CSC8599::StateMachine* StateMachineParser::parse2(ltlf& formula, std::unordered_set<std::string>& sigmaAll)
+NCL::CSC8599::StateMachine* StateMachineParser::parse2(ltlf& formula)
 {
     std::stringstream s;
     // Representing the formula as per online syntax 
@@ -185,7 +185,7 @@ NCL::CSC8599::StateMachine* StateMachineParser::parse2(ltlf& formula, std::unord
     auto patternGraphToInstantiate = graph_loader.parse(file);
 
     // Converting the graph with propositions into a DFA
-    FlexibleFA<size_t, std::string> result;
+    FlexibleFA<size_t, easy_prop> result;   // FlexibleFA<size_t, std::string> result;
     std::unordered_map<size_t, size_t> idConv;
     for (size_t nodeId = 0, N = patternGraphToInstantiate.maximumNodeId(); nodeId < N; nodeId++) {
         size_t src = result.addNewNodeWithLabel(nodeId);
@@ -202,11 +202,13 @@ NCL::CSC8599::StateMachine* StateMachineParser::parse2(ltlf& formula, std::unord
         for (const auto& edge : patternGraphToInstantiate.outgoingEdges(nodeId)) {
             // std::cerr << edge.first << std::endl;
             size_t dst = idConv.at(edge.second);
-            std::string label = "\"" + easy_prop_to_string(edge.first) + "\"";
-            result.addNewEdgeFromId(src, dst, label);
+            //std::string label = "\"" + easy_prop_to_string(edge.first) + "\"";
+            result.addNewEdgeFromId(src, dst, edge.first);
         }
     }
-    result.makeDFAAsInTheory(sigmaAll);
+
+    //std::unordered_set<easy_prop> sigmaEP;
+    //result.makeDFAAsInTheory(sigmaAll); // evaluate_easy_prop_to_atoms(easy_prop)?
 
     // Printing the result into the terminal in a graphviz syntax
     result.dot(std::cout);
@@ -231,14 +233,14 @@ NCL::CSC8599::StateMachine* StateMachineParser::parse2(ltlf& formula, std::unord
         {
             auto startNode = parsedNodes.find(i);
             auto destNode = parsedNodes.find(j.second);
-            auto temp = std::string();
-            if (j.first == "other" && startNode != destNode)temp = "";
+            auto temp = easy_prop();
+            if (j.first == easy_prop("other") && startNode != destNode)temp = easy_prop("");
             else temp = j.first;
             auto trans = new StateTransition(startNode->second, destNode->second,
                 [](EVENT*)->bool
                 {
                     return true;
-                }, temp);
+                }, j.first);
 
             parsedEdges.emplace_back(trans);
             bool skip = false;

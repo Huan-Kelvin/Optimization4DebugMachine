@@ -343,7 +343,7 @@ public:
             for (const std::pair<EdgeLabel, int>& edge : outgoingEdges(node_id)) {
                 os << '\t' << node_id << " -> " << edge.second;
                 if (!ignoreEdgeLabels)
-                    os << " [label=" << edge.first << "]";
+                    os << " [label=" << easy_prop_to_string(edge.first) << "]";
                 os << std::endl;
             }
         }

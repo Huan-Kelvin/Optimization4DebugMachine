@@ -2,6 +2,7 @@
 #include "AbstractStateMachine.h"
 #include <list>
 #include <functional>
+#include "../CSC8503/GameTech/easy_prop.h"
 namespace NCL
 {
 	namespace CSC8503
@@ -52,6 +53,7 @@ namespace NCL {
 				return instance;
 			}
 			EVENT* HasHappened(const std::string&);
+			EVENT* HasHappened(const easy_prop&);
 			void Reset();
 		private:
 			static EventSystem* instance;
