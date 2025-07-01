@@ -26,7 +26,7 @@ void TestObj::init_state_machine()
 {
 	auto init = new State([this](float dt)->void
 		{			
-			//std::cout << "Enter state init" << std::endl;
+			//std::cout << "In state init" << std::endl;
 			if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM0))
 			{
 				EventSystem::getInstance()->PushEvent("test0", 0);
@@ -42,7 +42,7 @@ void TestObj::init_state_machine()
 		});
 	auto stateA = new State([this](float dt)->void
 		{
-			std::cout << "Enter state A" << std::endl;
+			std::cout << "In state A" << std::endl;
 			if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUM1))
 			{
 				std::cout << "Transitioning from state A to state B" << std::endl;
@@ -51,7 +51,7 @@ void TestObj::init_state_machine()
 		});
 	auto stateB = new State([this](float dt)->void
 		{
-			std::cout << "Enter state B" << std::endl;
+			std::cout << "In state B" << std::endl;
 			if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUM2))
 			{
 				EventSystem::getInstance()->PushEvent("test2", 0);
@@ -63,7 +63,7 @@ void TestObj::init_state_machine()
 		});
 	auto stateC = new State([this](float dt)->void
 		{
-			std::cout << "Enter state C" << std::endl;
+			std::cout << "In state C" << std::endl;
 			if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUM3))
 			{
 				EventSystem::getInstance()->PushEvent("test3", 0);
@@ -76,9 +76,9 @@ void TestObj::init_state_machine()
 		});
 	auto end = new State([this](float dt)->void
 		{
-			std::cout << "Enter state end" << std::endl;
+			std::cout << "In state end" << std::endl;
 		});
-	state_machine = new StateMachine("A", init, end);
+	state_machine = new StateMachine("init", init, end);
 	state_machine->AddComponent("stateA", stateA);
 	state_machine->AddComponent("stateB", stateB);
 	state_machine->AddComponent("stateC", stateC);
