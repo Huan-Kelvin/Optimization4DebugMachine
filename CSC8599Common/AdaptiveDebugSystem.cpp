@@ -4,6 +4,7 @@
 #include "State.h"
 #include "StateMachine.h"
 #include "StateTransition.h"
+#include <iostream>
 AdaptiveDebugSystem* AdaptiveDebugSystem::instance=nullptr;
 struct Node
 {
@@ -73,6 +74,7 @@ Environment* AdaptiveDebugSystem::find_deadlock_env()
 		for (const auto& state_machine : env->second)
 		{//	TODO: stateMachine plus 
 			const auto active = state_machine->get_active_component();
+			std::cout << "Active state: " << state_machine->GetName(active) << std::endl;
 			const auto exp = state_machine->get_exp_component();
 			if (exp == nullptr)   
 				continue;
@@ -81,20 +83,26 @@ Environment* AdaptiveDebugSystem::find_deadlock_env()
 			auto range = state_machine->get_transitions(active);
 			bool HasOutGoing = false;
 
-			if(active)
-
-			for (auto& i = range.first; i != range.second; ++i)
-			{
-				if (i->second->enable&& i->second->GetSourceState()!=i->second->GetDestinationState())
+			if (active) {
+				for (auto& i = range.first; i != range.second; ++i)
 				{
-					HasOutGoing = true;
-					break;
+					if (i->second->enable && i->second->GetSourceState() != i->second->GetDestinationState())
+					{
+						HasOutGoing = true;
+						
+						//break;
+					}
+					std::cout << "HasOutGoing = "<< HasOutGoing <<" : "
+						<< i->second->GetTriggerEP().toString(i->second->GetTriggerEP()) << std::endl;
 				}
+				std::cout << std::endl << std::endl;
 			}
 			if (!HasOutGoing)
 			{
+				std::cout << "Deadlock found in environment: " << env->first << std::endl;
 				return env;
 			}
+			//std::cout << "No deadlock in environment: " << env->first << std::endl;
 		}
 	}
 	return nullptr;

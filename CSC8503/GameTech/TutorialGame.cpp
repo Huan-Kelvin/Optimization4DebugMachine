@@ -36,23 +36,27 @@ TutorialGame::TutorialGame() {
 	InitialiseAssets();
 	initEventHandler();
 
-	auto envC = new Environment();
-	envC->first = "DebugC";
-	envC->second.emplace_back(_monster->get_monster_state_machine());
-	envC->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(debug_state_machine->GetComponent("DebugC")));
-	AdaptiveDebugSystem::getInstance()->insert(envC);
+	//auto envC = new Environment();
+	//envC->first = "DebugC";
+	//envC->second.emplace_back(_monster->get_monster_state_machine());
+	//envC->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(debug_state_machine->GetComponent("DebugC")));
+	//AdaptiveDebugSystem::getInstance()->insert(envC);
+	//auto envA = new Environment();
+	//envA->first = "DebugA";
+	//envA->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(debug_state_machine->GetComponent("DebugA")));
+	//AdaptiveDebugSystem::getInstance()->insert(envA);
+	//auto envB = new Environment();
+	//envB->first = "DebugB";
+	//envB->second.emplace_back(localPlayer->get_state_machine());
+	//envB->second.emplace_back(_pet->get_state_machine());
+	//envB->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(debug_state_machine->GetComponent("DebugB")));
+	//AdaptiveDebugSystem::getInstance()->insert(envB);
 
-	auto envA = new Environment();
-	envA->first = "DebugA";
-	envA->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(debug_state_machine->GetComponent("DebugA")));
-	AdaptiveDebugSystem::getInstance()->insert(envA);
-
-	auto envB = new Environment();
-	envB->first = "DebugB";
-	envB->second.emplace_back(localPlayer->get_state_machine());
-	envB->second.emplace_back(_pet->get_state_machine());
-	envB->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(debug_state_machine->GetComponent("DebugB")));
-	AdaptiveDebugSystem::getInstance()->insert(envB);
+	auto envT = new Environment();
+	envT->first = "DebugT";
+	envT->second.emplace_back(test_obj->get_state_machine());
+	envT->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(test_state_machine->GetComponent("DebugT")));
+	AdaptiveDebugSystem::getInstance()->insert(envT);
 }
 
 /*
@@ -113,6 +117,7 @@ TutorialGame::~TutorialGame() {
 
 void TutorialGame::UpdateGame(float dt) {
 	game_state_machine->Update(dt);
+	if (test_obj) test_obj->Update(dt);
 
 	EventSystem::getInstance()->Update(dt);
 
@@ -460,6 +465,8 @@ void TutorialGame::InitGameExamples() {
 	_pet= dynamic_cast<NCL::CSC8599::Pet*>(AddPetToWorld(Vector3(-15, 5, 0), localPlayer));
 	localPlayer->set_pet(_pet);
 	//AddBonusToWorld(Vector3(10, 5, 0));
+
+	test_obj = new TestObj();
 }
 
 GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
@@ -619,6 +626,7 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 			std::vector<std::string> text;
 			text.emplace_back("Scenarios A and B");
 			text.emplace_back("Scenarios C");
+			text.emplace_back("Scenarios Test");
 
 			if (selected < 0)selected = 0;
 			if (selected >= text.size())selected = text.size() - 1;
@@ -636,6 +644,9 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 					break;
 				case 1:
 					gameReset(1);
+					break;
+				case 2:
+					gameReset(2);
 					break;
 				default:
 					break;
@@ -692,6 +703,7 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 			{
 				Debug::Print("(F4)Debug state machine on", Vector2(5, 5));
 				debug_state_machine->Update(dt);
+				test_state_machine->Update(dt);
 			}else
 			{
 				Debug::Print("(F4)Debug state machine off", Vector2(5, 5));
@@ -720,7 +732,7 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 	game_state_machine->AddTransition(new CSC8599::StateTransition(
 		game_state_machine->GetComponent("init"),
 		game_state_machine->GetComponent("running"),
-		[this](EVENT* p_event)->bool
+		[this]()->bool
 		{
 			InitCamera();
 			return true;
@@ -731,7 +743,7 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 	game_state_machine->AddTransition(new CSC8599::StateTransition(
 		game_state_machine->GetComponent("end"),
 		game_state_machine->GetComponent("running"),
-		[this](EVENT* p_event)->bool
+		[this]()->bool
 		{
 			gameReset(0);
 			localPlayer->set_user_controller(new PlayerAIController(localPlayer));
@@ -743,7 +755,7 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 	game_state_machine->AddTransition(new CSC8599::StateTransition(
 		game_state_machine->GetComponent("end"),
 		game_state_machine->GetComponent("init"),
-		[this](EVENT* p_event)->bool
+		[this]()->bool
 		{
 			lose = 0;
 			win = 0;
@@ -755,7 +767,7 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 	game_state_machine->AddTransition(new CSC8599::StateTransition(
 		game_state_machine->GetComponent("running"),
 		game_state_machine->GetComponent("end"),
-		[this](EVENT* p_event)->bool
+		[this]()->bool
 		{
 			if (EventSystem::getInstance()->HasHappened("player_die"))
 			{
@@ -798,6 +810,16 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 	debug_state_machine->AddComponent("DebugB", DebugB);
 	debug_state_machine->AddComponent("DebugC", DebugC);
 
+
+	test_state_machine = new DebugStateMachine();
+	formula = ltlf::Box(ltlf::Implies(
+			ltlf::Act("test0"),
+			ltlf::Next(ltlf::Act("test1"))
+		)
+	);
+	//sigmaAll = std::unordered_set<std::string>{ "test0","test1" ,"test2" ,"other" };
+	auto DebugT = StateMachineParser::getInstance()->parse2(formula);
+	test_state_machine->AddComponent("DebugT", DebugT);
 }
 
 void NCL::CSC8503::TutorialGame::gameReset(int model)
@@ -806,15 +828,21 @@ void NCL::CSC8503::TutorialGame::gameReset(int model)
 	EventSystem::getInstance()->Reset();
 	initEventHandler();
 	InitWorld();
-	if(model==0)
+
+	if (model == 0)
 	{
 		localPlayer->set_user_controller(new PlayerAIController(localPlayer));
 		localPlayer->GetTransform().SetPosition(Vector3(-50, 8, 35));
 		_pet->GetTransform().SetPosition(Vector3(-50, 8, 70));
 		_monster->useStateMachine = false;
-	}else if(model==1)
+	}
+	else if (model == 1)
 	{
 		localPlayer->set_user_controller(new PlayerController());
+	}
+	else if (model == 2)
+	{
+
 	}
 	EventSystem::getInstance()->PushEvent("GameStart", 0);
 }

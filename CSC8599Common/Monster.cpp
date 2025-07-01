@@ -81,7 +81,7 @@ void NCL::CSC8599::Monster::init_state_machine()
 	monster_state_machine->AddComponent("summon", summon);
 	monster_state_machine->AddComponent("ride",ride);
 	monster_state_machine->AddComponent("end", end);
-	monster_state_machine->AddTransition(new CSC8599::StateTransition(init, summon, [this](EVENT* event)->bool
+	monster_state_machine->AddTransition(new CSC8599::StateTransition(init, summon, [this]()->bool
 		{
 			auto health = get_attr("health")._int;
 			if(health <= 30 && !pet)
@@ -92,11 +92,11 @@ void NCL::CSC8599::Monster::init_state_machine()
 			}
 			return false;
 		}, ""));
-	monster_state_machine->AddTransition(new CSC8599::StateTransition(summon, ride, [this](EVENT* event)->bool
+	monster_state_machine->AddTransition(new CSC8599::StateTransition(summon, ride, [this]()->bool
 		{
 			return pet;
 		}, ""));
-	monster_state_machine->AddTransition(new CSC8599::StateTransition(ride, end, [this](EVENT* event)->bool
+	monster_state_machine->AddTransition(new CSC8599::StateTransition(ride, end, [this]()->bool
 		{
 			return true;
 		}, "arrival"));

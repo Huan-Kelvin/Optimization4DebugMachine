@@ -22,7 +22,11 @@ extern EVENT_DEFINE g_Events[] =
 	{"arrival",true},
 	{"dragon_die",true},
 
-
+	{"test0"},
+	{"test1"},
+	{"test2"},
+	{"test3"},
+	{"test4"},
 };
 NCL::CSC8599::EventSystem::EventSystem()
 {
@@ -115,6 +119,41 @@ EVENT* NCL::CSC8599::EventSystem::HasHappened(const std::string& name)
 	}
 	return nullptr;
 }
+bool NCL::CSC8599::EventSystem::HasHappened(const easy_prop& ep) {
+
+	//std::cout << "============================================================="<< std::endl;
+	//std::cout << "Checking event: "<< std::endl;
+	if (ep.empty()) return false;
+
+	//std::set<std::string> eventSet = ep.getAtoms(ep);
+	//for (const auto& name : eventSet) {
+	//	std::cout << name << " ";
+	//}
+
+	std::set<std::string> nameSet;
+	for (auto event : eventQueue) {
+		nameSet.insert(event->pEventDef->name);
+	}
+	//std::cout << "Event Queue: ";
+	//for (const auto& name : nameSet) {
+	//	std::cout << name << " ";
+	//}
+	if (nameSet.empty()) return false;
+	if (ep.evaluate(nameSet)) return true;
+
+	nameSet.clear();
+	for (auto event : eventQueueDelay) {
+		nameSet.insert(event->pEventDef->name);
+	}
+	//std::cout << "\nEvent Queue Delay: ";
+	//for (const auto& name : nameSet) {
+	//	std::cout << name << " ";
+	//}
+	if (nameSet.empty()) return false;
+	return ep.evaluate(nameSet);
+}
+
+
 
 void EventSystem::Reset()
 {
