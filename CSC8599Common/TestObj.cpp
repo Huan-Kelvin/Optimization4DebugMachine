@@ -35,6 +35,10 @@ void TestObj::init_state_machine()
 			{
 				EventSystem::getInstance()->PushEvent("test1", 0);
 			}
+			if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::P))
+			{
+				t1->enable = !t1->enable;
+			}
 		});
 	auto stateA = new State([this](float dt)->void
 		{
@@ -83,11 +87,12 @@ void TestObj::init_state_machine()
 	//state_machine->AddTransition(new CSC8599::StateTransition(init, stateA, [this]()->bool
 	//	{
 	//		return true;
-	//	}, easy_prop("test0")));
-	state_machine->AddTransition(new CSC8599::StateTransition(init, stateA, [this]()->bool
+	//	}, "test0"));
+	t1 = new CSC8599::StateTransition(init, stateA, [this]()->bool
 		{
 			return true;
-		}, easy_prop::And(easy_prop("test0"), easy_prop("test1"))));
+		}, easy_prop::And(easy_prop("test0"), easy_prop("test1")));
+	state_machine->AddTransition(t1);
 
 	state_machine->AddTransition(new CSC8599::StateTransition(stateA, stateB, [this]()->bool
 		{
@@ -97,11 +102,13 @@ void TestObj::init_state_machine()
 		{
 			return true;
 		}, "test4"));
+
 	t2 = new CSC8599::StateTransition(stateB, stateC, [this]()->bool
 		{
 			return true;
 		}, "test2");
 	state_machine->AddTransition(t2);
+
 	t3 = new CSC8599::StateTransition(stateC, stateA, [this]()->bool
 		{
 			return true;

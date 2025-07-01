@@ -111,7 +111,22 @@ struct easy_prop {
         collectAtoms(prop, atoms);
         return atoms;
     }
-
+    static std::string toString(const easy_prop& prop) {
+        switch (prop.casusu) {
+        case easy_prop::E_P_AND:
+            return "(" + toString(prop.args[0]) + " && " + toString(prop.args[1]) + ")";
+        case easy_prop::E_P_OR:
+            return "(" + toString(prop.args[0]) + " || " + toString(prop.args[1]) + ")";
+        case easy_prop::E_P_ATOM:
+            return prop.isAtomNegated ? "!" + prop.single_atom_if_any : prop.single_atom_if_any;
+        case easy_prop::E_P_TRUE:
+            return "true";
+        case easy_prop::E_P_FALSE:
+            return "false";
+        default:
+            return "";
+        }
+    }
 };
 
 #endif //GRAPHS_EASY_PROP_H

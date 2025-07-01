@@ -15,6 +15,7 @@ namespace NCL {
 			StateMachine* state_machine = nullptr;
 			void init_state_machine();
 
+			CSC8599::StateTransition* t1;
 			CSC8599::StateTransition* t2;
 			CSC8599::StateTransition* t3;
 		};

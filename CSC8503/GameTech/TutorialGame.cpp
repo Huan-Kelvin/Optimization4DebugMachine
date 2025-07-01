@@ -41,12 +41,10 @@ TutorialGame::TutorialGame() {
 	envC->second.emplace_back(_monster->get_monster_state_machine());
 	envC->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(debug_state_machine->GetComponent("DebugC")));
 	AdaptiveDebugSystem::getInstance()->insert(envC);
-
 	auto envA = new Environment();
 	envA->first = "DebugA";
 	envA->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(debug_state_machine->GetComponent("DebugA")));
 	AdaptiveDebugSystem::getInstance()->insert(envA);
-
 	auto envB = new Environment();
 	envB->first = "DebugB";
 	envB->second.emplace_back(localPlayer->get_state_machine());

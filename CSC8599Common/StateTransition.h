@@ -14,7 +14,8 @@ namespace NCL {
 				sourceState = source;
 				destinationState = dest;
 				transitionFunction = std::move(f);
-				trigger = _trigger;
+				//trigger = _trigger;
+				trigger_ep = easy_prop(_trigger);
 				enable = _enable;
 			}
 			StateTransition(AbstractComponent* source, AbstractComponent* dest, StateTransitionFunction f, easy_prop _trigger,
@@ -29,11 +30,15 @@ namespace NCL {
 			AbstractComponent* GetDestinationState() const { return destinationState; }
 			AbstractComponent* GetSourceState() const { return sourceState; }
 			bool enable;
+
+			//const std::string& GetTrigger() const { return trigger; }
+			const easy_prop& GetTriggerEP() const { return trigger_ep; }
+
 		protected:
 			AbstractComponent* sourceState;
 			AbstractComponent* destinationState;
 			StateTransitionFunction transitionFunction;
-			std::string trigger;
+			//std::string trigger;
 			
 			easy_prop trigger_ep;
 

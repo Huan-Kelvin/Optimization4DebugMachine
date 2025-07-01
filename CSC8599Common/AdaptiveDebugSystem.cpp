@@ -82,21 +82,26 @@ Environment* AdaptiveDebugSystem::find_deadlock_env()
 			auto range = state_machine->get_transitions(active);
 			bool HasOutGoing = false;
 
-			if(active)
-
-			for (auto& i = range.first; i != range.second; ++i)
-			{
-				if (i->second->enable&& i->second->GetSourceState()!=i->second->GetDestinationState())
+			if (active) {
+				for (auto& i = range.first; i != range.second; ++i)
 				{
-					HasOutGoing = true;
-					break;
+					if (i->second->enable && i->second->GetSourceState() != i->second->GetDestinationState())
+					{
+						HasOutGoing = true;
+						
+						//break;
+					}
+					std::cout << "HasOutGoing = "<< HasOutGoing <<" : "
+						<< i->second->GetTriggerEP().toString(i->second->GetTriggerEP()) << std::endl;
 				}
+				std::cout << std::endl << std::endl;
 			}
 			if (!HasOutGoing)
 			{
 				std::cout << "Deadlock found in environment: " << env->first << std::endl;
 				return env;
 			}
+			//std::cout << "No deadlock in environment: " << env->first << std::endl;
 		}
 	}
 	return nullptr;
