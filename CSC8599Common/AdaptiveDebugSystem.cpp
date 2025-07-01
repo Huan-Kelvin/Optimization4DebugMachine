@@ -74,6 +74,7 @@ Environment* AdaptiveDebugSystem::find_deadlock_env()
 		for (const auto& state_machine : env->second)
 		{//	TODO: stateMachine plus 
 			const auto active = state_machine->get_active_component();
+			std::cout << "Active state: " << state_machine->GetName(active) << std::endl;
 			const auto exp = state_machine->get_exp_component();
 			if (exp == nullptr)   
 				continue;

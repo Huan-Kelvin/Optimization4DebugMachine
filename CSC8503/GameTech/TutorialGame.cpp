@@ -36,21 +36,21 @@ TutorialGame::TutorialGame() {
 	InitialiseAssets();
 	initEventHandler();
 
-	auto envC = new Environment();
-	envC->first = "DebugC";
-	envC->second.emplace_back(_monster->get_monster_state_machine());
-	envC->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(debug_state_machine->GetComponent("DebugC")));
-	AdaptiveDebugSystem::getInstance()->insert(envC);
-	auto envA = new Environment();
-	envA->first = "DebugA";
-	envA->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(debug_state_machine->GetComponent("DebugA")));
-	AdaptiveDebugSystem::getInstance()->insert(envA);
-	auto envB = new Environment();
-	envB->first = "DebugB";
-	envB->second.emplace_back(localPlayer->get_state_machine());
-	envB->second.emplace_back(_pet->get_state_machine());
-	envB->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(debug_state_machine->GetComponent("DebugB")));
-	AdaptiveDebugSystem::getInstance()->insert(envB);
+	//auto envC = new Environment();
+	//envC->first = "DebugC";
+	//envC->second.emplace_back(_monster->get_monster_state_machine());
+	//envC->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(debug_state_machine->GetComponent("DebugC")));
+	//AdaptiveDebugSystem::getInstance()->insert(envC);
+	//auto envA = new Environment();
+	//envA->first = "DebugA";
+	//envA->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(debug_state_machine->GetComponent("DebugA")));
+	//AdaptiveDebugSystem::getInstance()->insert(envA);
+	//auto envB = new Environment();
+	//envB->first = "DebugB";
+	//envB->second.emplace_back(localPlayer->get_state_machine());
+	//envB->second.emplace_back(_pet->get_state_machine());
+	//envB->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(debug_state_machine->GetComponent("DebugB")));
+	//AdaptiveDebugSystem::getInstance()->insert(envB);
 
 	auto envT = new Environment();
 	envT->first = "DebugT";
@@ -813,8 +813,8 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 
 	test_state_machine = new DebugStateMachine();
 	formula = ltlf::Box(ltlf::Implies(
-			ltlf::And(ltlf::Act("test0"), ltlf::Act("test1")),
-			ltlf::Next(ltlf::Act("test2"))
+			ltlf::Act("test0"),
+			ltlf::Next(ltlf::Act("test1"))
 		)
 	);
 	//sigmaAll = std::unordered_set<std::string>{ "test0","test1" ,"test2" ,"other" };

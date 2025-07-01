@@ -12,6 +12,7 @@ void  NCL::CSC8599::StateMachine::Update(float dt) {
 		if (!i->second->enable)continue;
 		if (i->second->CanTransition())
 		{
+			std::cout << "Transitioning from " << GetName(activeComponent) << " to " << GetName(i->second->GetDestinationState()) << std::endl;
 			activeComponent = i->second->GetDestinationState();
 		}
 	}

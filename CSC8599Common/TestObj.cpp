@@ -45,7 +45,7 @@ void TestObj::init_state_machine()
 			std::cout << "Enter state A" << std::endl;
 			if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUM1))
 			{
-				std::cout << "Transitioning to state B from A" << std::endl;
+				std::cout << "Transitioning from state A to state B" << std::endl;
 				EventSystem::getInstance()->PushEvent("test1", 0);
 			}
 		});
@@ -91,7 +91,7 @@ void TestObj::init_state_machine()
 	t1 = new CSC8599::StateTransition(init, stateA, [this]()->bool
 		{
 			return true;
-		}, easy_prop::And(easy_prop("test0"), easy_prop("test1")));
+		}, "test0");
 	state_machine->AddTransition(t1);
 
 	state_machine->AddTransition(new CSC8599::StateTransition(stateA, stateB, [this]()->bool
