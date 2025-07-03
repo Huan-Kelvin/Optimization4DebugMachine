@@ -466,7 +466,7 @@ void TutorialGame::InitGameExamples() {
 	localPlayer->set_pet(_pet);
 	//AddBonusToWorld(Vector3(10, 5, 0));
 
-	test_obj = new TestObj();
+	if(!test_obj) test_obj = new TestObj();
 }
 
 GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
