@@ -171,7 +171,7 @@ void TutorialGame::UpdateKeys() {
 		DebugObjectMovement();
 	}
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F3)) {
-		std::cout<<EventSystem::getInstance()->Print(0)<<std::endl;
+		std::cout << EventSystem::getInstance()->Print(0) << std::endl;
 	}
 
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F4)) {
@@ -179,6 +179,37 @@ void TutorialGame::UpdateKeys() {
 	}
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F5)) {
 		std::cout << *AdaptiveDebugSystem::getInstance() << std::endl;
+	}
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F5)) {
+		AbstractComponent* comp = test_state_machine->GetComponent("DebugT");
+		CSC8599::StateMachine* sm = dynamic_cast<CSC8599::StateMachine*>(comp);
+
+		auto allTrans = sm->get_all_transitions();
+		for (auto& [srcState, trans] : allTrans) {
+			std::cout << "From: " << test_state_machine->GetName(srcState)
+				<< " ¡ú To: " << test_state_machine->GetName(trans->GetDestinationState())
+				<< " Condition: " << trans->GetTriggerEP().toString(trans->GetTriggerEP())
+				<< std::endl;
+		}
+	}
+
+	auto keyboard = Window::GetKeyboard();
+	bool ctrlHeld = keyboard->KeyDown(KeyboardKeys::CONTROL);
+	std::vector<std::pair<KeyboardKeys, std::string>> keyEvents = {
+		{KeyboardKeys::NUM0, "test0"},
+		{KeyboardKeys::NUM1, "test1"},
+		{KeyboardKeys::NUM2, "test2"},
+		{KeyboardKeys::NUM3, "test3"}
+	};
+	std::function<bool(KeyboardKeys)> keyCheck;
+	if (ctrlHeld) {
+		keyCheck = [keyboard](KeyboardKeys key) { return keyboard->KeyDown(key); };
+	}
+	else {
+		keyCheck = [keyboard](KeyboardKeys key) { return keyboard->KeyPressed(key); };
+	}
+	for (const auto& [key, eventName] : keyEvents) {
+		if (keyCheck(key)) EventSystem::getInstance()->PushEvent(eventName, 0);
 	}
 }
 
@@ -702,8 +733,8 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 			if(useDebugSM)
 			{
 				Debug::Print("(F4)Debug state machine on", Vector2(5, 5));
-				debug_state_machine->Update(dt);
-				test_state_machine->Update(dt);
+				if(debug_state_machine) debug_state_machine->Update(dt);
+				if(test_state_machine) test_state_machine->Update(dt);
 			}else
 			{
 				Debug::Print("(F4)Debug state machine off", Vector2(5, 5));
@@ -786,40 +817,41 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 		""
 			));
 
-	debug_state_machine = new DebugStateMachine();
+	//debug_state_machine = new DebugStateMachine();
 
-	auto formula = ltlf::Box(ltlf::Implies(ltlf::Act("player_over_threat"),
-		ltlf::Next(ltlf::Act("pet_taunt"))));
-	auto sigmaAll = std::unordered_set<std::string>{ "player_over_threat", "pet_taunt" ,"other" };
-	auto DebugA = StateMachineParser::getInstance()->parse(formula, sigmaAll);
+	//auto formula = ltlf::Box(ltlf::Implies(ltlf::Act("player_over_threat"),
+	//	ltlf::Next(ltlf::Act("pet_taunt"))));
+	//auto sigmaAll = std::unordered_set<std::string>{ "player_over_threat", "pet_taunt" ,"other" };
+	//auto DebugA = StateMachineParser::getInstance()->parse(formula, sigmaAll);
 
-	formula = ltlf::Box(ltlf::Implies(ltlf::Act("player_die"),
-		ltlf::Next(ltlf::Act("pet_die"))));
-	sigmaAll = std::unordered_set<std::string>{ "player_die", "pet_die" ,"other"};
-	auto DebugB = StateMachineParser::getInstance()->parse(formula, sigmaAll);
+	//formula = ltlf::Box(ltlf::Implies(ltlf::Act("player_die"),
+	//	ltlf::Next(ltlf::Act("pet_die"))));
+	//sigmaAll = std::unordered_set<std::string>{ "player_die", "pet_die" ,"other"};
+	//auto DebugB = StateMachineParser::getInstance()->parse(formula, sigmaAll);
 
 
-	formula = ltlf::Box(ltlf::Implies(ltlf::Act("summon_dragon"),
-		ltlf::And(ltlf::Diamond(ltlf::Act("dragon_die")),
-			ltlf::Until(ltlf::Act("dragon_die", true), ltlf::Act("arrival"))
-		)));
-	sigmaAll = std::unordered_set<std::string>{ "init", "summon_dragon", "arrival","dragon_die" ,"other"};
-	auto DebugC = StateMachineParser::getInstance()->parse(formula, sigmaAll);
+	//formula = ltlf::Box(ltlf::Implies(ltlf::Act("summon_dragon"),
+	//	ltlf::And(ltlf::Diamond(ltlf::Act("dragon_die")),
+	//		ltlf::Until(ltlf::Act("dragon_die", true), ltlf::Act("arrival"))
+	//	)));
+	//sigmaAll = std::unordered_set<std::string>{ "init", "summon_dragon", "arrival","dragon_die" ,"other"};
+	//auto DebugC = StateMachineParser::getInstance()->parse(formula, sigmaAll);
 
-	debug_state_machine->AddComponent("DebugA", DebugA);
-	debug_state_machine->AddComponent("DebugB", DebugB);
-	debug_state_machine->AddComponent("DebugC", DebugC);
+	//debug_state_machine->AddComponent("DebugA", DebugA);
+	//debug_state_machine->AddComponent("DebugB", DebugB);
+	//debug_state_machine->AddComponent("DebugC", DebugC);
 
 
 	test_state_machine = new DebugStateMachine();
-	formula = ltlf::Box(ltlf::Implies(
-			ltlf::Act("test0"),
-			ltlf::Next(ltlf::Act("test1"))
+	auto formula = ltlf::Box(ltlf::Implies(
+			ltlf::Act("test1"),
+			ltlf::Next(ltlf::Act("test2"))
 		)
 	);
 	//sigmaAll = std::unordered_set<std::string>{ "test0","test1" ,"test2" ,"other" };
 	auto DebugT = StateMachineParser::getInstance()->parse2(formula);
 	test_state_machine->AddComponent("DebugT", DebugT);
+
 }
 
 void NCL::CSC8503::TutorialGame::gameReset(int model)

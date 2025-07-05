@@ -27,14 +27,6 @@ void TestObj::init_state_machine()
 	auto init = new State([this](float dt)->void
 		{			
 			//std::cout << "In state init" << std::endl;
-			if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM0))
-			{
-				EventSystem::getInstance()->PushEvent("test0", 0);
-			}
-			if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM1))
-			{
-				EventSystem::getInstance()->PushEvent("test1", 0);
-			}
 			if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::P))
 			{
 				t1->enable = !t1->enable;
@@ -42,7 +34,7 @@ void TestObj::init_state_machine()
 		});
 	auto stateA = new State([this](float dt)->void
 		{
-			std::cout << "In state A" << std::endl;
+			//std::cout << "In state A" << std::endl;
 			if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUM1))
 			{
 				std::cout << "Transitioning from state A to state B" << std::endl;
@@ -51,23 +43,11 @@ void TestObj::init_state_machine()
 		});
 	auto stateB = new State([this](float dt)->void
 		{
-			std::cout << "In state B" << std::endl;
-			if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUM2))
-			{
-				EventSystem::getInstance()->PushEvent("test2", 0);
-			}
-			if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUM4))
-			{
-				EventSystem::getInstance()->PushEvent("test4", 0);
-			}
+			//std::cout << "In state B" << std::endl;
 		});
 	auto stateC = new State([this](float dt)->void
 		{
-			std::cout << "In state C" << std::endl;
-			if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUM3))
-			{
-				EventSystem::getInstance()->PushEvent("test3", 0);
-			}
+			//std::cout << "In state C" << std::endl;
 			if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::P))
 			{
 				t2->enable = false;
@@ -76,7 +56,7 @@ void TestObj::init_state_machine()
 		});
 	auto end = new State([this](float dt)->void
 		{
-			std::cout << "In state end" << std::endl;
+			//std::cout << "In state end" << std::endl;
 		});
 	state_machine = new StateMachine("init", init, end);
 	state_machine->AddComponent("stateA", stateA);
@@ -97,14 +77,7 @@ void TestObj::init_state_machine()
 
 	state_machine->AddTransition(new CSC8599::StateTransition(stateA, stateB, [this]()->bool
 		{
-			float health = 1;
-
-			if(health<0)
 			return true;
-			else
-			{
-				return false;
-			}
 		}, "test1"));
 	state_machine->AddTransition(new CSC8599::StateTransition(stateB, stateA, [this]()->bool
 		{

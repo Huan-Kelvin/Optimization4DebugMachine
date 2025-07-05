@@ -234,13 +234,16 @@ NCL::CSC8599::StateMachine* StateMachineParser::parse2(ltlf& formula)
             auto startNode = parsedNodes.find(i);
             auto destNode = parsedNodes.find(j.second);
             auto temp = easy_prop();
-            if (j.first == easy_prop("other") && startNode != destNode)temp = easy_prop("");
+            if (j.first == easy_prop("other") && startNode != destNode) temp = easy_prop("");
             else temp = j.first;
             auto trans = new StateTransition(startNode->second, destNode->second,
-                []()->bool
+                [j]()->bool
                 {
+                    //std::cout << "Transitioning : " << j.first.toString(j.first) << std::endl;
                     return true;
                 }, j.first);
+
+			//std::cout << "Transitioning : " << j.first.toString(j.first) << std::endl;
 
             parsedEdges.emplace_back(trans);
             bool skip = false;
