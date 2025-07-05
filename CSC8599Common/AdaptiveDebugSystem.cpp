@@ -34,37 +34,39 @@ void NCL::CSC8599::AdaptiveDebugSystem::update(float dt)
 		const auto path = re_plan(i);
 		adjust(path,i);
 	}
-	EventSystem::getInstance()->PushEvent("fix_"+env->first,0);
+	//EventSystem::getInstance()->PushEvent("fix_"+env->first,0);
 }
 
 void NCL::CSC8599::AdaptiveDebugSystem::adjust(Path path, StateMachine* state_machine)
 {
 	const auto size = path.size();
-	for (size_t i = 0; i < size - 1; ++i)
-	{
-		const auto currentNode = path.top();
-		path.pop();
-		const auto destNode = path.top();
-		auto currentNodeRange = state_machine->get_transitions(currentNode);
-		auto destNodeRange = state_machine->get_transitions(destNode);
-		for (auto& j = currentNodeRange.first; j != currentNodeRange.second; ++j)
+	if (size > 0)
+		for (size_t i = 0; i < size - 1; ++i)
 		{
-			if (j->second->GetDestinationState() == destNode)
+			const auto currentNode = path.top();
+			path.pop();
+			const auto destNode = path.top();
+			auto currentNodeRange = state_machine->get_transitions(currentNode);
+			auto destNodeRange = state_machine->get_transitions(destNode);
+			for (auto& j = currentNodeRange.first; j != currentNodeRange.second; ++j)
 			{
-				j->second->CanTransition();
-				break;
+				if (j->second->GetDestinationState() == destNode)
+				{
+					j->second->CanTransition();
+					break;
+				}
 			}
+			//for (auto& k = destNodeRange.first; k != destNodeRange.second; ++k)
+			//{
+			//	if (k->second->GetDestinationState() == currentNode)
+			//	{
+			//		k->second->enable = false;// turn off previous trans
+			//		break;
+			//	}
+			//}
 		}
-		//for (auto& k = destNodeRange.first; k != destNodeRange.second; ++k)
-		//{
-		//	if (k->second->GetDestinationState() == currentNode)
-		//	{
-		//		k->second->enable = false;// turn off previous trans
-		//		break;
-		//	}
-		//}
-	}
-	state_machine->SetActiveComponent(path.top());
+	if (!path.empty())
+		state_machine->SetActiveComponent(path.top());
 }
 
 Environment* AdaptiveDebugSystem::find_deadlock_env()
@@ -74,7 +76,7 @@ Environment* AdaptiveDebugSystem::find_deadlock_env()
 		for (const auto& state_machine : env->second)
 		{//	TODO: stateMachine plus 
 			const auto active = state_machine->get_active_component();
-			std::cout << "Active state: " << state_machine->GetName(active) << std::endl;
+			//std::cout << "Active state: " << state_machine->GetName(active) << std::endl;
 			const auto exp = state_machine->get_exp_component();
 			if (exp == nullptr)   
 				continue;
@@ -92,10 +94,10 @@ Environment* AdaptiveDebugSystem::find_deadlock_env()
 						
 						//break;
 					}
-					std::cout << "HasOutGoing = "<< HasOutGoing <<" : "
-						<< i->second->GetTriggerEP().toString(i->second->GetTriggerEP()) << std::endl;
+					//std::cout << "HasOutGoing = "<< HasOutGoing <<" : "
+					//	<< i->second->GetTriggerEP().toString(i->second->GetTriggerEP()) << std::endl;
 				}
-				std::cout << std::endl << std::endl;
+				//std::cout << std::endl << std::endl;
 			}
 			if (!HasOutGoing)
 			{

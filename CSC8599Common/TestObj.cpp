@@ -13,9 +13,9 @@ TestObj::TestObj()
 {
 	init_state_machine();
 
-	//EventSystem::getInstance()->RegisterEventHandler("test0", [this](EVENT* p_event)->void
-	//	{
-	//	});
+	EventSystem::getInstance()->RegisterEventHandler("test0", [this](EVENT* p_event)->void
+		{
+		});
 }
 
 void TestObj::Update(float dt) {
@@ -91,12 +91,20 @@ void TestObj::init_state_machine()
 	t1 = new CSC8599::StateTransition(init, stateA, [this]()->bool
 		{
 			return true;
-		}, "test0");
+		}, easy_prop::And(easy_prop("test0"), easy_prop("test1")));
 	state_machine->AddTransition(t1);
+
 
 	state_machine->AddTransition(new CSC8599::StateTransition(stateA, stateB, [this]()->bool
 		{
+			float health = 1;
+
+			if(health<0)
 			return true;
+			else
+			{
+				return false;
+			}
 		}, "test1"));
 	state_machine->AddTransition(new CSC8599::StateTransition(stateB, stateA, [this]()->bool
 		{
