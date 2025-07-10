@@ -11,7 +11,7 @@ namespace NCL {
 			~AbstractStateMachine()override = default;
 			void AddComponent(const std::string&, AbstractComponent*);
 			AbstractComponent* GetComponent(const std::string&);
-			std::string GetName(AbstractComponent* comp);
+			std::string GetStateName(AbstractComponent* comp);
 
 			std::map<std::string, AbstractComponent*> get_component_container() const
 			{

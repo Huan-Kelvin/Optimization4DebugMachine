@@ -20,7 +20,7 @@ NCL::CSC8599::AbstractComponent* NCL::CSC8599::AbstractStateMachine::GetComponen
 	return nullptr;
 }
 
-std::string NCL::CSC8599::AbstractStateMachine::GetName(AbstractComponent* comp)
+std::string NCL::CSC8599::AbstractStateMachine::GetStateName(AbstractComponent* comp)
 {
 	for (const auto& pair : ComponentContainer)
 	{
@@ -28,7 +28,7 @@ std::string NCL::CSC8599::AbstractStateMachine::GetName(AbstractComponent* comp)
 			return pair.first;
 		if (auto sub = dynamic_cast<AbstractStateMachine*>(pair.second))
 		{
-			std::string result = sub->GetName(comp);
+			std::string result = sub->GetStateName(comp);
 			if (!result.empty())
 				return result;
 		}

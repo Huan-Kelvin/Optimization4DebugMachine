@@ -55,7 +55,8 @@ TutorialGame::TutorialGame() {
 	auto envT = new Environment();
 	envT->first = "DebugT";
 	envT->second.emplace_back(test_obj->get_state_machine());
-	envT->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(test_state_machine->GetComponent("DebugT")));
+	envT->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(test_state_machine->GetComponent("DebugT1")));
+	envT->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(test_state_machine->GetComponent("DebugT2")));
 	AdaptiveDebugSystem::getInstance()->insert(envT);
 }
 
@@ -186,9 +187,10 @@ void TutorialGame::UpdateKeys() {
 
 		auto allTrans = sm->get_all_transitions();
 		for (auto& [srcState, trans] : allTrans) {
-			std::cout << "From: " << test_state_machine->GetName(srcState)
-				<< " ¡ú To: " << test_state_machine->GetName(trans->GetDestinationState())
+			std::cout << "From: " << test_state_machine->GetStateName(srcState)
+				<< " ¡ú To: " << test_state_machine->GetStateName(trans->GetDestinationState())
 				<< " Condition: " << trans->GetTriggerEP().toString(trans->GetTriggerEP())
+				<< (trans->enable ? "" : " - Disabled")
 				<< std::endl;
 		}
 	}
@@ -844,14 +846,20 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 
 	test_state_machine = new DebugStateMachine();
 	auto formula = ltlf::Box(ltlf::Implies(
-			ltlf::Act("test1"),
-			ltlf::Next(ltlf::Act("test2"))
-		)
+		ltlf::Act("test1"),
+		ltlf::Next(ltlf::Act("test2"))
+	)
 	);
-	//sigmaAll = std::unordered_set<std::string>{ "test0","test1" ,"test2" ,"other" };
 	auto DebugT = StateMachineParser::getInstance()->parse2(formula);
-	test_state_machine->AddComponent("DebugT", DebugT);
+	test_state_machine->AddComponent("DebugT1", DebugT);
 
+	formula = ltlf::Box(ltlf::Implies(
+		ltlf::Act("test2"),
+		ltlf::Next(ltlf::Act("test1"))
+	)
+	);
+	DebugT = StateMachineParser::getInstance()->parse2(formula);
+	test_state_machine->AddComponent("DebugT2", DebugT);
 }
 
 void NCL::CSC8503::TutorialGame::gameReset(int model)
@@ -892,6 +900,14 @@ void NCL::CSC8503::TutorialGame::initEventHandler()
 	EventSystem::getInstance()->RegisterEventHandler("fix_DebugC", [this](EVENT* p_event)->bool
 		{
 			_monster->immortal = false;
+			return true;
+		});
+
+
+	EventSystem::getInstance()->RegisterEventHandler("fix_DebugT", [this](EVENT* p_event)->bool
+		{
+			std::cout << "fix_DebugT" << std::endl;
+			test_obj->ReturnToLastState();
 			return true;
 		});
 }

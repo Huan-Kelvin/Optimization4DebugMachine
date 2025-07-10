@@ -12,10 +12,6 @@ using namespace CSC8599;
 TestObj::TestObj()
 {
 	init_state_machine();
-
-	EventSystem::getInstance()->RegisterEventHandler("test0", [this](EVENT* p_event)->void
-		{
-		});
 }
 
 void TestObj::Update(float dt) {
@@ -27,31 +23,31 @@ void TestObj::init_state_machine()
 	auto init = new State([this](float dt)->void
 		{			
 			//std::cout << "In state init" << std::endl;
-			if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::P))
-			{
-				t1->enable = !t1->enable;
-			}
+			//if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::P))
+			//{
+			//	t1->enable = !t1->enable;
+			//}
 		});
 	auto stateA = new State([this](float dt)->void
 		{
-			//std::cout << "In state A" << std::endl;
-			if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUM1))
+			if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::P))
 			{
-				std::cout << "Transitioning from state A to state B" << std::endl;
-				EventSystem::getInstance()->PushEvent("test1", 0);
+				t2->enable = !t2->enable;
 			}
 		});
 	auto stateB = new State([this](float dt)->void
 		{
-			//std::cout << "In state B" << std::endl;
+			if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::P))
+			{
+				t2->enable = !t2->enable;
+			}
 		});
 	auto stateC = new State([this](float dt)->void
 		{
 			//std::cout << "In state C" << std::endl;
 			if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::P))
 			{
-				t2->enable = false;
-				t3->enable = false;
+				t2->enable = !t2->enable;
 			}
 		});
 	auto end = new State([this](float dt)->void
@@ -68,31 +64,52 @@ void TestObj::init_state_machine()
 	//	{
 	//		return true;
 	//	}, "test0"));
+	lastState = init;
 	t1 = new CSC8599::StateTransition(init, stateA, [this]()->bool
 		{
 			return true;
-		}, easy_prop::And(easy_prop("test0"), easy_prop("test1")));
+		}, "");
 	state_machine->AddTransition(t1);
 
 
-	state_machine->AddTransition(new CSC8599::StateTransition(stateA, stateB, [this]()->bool
+	state_machine->AddTransition(new CSC8599::StateTransition(stateA, stateB, [this, stateA]()->bool
 		{
+			lastState = stateA;
 			return true;
 		}, "test1"));
-	state_machine->AddTransition(new CSC8599::StateTransition(stateB, stateA, [this]()->bool
+	state_machine->AddTransition(new CSC8599::StateTransition(stateB, stateA, [this, stateB]()->bool
 		{
+			lastState = stateB;
 			return true;
-		}, "test4"));
+		}, "test2"));
 
-	t2 = new CSC8599::StateTransition(stateB, stateC, [this]()->bool
+	state_machine->AddTransition(new CSC8599::StateTransition(stateB, stateC, [this, stateB]()->bool
 		{
+			lastState = stateB;
 			return true;
-		}, "test2");
+		}, "test3"));
+	state_machine->AddTransition(new CSC8599::StateTransition(stateA, stateC, [this, stateA]()->bool
+		{
+			lastState = stateA;
+			return true;
+		}, "test3"));
+
+	t2 = new CSC8599::StateTransition(stateC, init, [this, init]()->bool
+		{
+			lastState = init;
+			return true;
+		}, "test0");
+
 	state_machine->AddTransition(t2);
+}
 
-	t3 = new CSC8599::StateTransition(stateC, stateA, [this]()->bool
-		{
-			return true;
-		}, "test3");
-	state_machine->AddTransition(t3);
+void TestObj::ReturnToLastState() {
+	if (lastState) {
+		state_machine->SetActiveComponent(state_machine->GetComponent(state_machine->GetStateName(lastState)));
+		std::cout << "Return to state : " << state_machine->GetStateName(lastState)
+			<< "	# Can state C quit : " << (t2->enable ? "true" : "false") << std::endl << std::endl;
+	}
+	else {
+		std::cout << "No last state to return to." << std::endl;
+	}
 }

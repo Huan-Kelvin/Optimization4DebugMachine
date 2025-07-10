@@ -34,7 +34,7 @@ void NCL::CSC8599::AdaptiveDebugSystem::update(float dt)
 		const auto path = re_plan(i);
 		adjust(path,i);
 	}
-	//EventSystem::getInstance()->PushEvent("fix_"+env->first,0);
+	EventSystem::getInstance()->PushEvent("fix_"+env->first,0);
 }
 
 void NCL::CSC8599::AdaptiveDebugSystem::adjust(Path path, StateMachine* state_machine)

@@ -27,6 +27,7 @@ extern EVENT_DEFINE g_Events[] =
 	{"test2"},
 	{"test3"},
 	{"test4"},
+	{"fix_DebugT"},
 };
 NCL::CSC8599::EventSystem::EventSystem()
 {
@@ -87,13 +88,19 @@ std::string NCL::CSC8599::EventSystem::Print(int index)
 
 void NCL::CSC8599::EventSystem::RegisterEventHandler(const std::string& name, const std::function<void(EVENT*)>& func)
 {
-	eventDefContainer[name]->listFunc.emplace_back(func);
-}
+	eventDefContainer[name]->listFunc.emplace_back(func);}
 
 void NCL::CSC8599::EventSystem::PushEvent(const std::string& name, int n, ...)
 {
 	EVENT* event = new EVENT;
 	event->pEventDef = eventDefContainer[name];
+
+	if (event->pEventDef == nullptr) {
+		std::cerr << "Event definition not found for: " << name << std::endl;
+		delete event;
+		return;
+	}
+
 	va_list args;
 	va_start(args, n);
 	for (int i = 0; i < n; ++i) {

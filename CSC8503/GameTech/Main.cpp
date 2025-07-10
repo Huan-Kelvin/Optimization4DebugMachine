@@ -222,6 +222,13 @@ void TestStateMachine() {
 //	}
 //}
 
+bool isLock = false;
+void LockMouseToWindow(Window* w) {
+	w->ShowOSPointer(isLock);
+	w->LockMouseToWindow(!isLock);
+	isLock = !isLock;
+}
+
 int main() {
 	Window*w = Window::CreateGameWindow("CSC8503 Game technology!", 1280, 720);
 
@@ -229,8 +236,7 @@ int main() {
 		return -1;
 	}	
 	srand(time(0));
-	w->ShowOSPointer(false);
-	w->LockMouseToWindow(true);
+	LockMouseToWindow(w);
 
 	TutorialGame* g = new TutorialGame();
 	w->GetTimer()->GetTimeDeltaSeconds(); //Clear the timer so we don't get a larget first dt!
@@ -254,6 +260,10 @@ int main() {
 
 		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::T)) {
 			w->SetWindowPosition(0, 0);
+		}
+
+		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::TAB)) {
+			LockMouseToWindow(w);
 		}
 
 		w->SetTitle("Gametech frame time:" + std::to_string(1000.0f * dt));
