@@ -1,13 +1,14 @@
 #pragma once
+#include "../CSC8503/CSC8503Common/GameObject.h"
 #include "StateMachine.h"
 #include "State.h"
 namespace NCL {
 	namespace CSC8599
 	{
-		class TestObj
+		class TestObj :public CSC8503::GameObject
 		{
 		public:
-			TestObj();
+			TestObj(string name = "");
 			void Update(float dt);
 
 			StateMachine* get_state_machine()const { return state_machine; }

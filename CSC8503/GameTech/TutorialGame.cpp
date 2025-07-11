@@ -51,13 +51,6 @@ TutorialGame::TutorialGame() {
 	//envB->second.emplace_back(_pet->get_state_machine());
 	//envB->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(debug_state_machine->GetComponent("DebugB")));
 	//AdaptiveDebugSystem::getInstance()->insert(envB);
-
-	auto envT = new Environment();
-	envT->first = "DebugT";
-	envT->second.emplace_back(test_obj->get_state_machine());
-	envT->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(test_state_machine->GetComponent("DebugT1")));
-	envT->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(test_state_machine->GetComponent("DebugT2")));
-	AdaptiveDebugSystem::getInstance()->insert(envT);
 }
 
 /*
@@ -492,14 +485,20 @@ void TutorialGame::InitDefaultFloor() {
 }
 
 void TutorialGame::InitGameExamples() {
-	localPlayer=dynamic_cast<NCL::CSC8599::Player*>(AddPlayerToWorld(Vector3(-10, 5, 0)));
-	_monster= dynamic_cast<NCL::CSC8599::Monster*>(AddMonsterToWorld(Vector3(-50, 8, 50)));
+	localPlayer = dynamic_cast<NCL::CSC8599::Player*>(AddPlayerToWorld(Vector3(-10, 5, 0)));
+	_monster = dynamic_cast<NCL::CSC8599::Monster*>(AddMonsterToWorld(Vector3(-50, 8, 50)));
 	//AddDragonToWorld(Vector3(-50, 10, 0));
-	_pet= dynamic_cast<NCL::CSC8599::Pet*>(AddPetToWorld(Vector3(-15, 5, 0), localPlayer));
+	_pet = dynamic_cast<NCL::CSC8599::Pet*>(AddPetToWorld(Vector3(-15, 5, 0), localPlayer));
 	localPlayer->set_pet(_pet);
 	//AddBonusToWorld(Vector3(10, 5, 0));
 
-	if(!test_obj) test_obj = new TestObj();
+	test_obj = new TestObj("obj");
+	auto envT = new Environment();
+	envT->first = "DebugT";
+	envT->second.emplace_back(test_obj->get_state_machine());
+	envT->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(test_state_machine->GetComponent("DebugT1")));
+	envT->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(test_state_machine->GetComponent("DebugT2")));
+	AdaptiveDebugSystem::getInstance()->insert(envT);
 }
 
 GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
@@ -866,6 +865,7 @@ void NCL::CSC8503::TutorialGame::gameReset(int model)
 {
 	//InitCamera();
 	EventSystem::getInstance()->Reset();
+	AdaptiveDebugSystem::getInstance()->Clear();
 	initEventHandler();
 	InitWorld();
 
@@ -907,7 +907,7 @@ void NCL::CSC8503::TutorialGame::initEventHandler()
 	EventSystem::getInstance()->RegisterEventHandler("fix_DebugT", [this](EVENT* p_event)->bool
 		{
 			std::cout << "fix_DebugT" << std::endl;
-			test_obj->ReturnToLastState();
+			dynamic_cast<CSC8599::TestObj*>(world->find_game_object("obj"))->ReturnToLastState();
 			return true;
 		});
 }

@@ -7,8 +7,8 @@
 游戏世界总览，增加和减少游戏物体等等
 */
 namespace NCL {
-		class Camera;
-		using Maths::Ray;
+	class Camera;
+	using Maths::Ray;
 	namespace CSC8503 {
 		class GameObject;
 		class Constraint;
@@ -16,7 +16,7 @@ namespace NCL {
 		typedef std::function<void(GameObject*)> GameObjectFunc;
 		typedef std::vector<GameObject*>::const_iterator GameObjectIterator;
 
-		class GameWorld	{
+		class GameWorld {
 		public:
 			GameWorld();
 			~GameWorld();
@@ -66,13 +66,15 @@ namespace NCL {
 			void GetConstraintIterators(
 				std::vector<Constraint*>::const_iterator& first,
 				std::vector<Constraint*>::const_iterator& last) const;
-			static GameWorld* Get(){
+			static GameWorld* Get() {
 				return  p_self;
 			}
-			static GameWorld* p_self;
-			GameObject* find_game_object(int id) ;
-			GameObject* find_nearest_game_object(GameObject* origin) const ;
+			GameObject* find_game_object(int id);
+			GameObject* find_game_object(string name);
+			GameObject* find_nearest_game_object(GameObject* origin) const;
 		protected:
+			static GameWorld* p_self;
+
 			std::vector<GameObject*> gameObjects;
 			std::vector<Constraint*> constraints;
 

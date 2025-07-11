@@ -1,3 +1,4 @@
+#pragma once
 #include "pch.h"
 #include "TestObj.h"
 #include "EventSystem.h"
@@ -9,9 +10,9 @@ using namespace NCL;
 using namespace CSC8503;
 using namespace CSC8599;
 
-TestObj::TestObj()
-{
+TestObj::TestObj(string name) :GameObject(name) {
 	init_state_machine();
+	GameWorld::Get()->AddGameObject(this);
 }
 
 void TestObj::Update(float dt) {

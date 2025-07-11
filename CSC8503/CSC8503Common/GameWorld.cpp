@@ -144,6 +144,16 @@ GameObject* GameWorld::find_game_object(int id)
 	return nullptr;
 }
 
+GameObject* GameWorld::find_game_object(string name)
+{
+	for (const auto i : gameObjects)
+	{
+		if (i->GetName() == name) return i;
+	}
+	//std::cout << "GameObject with name " << name << " not found!" << std::endl;
+	return nullptr;
+}
+
 GameObject* GameWorld::find_nearest_game_object(GameObject* origin) const
 {                    
 	float min_distance = (gameObjects[0]->GetTransform().GetPosition() -origin->GetTransform().GetPosition()).Length();

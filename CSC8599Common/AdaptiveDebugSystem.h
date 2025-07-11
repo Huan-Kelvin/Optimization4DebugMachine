@@ -48,6 +48,7 @@ namespace NCL {
 			}
 			void insert(Environment* env);
 			void update(float dt);
+			void Clear();
 		protected:
 			EnvContainer env_container_;
 		private:

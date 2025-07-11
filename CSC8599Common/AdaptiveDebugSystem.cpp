@@ -37,6 +37,11 @@ void NCL::CSC8599::AdaptiveDebugSystem::update(float dt)
 	EventSystem::getInstance()->PushEvent("fix_"+env->first,0);
 }
 
+void NCL::CSC8599::AdaptiveDebugSystem::Clear()
+{
+	env_container_.clear();
+}
+
 void NCL::CSC8599::AdaptiveDebugSystem::adjust(Path path, StateMachine* state_machine)
 {
 	const auto size = path.size();
