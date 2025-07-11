@@ -15,9 +15,13 @@ namespace NCL {
 
 			void ReturnToLastState();
 
+			float GetHealth() const { return health; }
+
 		private:
 			StateMachine* state_machine = nullptr;
 			void init_state_machine();
+
+			float health = 100.0f;
 
 			CSC8599::StateTransition* t1;
 			CSC8599::StateTransition* t2;

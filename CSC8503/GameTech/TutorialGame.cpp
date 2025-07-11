@@ -492,7 +492,7 @@ void TutorialGame::InitGameExamples() {
 	localPlayer->set_pet(_pet);
 	//AddBonusToWorld(Vector3(10, 5, 0));
 
-	test_obj = new TestObj("obj");
+	test_obj = new TestObj("testObj");
 	auto envT = new Environment();
 	envT->first = "DebugT";
 	envT->second.emplace_back(test_obj->get_state_machine());
@@ -907,7 +907,7 @@ void NCL::CSC8503::TutorialGame::initEventHandler()
 	EventSystem::getInstance()->RegisterEventHandler("fix_DebugT", [this](EVENT* p_event)->bool
 		{
 			std::cout << "fix_DebugT" << std::endl;
-			dynamic_cast<CSC8599::TestObj*>(world->find_game_object("obj"))->ReturnToLastState();
+			dynamic_cast<CSC8599::TestObj*>(world->find_game_object("testObj"))->ReturnToLastState();
 			return true;
 		});
 }

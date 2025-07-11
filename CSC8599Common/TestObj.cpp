@@ -91,6 +91,8 @@ void TestObj::init_state_machine()
 		}, "test3"));
 	state_machine->AddTransition(new CSC8599::StateTransition(stateA, stateC, [this, stateA]()->bool
 		{
+			std::cout << "Check health of testObj : " 
+				<< dynamic_cast<CSC8599::TestObj*>(GameWorld::Get()->find_game_object("testObj"))->GetHealth() << std::endl;
 			lastState = stateA;
 			return true;
 		}, "test3"));
