@@ -178,20 +178,33 @@ void TutorialGame::UpdateKeys() {
 	}
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F5)) {
 		AbstractComponent* comp = test_state_machine->GetComponent("DebugT");
-		CSC8599::StateMachine* sm = dynamic_cast<CSC8599::StateMachine*>(comp);
-
-		auto allTrans = sm->get_all_transitions();
-		for (auto& [srcState, trans] : allTrans) {
-			std::cout << "From: " << test_state_machine->GetStateName(srcState)
-				<< " ¡ú To: " << test_state_machine->GetStateName(trans->GetDestinationState())
-				<< " Condition: " << trans->GetTriggerEP().toString(trans->GetTriggerEP())
-				<< (trans->enable ? "" : " - Disabled")
-				<< std::endl;
+		if (comp) {
+			CSC8599::StateMachine* sm = dynamic_cast<CSC8599::StateMachine*>(comp);
+			auto allTrans = sm->get_all_transitions();
+			for (auto& [srcState, trans] : allTrans) {
+				std::cout << "From: " << test_state_machine->GetStateName(srcState)
+					<< " ¡ú To: " << test_state_machine->GetStateName(trans->GetDestinationState())
+					<< " Condition: " << trans->GetTriggerEP().toString(trans->GetTriggerEP())
+					<< (trans->enable ? "" : " - Disabled")
+					<< std::endl;
+			}
 		}
 
+		std::cout << "Shared1:" << std::endl;
+		std::cout << shared1->Print(0) << std::endl;
+		std::cout << "Shared2:" << std::endl;
+		std::cout << shared2->Print(0) << std::endl;
 
-		shared1->Print(0);
-		shared2->Print(0);
+		if (shared2->IsActive(test_obj->get_state_machine())) {
+			std::cout << "test_obj is active!" << std::endl;
+			std::cout << test_obj->get_state_machine() << std::endl;
+		}
+		else
+		{
+			std::cout << "test_obj is not active!" << std::endl;
+			shared1->AddStatemachine(test_obj->get_state_machine());
+			shared2->AddStatemachine(test_obj->get_state_machine());
+		}
 	}
 
 	auto keyboard = Window::GetKeyboard();
@@ -502,8 +515,8 @@ void TutorialGame::InitGameExamples() {
 	auto envT = new Environment();
 	envT->first = "DebugT";
 	envT->second.emplace_back(test_obj->get_state_machine());
-	envT->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(test_state_machine->GetComponent("DebugT1")));
-	envT->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(test_state_machine->GetComponent("DebugT2")));
+	//envT->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(test_state_machine->GetComponent("DebugT1")));
+	//envT->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(test_state_machine->GetComponent("DebugT2")));
 	AdaptiveDebugSystem::getInstance()->insert(envT);
 }
 
@@ -859,7 +872,7 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 	auto DebugT = StateMachineParser::getInstance()->parse2(formula);
 	test_state_machine->AddComponent("DebugT1", DebugT);
 	shared1 = StateMachineParser::getInstance()->parseTest(formula);
-	shared1->PushStatemachine(test_state_machine);
+	shared1->AddStatemachine(test_state_machine);
 
 	formula = ltlf::Box(ltlf::Implies(
 		ltlf::Act("test2"),
@@ -869,7 +882,7 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 	DebugT = StateMachineParser::getInstance()->parse2(formula);
 	test_state_machine->AddComponent("DebugT2", DebugT);
 	shared2 = StateMachineParser::getInstance()->parseTest(formula);
-	shared2->PushStatemachine(test_state_machine);
+	shared2->AddStatemachine(test_state_machine);
 }
 
 void NCL::CSC8503::TutorialGame::gameReset(int model)

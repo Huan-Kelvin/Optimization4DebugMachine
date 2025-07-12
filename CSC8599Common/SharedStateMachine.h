@@ -41,7 +41,7 @@ namespace NCL {
 			}
 			std::pair<TransitionIterator, TransitionIterator> get_transitions(AbstractComponent* state);
 
-			void PushStatemachine(AbstractStateMachine* machine) {
+			void AddStatemachine(AbstractStateMachine* machine) {
 				activeComponents[machine] = enterComponent;
 			}
 			bool IsActive(AbstractStateMachine* machine) const {

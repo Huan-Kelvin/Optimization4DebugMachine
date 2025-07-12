@@ -26,28 +26,36 @@ void  SharedStateMachine::Update(float dt) {
 }
 std::string SharedStateMachine::Print(int index)
 {
-	for (auto& ac : activeComponents)
+	std::string buffer("[SharedStateMachine]\n");
+
+	for (const auto& machinePair : activeComponents)
 	{
-		std::string active;
-		for (auto& it : ComponentContainer)
+		std::string activeName;
+		for (const auto& comp : ComponentContainer)
 		{
-			if (it.second == ac.second)
+			if (comp.second == machinePair.second)
 			{
-				active = it.first;
+				activeName = comp.first;
 				break;
 			}
 		}
-		std::string buffer("[StateMachine]");
-		buffer += "<" + active + ">\n";
-		for (auto i : ComponentContainer)
+
+		for (int j = 0; j < index; ++j) {
+			buffer += "    ";
+		}
+		buffer += "StateMachine@" + std::to_string(reinterpret_cast<std::uintptr_t>(machinePair.first));
+		buffer += " <" + activeName + ">\n";
+
+		for (const auto& comp : ComponentContainer)
 		{
-			for (int j = 0; j < index; ++j) {
+			for (int j = 0; j < index + 1; ++j) {
 				buffer += "    ";
 			}
-			buffer += "(" + i.first + ")" + i.second->Print(index + 1);
+			buffer += "(" + comp.first + ")" + comp.second->Print(index + 2);
 		}
-		return buffer;
 	}
+
+	return buffer;
 }
 
 void SharedStateMachine::AddTransition(StateTransition* t) {
