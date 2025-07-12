@@ -2,16 +2,21 @@
 #include "flloat_wrapper.h"
 #include "ltlf.h"
 #include "../../CSC8599Common/StateMachine.h"
-class StateMachineParser
-{
-public:
-	NCL::CSC8599::StateMachine* parse(ltlf& formula, std::unordered_set<std::string>& sigmaAll);
-	NCL::CSC8599::StateMachine* parse2(ltlf& formula);
-	static StateMachineParser* getInstance();
-private:
-	static StateMachineParser* uniqueInstance;
-	StateMachineParser();
-	// Python wrapper, to be instantiated only once in the program! (it should be a singleton!)
-	FLLOAT callable; // python callable
-};
-
+#include "../../CSC8599Common/SharedStateMachine.h"
+namespace NCL {
+	namespace CSC8599 {
+		class StateMachineParser
+		{
+		public:
+			StateMachine* parse(ltlf& formula, std::unordered_set<std::string>& sigmaAll);
+			StateMachine* parse2(ltlf& formula);
+			SharedStateMachine* parseTest(ltlf& formula);
+			static StateMachineParser* getInstance();
+		private:
+			static StateMachineParser* uniqueInstance;
+			StateMachineParser();
+			// Python wrapper, to be instantiated only once in the program! (it should be a singleton!)
+			FLLOAT callable; // python callable
+		};
+	}
+}
