@@ -115,4 +115,39 @@ private:
 
 std::ostream &operator<<(std::ostream &os, const ltlf &syntax);
 
+
+#include <functional>
+inline bool operator==(const ltlf& lhs, const ltlf& rhs) {
+    if (lhs.casusu != rhs.casusu) return false;
+    if (lhs.act != rhs.act) return false;
+    if (lhs.is_negated != rhs.is_negated) return false;
+    if (lhs.rewritten_act != rhs.rewritten_act) return false;
+    if (lhs.args.size() != rhs.args.size()) return false;
+    for (size_t i = 0; i < lhs.args.size(); ++i) {
+        if (!(lhs.args[i] == rhs.args[i])) return false;
+    }
+    return true;
+}
+namespace std {
+    template<>
+    struct hash<ltlf> {
+        std::size_t operator()(const ltlf& f) const noexcept {
+            std::size_t h = std::hash<int>()(static_cast<int>(f.casusu));
+            h ^= std::hash<std::string>()(f.act) + 0x9e3779b9 + (h << 6) + (h >> 2);
+
+            for (const auto& s : f.rewritten_act) {
+                h ^= std::hash<std::string>()(s) + 0x9e3779b9 + (h << 6) + (h >> 2);
+            }
+
+            for (const auto& sub : f.args) {
+                h ^= operator()(sub) + 0x9e3779b9 + (h << 6) + (h >> 2);
+            }
+
+            h ^= std::hash<bool>()(f.is_negated) + 0x9e3779b9 + (h << 6) + (h >> 2);
+
+            return h;
+        }
+    };
+}
+
 #endif //GRAPHS_LTLF_H

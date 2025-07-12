@@ -112,6 +112,8 @@ TutorialGame::~TutorialGame() {
 void TutorialGame::UpdateGame(float dt) {
 	game_state_machine->Update(dt);
 	if (test_obj) test_obj->Update(dt);
+	shared1->Update(dt);
+	shared2->Update(dt);
 
 	EventSystem::getInstance()->Update(dt);
 
@@ -186,6 +188,10 @@ void TutorialGame::UpdateKeys() {
 				<< (trans->enable ? "" : " - Disabled")
 				<< std::endl;
 		}
+
+
+		shared1->Print(0);
+		shared2->Print(0);
 	}
 
 	auto keyboard = Window::GetKeyboard();
@@ -653,45 +659,45 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 {
 	game_state_machine = new NCL::CSC8599::StateMachine("init",
 		new NCL::CSC8599::State([this](float dt)->void
-		{
-			MoveCameraToMenu();
-			std::vector<std::string> text;
-			text.emplace_back("Scenarios A and B");
-			text.emplace_back("Scenarios C");
-			text.emplace_back("Scenarios Test");
-
-			if (selected < 0)selected = 0;
-			if (selected >= text.size())selected = text.size() - 1;
-			if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::DOWN)) {
-				selected++;
-			}
-			if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::UP)) {
-				selected--;
-			}
-			if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::RETURN)) {
-				switch (selected)
-				{
-				case 0:
-					gameReset(0);
-					break;
-				case 1:
-					gameReset(1);
-					break;
-				case 2:
-					gameReset(2);
-					break;
-				default:
-					break;
-				}
-			}
-			for (int i = 0; i < text.size(); ++i)
 			{
-				if (i == selected)
-					renderer->DrawString(text[i], Vector2(45, 20 * (i + 1)), Vector4(1, 0, 1, 1));
-				else
-					renderer->DrawString(text[i], Vector2(45, 20 * (i + 1)));
-			}
-		}));
+				MoveCameraToMenu();
+				std::vector<std::string> text;
+				text.emplace_back("Scenarios A and B");
+				text.emplace_back("Scenarios C");
+				text.emplace_back("Scenarios Test");
+
+				if (selected < 0)selected = 0;
+				if (selected >= text.size())selected = text.size() - 1;
+				if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::DOWN)) {
+					selected++;
+				}
+				if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::UP)) {
+					selected--;
+				}
+				if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::RETURN)) {
+					switch (selected)
+					{
+					case 0:
+						gameReset(0);
+						break;
+					case 1:
+						gameReset(1);
+						break;
+					case 2:
+						gameReset(2);
+						break;
+					default:
+						break;
+					}
+				}
+				for (int i = 0; i < text.size(); ++i)
+				{
+					if (i == selected)
+						renderer->DrawString(text[i], Vector2(45, 20 * (i + 1)), Vector4(1, 0, 1, 1));
+					else
+						renderer->DrawString(text[i], Vector2(45, 20 * (i + 1)));
+				}
+			}));
 	game_state_machine->AddComponent("running", new NCL::CSC8599::State([this](float dt)->void
 		{
 			if (!inSelectionMode) {
@@ -731,12 +737,13 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 
 			world->UpdateWorld(dt);
 
-			if(useDebugSM)
+			if (useDebugSM)
 			{
 				Debug::Print("(F4)Debug state machine on", Vector2(5, 5));
-				if(debug_state_machine) debug_state_machine->Update(dt);
-				if(test_state_machine) test_state_machine->Update(dt);
-			}else
+				if (debug_state_machine) debug_state_machine->Update(dt);
+				if (test_state_machine) test_state_machine->Update(dt);
+			}
+			else
 			{
 				Debug::Print("(F4)Debug state machine off", Vector2(5, 5));
 			}
@@ -744,7 +751,7 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 
 	game_state_machine->AddComponent("end", new NCL::CSC8599::State([this](float dt)->void
 		{
-			if(win+lose==total)
+			if (win + lose == total)
 			{
 				renderer->DrawString("win:" + std::to_string(win), Vector2(45, 50));
 				renderer->DrawString("lose:" + std::to_string(lose), Vector2(45, 55));
@@ -758,7 +765,7 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 			{
 				EventSystem::getInstance()->PushEvent("GameReset", 0);
 			}
-			
+
 		}));
 
 	game_state_machine->AddTransition(new CSC8599::StateTransition(
@@ -782,7 +789,7 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 			return true;
 		},
 		"GameReset"
-			));
+	));
 
 	game_state_machine->AddTransition(new CSC8599::StateTransition(
 		game_state_machine->GetComponent("end"),
@@ -794,7 +801,7 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 			return true;
 		},
 		"GameInit"
-			));
+	));
 
 	game_state_machine->AddTransition(new CSC8599::StateTransition(
 		game_state_machine->GetComponent("running"),
@@ -813,10 +820,10 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 			}
 			else
 				return false;
-				
+
 		},
 		""
-			));
+	));
 
 	//debug_state_machine = new DebugStateMachine();
 
@@ -851,6 +858,8 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 	);
 	auto DebugT = StateMachineParser::getInstance()->parse2(formula);
 	test_state_machine->AddComponent("DebugT1", DebugT);
+	shared1 = StateMachineParser::getInstance()->parseTest(formula);
+	shared1->PushStatemachine(test_state_machine);
 
 	formula = ltlf::Box(ltlf::Implies(
 		ltlf::Act("test2"),
@@ -859,6 +868,8 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 	);
 	DebugT = StateMachineParser::getInstance()->parse2(formula);
 	test_state_machine->AddComponent("DebugT2", DebugT);
+	shared2 = StateMachineParser::getInstance()->parseTest(formula);
+	shared2->PushStatemachine(test_state_machine);
 }
 
 void NCL::CSC8503::TutorialGame::gameReset(int model)

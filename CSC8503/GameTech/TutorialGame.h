@@ -6,6 +6,7 @@
 #include "../../CSC8599Common/DebugStateMachine.h"
 #include "../../CSC8599Common/AdaptiveDebugSystem.h"
 #include "../../CSC8599Common/TestObj.h"
+#include "../../CSC8599Common/SharedStateMachine.h"
 
 namespace NCL
 {
@@ -139,6 +140,9 @@ namespace NCL {
 
 			void initEventHandler();
 
+
+			SharedStateMachine* shared1;
+			SharedStateMachine* shared2;
 		};
 	}
 }

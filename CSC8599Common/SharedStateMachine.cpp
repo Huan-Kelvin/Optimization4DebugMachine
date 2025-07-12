@@ -6,7 +6,7 @@
 using namespace NCL::CSC8599;
 
 void  SharedStateMachine::Update(float dt) {
-	for (auto& it : activeComponent)
+	for (auto& it : activeComponents)
 	{
 		if (it.second == nullptr)return;
 		it.second->Update(dt);
@@ -26,7 +26,28 @@ void  SharedStateMachine::Update(float dt) {
 }
 std::string SharedStateMachine::Print(int index)
 {
-	return "unfinished : std::string SharedStateMachine::Print(int index)";
+	for (auto& ac : activeComponents)
+	{
+		std::string active;
+		for (auto& it : ComponentContainer)
+		{
+			if (it.second == ac.second)
+			{
+				active = it.first;
+				break;
+			}
+		}
+		std::string buffer("[StateMachine]");
+		buffer += "<" + active + ">\n";
+		for (auto i : ComponentContainer)
+		{
+			for (int j = 0; j < index; ++j) {
+				buffer += "    ";
+			}
+			buffer += "(" + i.first + ")" + i.second->Print(index + 1);
+		}
+		return buffer;
+	}
 }
 
 void SharedStateMachine::AddTransition(StateTransition* t) {
@@ -42,7 +63,7 @@ void SharedStateMachine::GetActiveComponentArr(AbstractStateMachine* machine,std
 {
 	for (auto& it : ComponentContainer)
 	{
-		if (it.second == activeComponent[machine])
+		if (it.second == activeComponents[machine])
 		{
 			arr.emplace_back(it.first);
 		}

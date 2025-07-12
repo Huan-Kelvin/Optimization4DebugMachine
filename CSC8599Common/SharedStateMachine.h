@@ -13,6 +13,7 @@ namespace NCL {
 			SharedStateMachine(const std::string& name, AbstractComponent* defaultComponent, AbstractComponent* exp = nullptr)
 				:expComponent(exp) {
 				AddComponent(name, defaultComponent);
+				enterComponent = defaultComponent;
 			}
 			~SharedStateMachine() = default;
 			void Update(float dt) override;
@@ -22,7 +23,7 @@ namespace NCL {
 			void GetActiveComponentArr(AbstractStateMachine* machine, std::vector<std::string>& arr);
 			void SetActiveComponent(AbstractStateMachine* machine, AbstractComponent* active)
 			{
-				activeComponent[machine] = active;
+				activeComponents[machine] = active;
 			}
 			TransitionContainer get_all_transitions() const
 			{
@@ -31,7 +32,7 @@ namespace NCL {
 
 			ActiveMap& get_active_component()
 			{
-				return activeComponent;
+				return activeComponents;
 			}
 
 			AbstractComponent* get_exp_component() const
@@ -39,10 +40,20 @@ namespace NCL {
 				return expComponent;
 			}
 			std::pair<TransitionIterator, TransitionIterator> get_transitions(AbstractComponent* state);
+
+			void PushStatemachine(AbstractStateMachine* machine) {
+				activeComponents[machine] = enterComponent;
+			}
+			bool IsActive(AbstractStateMachine* machine) const {
+				return activeComponents.find(machine) != activeComponents.end();
+			}
+
 		protected:
-			ActiveMap  activeComponent;
+			ActiveMap  activeComponents;
 			AbstractComponent* expComponent;
 			TransitionContainer allTransitions;
+
+			AbstractComponent* enterComponent;
 		};
 	}
 }
