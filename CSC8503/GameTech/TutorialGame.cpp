@@ -112,12 +112,10 @@ TutorialGame::~TutorialGame() {
 void TutorialGame::UpdateGame(float dt) {
 	game_state_machine->Update(dt);
 
-	shared1->Update(dt);
-	shared2->Update(dt);
+	//shared1->Update(dt);
+	//shared2->Update(dt);
 
 	EventSystem::getInstance()->Update(dt);
-
-	AdaptiveDebugSystem::getInstance()->update(dt);
 
 	renderer->Update(dt);
 
@@ -514,9 +512,9 @@ void TutorialGame::InitGameExamples() {
 	test_obj = new TestObj("testObj");
 	auto envT = new Environment();
 	envT->first = "DebugT";
-	envT->second.emplace_back(test_obj->get_state_machine());
-	//envT->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(test_state_machine->GetComponent("DebugT1")));
-	//envT->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(test_state_machine->GetComponent("DebugT2")));
+	//envT->second.emplace_back(test_obj->get_state_machine());
+	envT->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(test_state_machine->GetComponent("DebugT1")));
+	envT->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(test_state_machine->GetComponent("DebugT2")));
 	AdaptiveDebugSystem::getInstance()->insert(envT);
 }
 
@@ -748,8 +746,6 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 				//Debug::DrawAxisLines(lockedObject->GetTransform().GetMatrix(), 2.0f);
 			}
 
-			world->UpdateWorld(dt);
-
 			if (useDebugSM)
 			{
 				Debug::Print("(F4)Debug state machine on", Vector2(5, 5));
@@ -760,6 +756,8 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 			{
 				Debug::Print("(F4)Debug state machine off", Vector2(5, 5));
 			}
+			AdaptiveDebugSystem::getInstance()->update(dt);
+			world->UpdateWorld(dt);
 		}));
 
 	game_state_machine->AddComponent("end", new NCL::CSC8599::State([this](float dt)->void
