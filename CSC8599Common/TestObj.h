@@ -9,7 +9,7 @@ namespace NCL {
 		{
 		public:
 			TestObj(string name = "");
-			void Update(float dt);
+			void update(float dt) override;
 
 			StateMachine* get_state_machine()const { return state_machine; }
 

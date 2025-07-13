@@ -15,7 +15,7 @@ TestObj::TestObj(string name) :GameObject(name) {
 	GameWorld::Get()->AddGameObject(this);
 }
 
-void TestObj::Update(float dt) {
+void TestObj::update(float dt) {
 	state_machine->Update(dt);
 }
 

@@ -111,7 +111,7 @@ TutorialGame::~TutorialGame() {
 
 void TutorialGame::UpdateGame(float dt) {
 	game_state_machine->Update(dt);
-	if (test_obj) test_obj->Update(dt);
+
 	shared1->Update(dt);
 	shared2->Update(dt);
 
