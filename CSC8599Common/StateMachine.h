@@ -36,10 +36,16 @@ namespace NCL {
 				return expComponent;
 			}
 			std::pair<TransitionIterator, TransitionIterator> get_transitions(AbstractComponent* state);
+
+			void BlockTransition() {
+				canTrans = false;
+			}
 		protected:
 			AbstractComponent* activeComponent;
 			AbstractComponent* expComponent;
 			TransitionContainer allTransitions;
+
+			bool canTrans = true;
 		};
 	}
 }

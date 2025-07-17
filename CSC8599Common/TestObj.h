@@ -17,6 +17,8 @@ namespace NCL {
 
 			float GetHealth() const { return health; }
 
+			void BlockTransition();
+
 		private:
 			StateMachine* state_machine = nullptr;
 			void init_state_machine();

@@ -116,3 +116,8 @@ void TestObj::ReturnToLastState() {
 		std::cout << "No last state to return to." << std::endl;
 	}
 }
+
+void TestObj::BlockTransition() {
+	std::cout << "BlockTransition" << std::endl;
+	state_machine->BlockTransition();
+}

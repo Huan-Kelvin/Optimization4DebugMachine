@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "AdaptiveDebugSystem.h"
+#include "TestObj.h"
+#include "../CSC8503/CSC8503Common/GameWorld.h"
 
 #include "State.h"
 #include "StateMachine.h"
@@ -18,6 +20,8 @@ bool cmp(const std::forward_list<Node> a, const std::forward_list<Node> b) {
 	return a.begin()->f < b.begin()->f;
 }
 
+using namespace NCL::CSC8599;
+
 NCL::CSC8599::AdaptiveDebugSystem::AdaptiveDebugSystem() = default;
 
 void AdaptiveDebugSystem::insert(Environment* env)
@@ -34,6 +38,10 @@ void NCL::CSC8599::AdaptiveDebugSystem::update(float dt)
 		const auto path = re_plan(i);
 		adjust(path,i);
 	}
+	//if (env->first == "DebugT") {
+	//	dynamic_cast<TestObj*>(GameWorld::Get()->find_game_object("testObj"))->BlockTransition();
+	//	return;
+	//}
 	EventSystem::getInstance()->PushEvent("fix_"+env->first,0);
 }
 

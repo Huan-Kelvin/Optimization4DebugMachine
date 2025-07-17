@@ -514,7 +514,7 @@ void TutorialGame::InitGameExamples() {
 	envT->first = "DebugT";
 	//envT->second.emplace_back(test_obj->get_state_machine());
 	envT->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(test_state_machine->GetComponent("DebugT1")));
-	envT->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(test_state_machine->GetComponent("DebugT2")));
+	//envT->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(test_state_machine->GetComponent("DebugT2")));
 	AdaptiveDebugSystem::getInstance()->insert(envT);
 }
 
@@ -862,25 +862,38 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 
 
 	test_state_machine = new DebugStateMachine();
-	auto formula = ltlf::Box(ltlf::Implies(
-		ltlf::Act("test1"),
-		ltlf::Next(ltlf::Act("test2"))
-	)
-	);
+	auto formula = ltlf::Act("");;
+	//formula =
+	//	ltlf::And(
+	//		ltlf::Box(ltlf::Implies(
+	//			ltlf::Act("test1"),
+	//			ltlf::Next(ltlf::Act("test2")))
+	//		),
+	//		ltlf::Box(ltlf::Implies(
+	//			ltlf::Act("test3"),
+	//			ltlf::Next(ltlf::And(ltlf::Act("test1"), ltlf::Act("test0"))))
+	//		));
+	formula =
+		ltlf::Box(ltlf::Implies(
+			ltlf::Act("test2"),
+			ltlf::Next(ltlf::Act("test1")))
+		);
+			
+		
 	auto DebugT = StateMachineParser::getInstance()->parse2(formula);
 	test_state_machine->AddComponent("DebugT1", DebugT);
-	shared1 = StateMachineParser::getInstance()->parseTest(formula);
-	shared1->AddStatemachine(test_state_machine);
+/*	shared1 = StateMachineParser::getInstance()->parseTest(formula);
+	shared1->AddStatemachine(test_state_machine)*/;
 
-	formula = ltlf::Box(ltlf::Implies(
-		ltlf::Act("test2"),
-		ltlf::Next(ltlf::Act("test1"))
-	)
-	);
+	formula =
+		ltlf::Box(ltlf::Implies(
+			ltlf::Act("test2"),
+			ltlf::Next(ltlf::Act("test1")))
+		);
 	DebugT = StateMachineParser::getInstance()->parse2(formula);
-	test_state_machine->AddComponent("DebugT2", DebugT);
-	shared2 = StateMachineParser::getInstance()->parseTest(formula);
-	shared2->AddStatemachine(test_state_machine);
+	//test_state_machine->AddComponent("DebugT2", DebugT);
+	//shared2 = StateMachineParser::getInstance()->parseTest(formula);
+	//shared2->AddStatemachine(test_state_machine);
 }
 
 void NCL::CSC8503::TutorialGame::gameReset(int model)

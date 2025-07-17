@@ -10,11 +10,15 @@ void  NCL::CSC8599::StateMachine::Update(float dt) {
 	for (auto& i = range.first; i != range.second; ++i)
 	{
 		if (!i->second->enable)continue;
-		if (i->second->CanTransition())
+		if (canTrans && i->second->CanTransition())
 		{
 			std::cout << "Transitioning from " << GetStateName(activeComponent) << " to " << GetStateName(i->second->GetDestinationState()) << std::endl;
 			activeComponent = i->second->GetDestinationState();
 		}
+	}
+	if (!canTrans) {
+		std::cout << "Transition blocked, waiting for next update." << std::endl;
+		canTrans = true;
 	}
 }
 std::string NCL::CSC8599::StateMachine::Print(int index)

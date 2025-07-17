@@ -169,6 +169,7 @@ std::string easy_prop_to_string(const easy_prop& prop) {
         return "";
     }
 }
+
 NCL::CSC8599::StateMachine* StateMachineParser::parse2(ltlf& formula)
 {
     std::stringstream s;
@@ -239,11 +240,11 @@ NCL::CSC8599::StateMachine* StateMachineParser::parse2(ltlf& formula)
             auto trans = new StateTransition(startNode->second, destNode->second,
                 [j]()->bool
                 {
-                    //std::cout << "Transitioning : " << j.first.toString(j.first) << std::endl;
+                    std::cout << "Transitioning (parse2 - run) : " << j.first.toString(j.first) << std::endl;
                     return true;
                 }, j.first);
 
-			//std::cout << "Transitioning : " << j.first.toString(j.first) << std::endl;
+			//std::cout << "Transitioning (parse2 - build) : " << j.first.toString(j.first) << std::endl;
 
             parsedEdges.emplace_back(trans);
             bool skip = false;
@@ -277,13 +278,14 @@ NCL::CSC8599::StateMachine* StateMachineParser::parse2(ltlf& formula)
 
     return state_machine;//state_machine;
 }
+
 SharedStateMachine* StateMachineParser::parseTest(ltlf& formula)
 {
-    if( ltlfStateMachines.find(formula) != ltlfStateMachines.end()) {
-		std::cout << "Found existing state machine for formula: " << formula << std::endl;
+    if (ltlfStateMachines.find(formula) != ltlfStateMachines.end()) {
+        std::cout << "Found existing state machine for formula: " << formula << std::endl;
         return ltlfStateMachines[formula];
-	}
-	std::cout << "Creating new state machine for formula: " << formula << std::endl;
+    }
+    std::cout << "Creating new state machine for formula: " << formula << std::endl;
 
     std::stringstream s;
     // Representing the formula as per online syntax 
@@ -357,7 +359,7 @@ SharedStateMachine* StateMachineParser::parseTest(ltlf& formula)
                     return true;
                 }, j.first);
 
-			//std::cout << "Transitioning : " << j.first.toString(j.first) << std::endl;
+            //std::cout << "Transitioning : " << j.first.toString(j.first) << std::endl;
 
             parsedEdges.emplace_back(trans);
             bool skip = false;
