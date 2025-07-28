@@ -19,6 +19,9 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="Extend">
+      <UniqueIdentifier>{c62141a5-075b-4997-b190-67c81aea3196}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -79,7 +82,13 @@
       <Filter>AI</Filter>
     </ClInclude>
     <ClInclude Include="TestObj.h">
-      <Filter>GameObject</Filter>
+      <Filter>Extend</Filter>
+    </ClInclude>
+    <ClInclude Include="SharedStateMachine.h">
+      <Filter>Extend</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeObject.h">
+      <Filter>Extend</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -138,7 +147,13 @@
       <Filter>AI</Filter>
     </ClCompile>
     <ClCompile Include="TestObj.cpp">
-      <Filter>GameObject</Filter>
+      <Filter>Extend</Filter>
+    </ClCompile>
+    <ClCompile Include="SharedStateMachine.cpp">
+      <Filter>Extend</Filter>
+    </ClCompile>
+    <ClCompile Include="TypeObject.cpp">
+      <Filter>Extend</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

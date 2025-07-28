@@ -1,38 +1,23 @@
 #pragma once
-#include "pch.h"
-#include "TestObj.h"
 #include "EventSystem.h"
-#include "../CSC8503/CSC8503Common/GameWorld.h"
+#include "TypeObject.h"
 #include "State.h"
 #include "StateTransition.h"
-#include "TypeObject.h"
+#include "TestObj.h"
+#include "../Common/Window.h"
 
 using namespace NCL;
-using namespace CSC8503;
-using namespace CSC8599;
+using namespace NCL::CSC8503;
+using namespace NCL::CSC8599;
 
-TestObj::TestObj(string name) :GameObject(name) {
-	init_state_machine();
-	GameWorld::Get()->AddGameObject(this);
-}
+SharedStateMachine* CharacterType::state_machine = nullptr;
+std::vector<TypeObject*> TypeObject::instances;
 
-void TestObj::update(float dt) {
-	if(state_machine) state_machine->Update(dt);
-
-	//if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::T))
-	//{
-	//	auto name = TestObjType::Instance().GetStateMachine()->GetCurStateName(this);
-	//	std::cout << "name : " << name << std::endl;
-	//}
-}
-
-void TestObj::init_state_machine()
+void TestObjType::InitStateMachine()
 {
-	TestObjType::Instance().GetStateMachine()->AddStatemachine(this);
-
-	return;
+	if (state_machine) return;
 	auto init = new State([this](float dt)->void
-		{			
+		{
 			//std::cout << "In state init" << std::endl;
 			//if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::P))
 			//{
@@ -65,7 +50,7 @@ void TestObj::init_state_machine()
 		{
 			//std::cout << "In state end" << std::endl;
 		});
-	state_machine = new StateMachine("init", init, end);
+	state_machine = new SharedStateMachine("init", init, end);
 	state_machine->AddComponent("stateA", stateA);
 	state_machine->AddComponent("stateB", stateB);
 	state_machine->AddComponent("stateC", stateC);
@@ -75,58 +60,42 @@ void TestObj::init_state_machine()
 	//	{
 	//		return true;
 	//	}, "test0"));
-	lastState = init;
 	t1 = new CSC8599::StateTransition(init, stateA, [this]()->bool
 		{
+			std::cout << "Transitioning from init to stateA" << std::endl;
 			return true;
 		}, "");
 	state_machine->AddTransition(t1);
 
 	state_machine->AddTransition(new CSC8599::StateTransition(stateA, stateB, [this, stateA]()->bool
 		{
-			lastState = stateA;
+			//lastState = stateA;
 			return true;
 		}, "test1"));
 	state_machine->AddTransition(new CSC8599::StateTransition(stateB, stateA, [this, stateB]()->bool
 		{
-			lastState = stateB;
+			//lastState = stateB;
 			return true;
 		}, "test2"));
 
 	state_machine->AddTransition(new CSC8599::StateTransition(stateB, stateC, [this, stateB]()->bool
 		{
-			lastState = stateB;
+			//lastState = stateB;
 			return true;
 		}, "test3"));
 	state_machine->AddTransition(new CSC8599::StateTransition(stateA, stateC, [this, stateA]()->bool
 		{
-			std::cout << "Check health of testObj : " 
-				<< dynamic_cast<CSC8599::TestObj*>(GameWorld::Get()->find_game_object("testObj"))->GetHealth() << std::endl;
-			lastState = stateA;
+			//std::cout << "Check health of testObj : "
+			//	<< dynamic_cast<CSC8599::TestObj*>(GameWorld::Get()->find_game_object("testObj"))->GetHealth() << std::endl;
+			//lastState = stateA;
 			return true;
 		}, "test3"));
 
 	t2 = new CSC8599::StateTransition(stateC, init, [this, init]()->bool
 		{
-			lastState = init;
+			//lastState = init;
 			return true;
 		}, "test0");
 
 	state_machine->AddTransition(t2);
-}
-
-void TestObj::ReturnToLastState() {
-	if (lastState) {
-		state_machine->SetActiveComponent(state_machine->GetComponent(state_machine->GetStateName(lastState)));
-		std::cout << "Return to state : " << state_machine->GetStateName(lastState)
-			<< "	# Can state C quit : " << (t2->enable ? "true" : "false") << std::endl << std::endl;
-	}
-	else {
-		std::cout << "No last state to return to." << std::endl;
-	}
-}
-
-void TestObj::BlockTransition() {
-	std::cout << "BlockTransition" << std::endl;
-	state_machine->BlockTransition();
 }

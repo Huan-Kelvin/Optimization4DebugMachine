@@ -1,13 +1,16 @@
 #pragma once
 #include "AbstractStateMachine.h"
 #include <unordered_map>
+#include "../CSC8503/CSC8503Common/GameObject.h"
 
+using namespace NCL::CSC8503;
 namespace NCL {
 	namespace CSC8599 {
 		class StateTransition;
 		using TransitionContainer = std::multimap<AbstractComponent*, StateTransition*>;
 		using TransitionIterator = TransitionContainer::iterator;
-		using ActiveMap = std::unordered_map<AbstractStateMachine*, AbstractComponent*>;
+		using ActiveMapSM = std::unordered_map<AbstractStateMachine*, AbstractComponent*>;
+		using ActiveMapObj = std::unordered_map<GameObject*, AbstractComponent*>;
 		class SharedStateMachine : public AbstractStateMachine {
 		public:
 			SharedStateMachine(const std::string& name, AbstractComponent* defaultComponent, AbstractComponent* exp = nullptr)
@@ -21,18 +24,39 @@ namespace NCL {
 			void AddTransition(StateTransition* t);
 			void GetActiveComponentArr(std::vector<std::string>& arr) override;
 			void GetActiveComponentArr(AbstractStateMachine* machine, std::vector<std::string>& arr);
+			void GetActiveComponentArr(GameObject* object, std::vector<std::string>& arr);
 			void SetActiveComponent(AbstractStateMachine* machine, AbstractComponent* active)
 			{
-				activeComponents[machine] = active;
+				activeComponentsSM[machine] = active;
+			}
+			void SetActiveComponent(GameObject* object, AbstractComponent* active)
+			{
+				activeComponentsObj[object] = active;
 			}
 			TransitionContainer get_all_transitions() const
 			{
 				return allTransitions;
 			}
 
-			ActiveMap& get_active_component()
+			ActiveMapSM& get_active_component_sm()
 			{
-				return activeComponents;
+				return activeComponentsSM;
+			}
+			ActiveMapObj& get_active_component_obj()
+			{
+				return activeComponentsObj;
+			}
+
+			string GetCurStateName(GameObject* obj)
+			{
+				for (const auto& t : activeComponentsObj)
+				{
+					if (t.first == obj)
+					{
+						return GetStateName(t.second);
+					}
+				}
+				return "";
 			}
 
 			AbstractComponent* get_exp_component() const
@@ -42,14 +66,22 @@ namespace NCL {
 			std::pair<TransitionIterator, TransitionIterator> get_transitions(AbstractComponent* state);
 
 			void AddStatemachine(AbstractStateMachine* machine) {
-				activeComponents[machine] = enterComponent;
+				activeComponentsSM[machine] = enterComponent;
+			}
+			void AddStatemachine(GameObject* object) {
+				activeComponentsObj[object] = enterComponent;
 			}
 			bool IsActive(AbstractStateMachine* machine) const {
-				return activeComponents.find(machine) != activeComponents.end();
+				return activeComponentsSM.find(machine) != activeComponentsSM.end();
+			}
+			bool IsActive(GameObject* object) const {
+				return activeComponentsObj.find(object) != activeComponentsObj.end();
 			}
 
 		protected:
-			ActiveMap  activeComponents;
+			ActiveMapSM  activeComponentsSM;
+			ActiveMapObj  activeComponentsObj;
+
 			AbstractComponent* expComponent;
 			TransitionContainer allTransitions;
 

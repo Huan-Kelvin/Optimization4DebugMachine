@@ -17,6 +17,8 @@
 #include "ltlf.h"
 #include "StateMachineParser.h"
 
+#include "../../CSC8599Common/TypeObject.h"
+
 using namespace NCL;
 using namespace CSC8503;
 using namespace CSC8599;
@@ -110,6 +112,7 @@ TutorialGame::~TutorialGame() {
 }
 
 void TutorialGame::UpdateGame(float dt) {
+	TypeObject::UpdateAll(dt);
 	game_state_machine->Update(dt);
 
 	//shared1->Update(dt);
@@ -942,7 +945,13 @@ void NCL::CSC8503::TutorialGame::initEventHandler()
 	EventSystem::getInstance()->RegisterEventHandler("fix_DebugT", [this](EVENT* p_event)->bool
 		{
 			std::cout << "fix_DebugT" << std::endl;
-			dynamic_cast<CSC8599::TestObj*>(world->find_game_object("testObj"))->ReturnToLastState();
+
+			auto obj = dynamic_cast<CSC8599::TestObj*>(world->find_game_object("testObj"));
+			//obj->ReturnToLastState();
+
+			auto state_machine = obj->get_state_machine();
+			state_machine->SetActiveComponent(state_machine->GetComponent("init"));
+
 			return true;
 		});
 }

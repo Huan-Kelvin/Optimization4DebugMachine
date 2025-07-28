@@ -355,11 +355,11 @@ SharedStateMachine* StateMachineParser::parseTest(ltlf& formula)
             auto trans = new StateTransition(startNode->second, destNode->second,
                 [j]()->bool
                 {
-                    //std::cout << "Transitioning : " << j.first.toString(j.first) << std::endl;
+                    std::cout << "Transitioning (parse2 - run) : " << j.first.toString(j.first) << std::endl;
                     return true;
                 }, j.first);
 
-            //std::cout << "Transitioning : " << j.first.toString(j.first) << std::endl;
+            //std::cout << "Transitioning (parse2 - build) : " << j.first.toString(j.first) << std::endl;
 
             parsedEdges.emplace_back(trans);
             bool skip = false;
