@@ -90,7 +90,7 @@ void TutorialGame::InitialiseAssets() {
 	MonsterTex = (OGLTexture*)TextureLoader::LoadAPITexture("AlbedoDog.png");
 	PlayerTex = (OGLTexture*)TextureLoader::LoadAPITexture("Robot_Color.png");
 	//InitCamera();
-	InitWorld();
+	//InitWorld();
 }
 
 TutorialGame::~TutorialGame() {
@@ -112,7 +112,6 @@ TutorialGame::~TutorialGame() {
 }
 
 void TutorialGame::UpdateGame(float dt) {
-	TypeObject::UpdateAll(dt);
 	game_state_machine->Update(dt);
 
 	//shared1->Update(dt);
@@ -191,10 +190,10 @@ void TutorialGame::UpdateKeys() {
 			}
 		}
 
-		std::cout << "Shared1:" << std::endl;
-		std::cout << shared1->Print(0) << std::endl;
-		std::cout << "Shared2:" << std::endl;
-		std::cout << shared2->Print(0) << std::endl;
+		//std::cout << "Shared1:" << std::endl;
+		//std::cout << shared1->Print(0) << std::endl;
+		//std::cout << "Shared2:" << std::endl;
+		//std::cout << shared2->Print(0) << std::endl;
 
 		if (shared2->IsActive(test_obj->get_state_machine())) {
 			std::cout << "test_obj is active!" << std::endl;
@@ -513,6 +512,8 @@ void TutorialGame::InitGameExamples() {
 	//AddBonusToWorld(Vector3(10, 5, 0));
 
 	test_obj = new TestObj("testObj");
+	EventSystem::getInstance()->PushEvent("test1", 0);
+
 	auto envT = new Environment();
 	envT->first = "DebugT";
 	//envT->second.emplace_back(test_obj->get_state_machine());
@@ -759,6 +760,7 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 			{
 				Debug::Print("(F4)Debug state machine off", Vector2(5, 5));
 			}
+			TypeObject::UpdateAll(dt);
 			AdaptiveDebugSystem::getInstance()->update(dt);
 			world->UpdateWorld(dt);
 		}));
@@ -949,8 +951,11 @@ void NCL::CSC8503::TutorialGame::initEventHandler()
 			auto obj = dynamic_cast<CSC8599::TestObj*>(world->find_game_object("testObj"));
 			//obj->ReturnToLastState();
 
-			auto state_machine = obj->get_state_machine();
-			state_machine->SetActiveComponent(state_machine->GetComponent("init"));
+			//auto state_machine = obj->get_state_machine();
+			//state_machine->SetActiveComponent(state_machine->GetComponent("init"));
+
+			auto state_machine = obj->get_shared_state_machine();
+			state_machine->SetActiveComponent(obj, state_machine->GetComponent("init"));
 
 			return true;
 		});

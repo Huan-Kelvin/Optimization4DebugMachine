@@ -62,9 +62,9 @@ void TestObjType::InitStateMachine()
 	//	}, "test0"));
 	t1 = new CSC8599::StateTransition(init, stateA, [this]()->bool
 		{
-			std::cout << "Transitioning from init to stateA" << std::endl;
+			//std::cout << "Transitioning from init to stateA" << std::endl;
 			return true;
-		}, "");
+		},"");
 	state_machine->AddTransition(t1);
 
 	state_machine->AddTransition(new CSC8599::StateTransition(stateA, stateB, [this, stateA]()->bool

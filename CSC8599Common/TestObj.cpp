@@ -19,11 +19,15 @@ TestObj::TestObj(string name) :GameObject(name) {
 void TestObj::update(float dt) {
 	if(state_machine) state_machine->Update(dt);
 
-	//if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::T))
-	//{
-	//	auto name = TestObjType::Instance().GetStateMachine()->GetCurStateName(this);
-	//	std::cout << "name : " << name << std::endl;
-	//}
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::M))
+	{
+		//new TestObj("testObj2");
+		auto name = TestObjType::Instance().GetStateMachine()->GetCurStateName(this);
+		std::cout << "name : " << name << std::endl;
+	}
+}
+SharedStateMachine* TestObj::get_shared_state_machine() const {
+	return TestObjType::Instance().GetStateMachine();
 }
 
 void TestObj::init_state_machine()

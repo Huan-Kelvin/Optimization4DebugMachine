@@ -1,6 +1,7 @@
 #pragma once
 #include "../CSC8503/CSC8503Common/GameObject.h"
 #include "StateMachine.h"
+#include "SharedStateMachine.h"
 #include "State.h"
 namespace NCL {
 	namespace CSC8599
@@ -12,6 +13,7 @@ namespace NCL {
 			void update(float dt) override;
 
 			StateMachine* get_state_machine()const { return state_machine; }
+			SharedStateMachine* get_shared_state_machine() const;
 
 			void ReturnToLastState();
 

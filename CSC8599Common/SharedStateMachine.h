@@ -69,6 +69,7 @@ namespace NCL {
 				activeComponentsSM[machine] = enterComponent;
 			}
 			void AddStatemachine(GameObject* object) {
+				//std::cout << "AddStatemachine called with object ptr: " << object << std::endl;
 				activeComponentsObj[object] = enterComponent;
 			}
 			bool IsActive(AbstractStateMachine* machine) const {

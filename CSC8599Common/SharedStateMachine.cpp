@@ -18,7 +18,7 @@ void  SharedStateMachine::Update(float dt) {
 			if (!i->second->enable)continue;
 			if (i->second->CanTransition())
 			{
-				std::cout << "Transitioning from " << GetStateName(it.second) << " to " << GetStateName(i->second->GetDestinationState()) << std::endl;
+				//std::cout << "Transitioning from " << GetStateName(it.second) << " to " << GetStateName(i->second->GetDestinationState()) << std::endl;
 				it.second = i->second->GetDestinationState();
 			}
 		}
@@ -35,7 +35,7 @@ void  SharedStateMachine::Update(float dt) {
 			if (!i->second->enable)continue;
 			if (i->second->CanTransition())
 			{
-				std::cout << "Transitioning from " << GetStateName(it.second) << " to " << GetStateName(i->second->GetDestinationState()) << std::endl;
+				std::cout << it.first->GetName() << " : Transitioning from " << GetStateName(it.second) << " to " << GetStateName(i->second->GetDestinationState()) << std::endl;
 				it.second = i->second->GetDestinationState();
 			}
 		}

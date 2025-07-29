@@ -141,10 +141,14 @@ bool NCL::CSC8599::EventSystem::HasHappened(const easy_prop& ep) {
 	for (auto event : eventQueue) {
 		nameSet.insert(event->pEventDef->name);
 	}
-	//std::cout << "Event Queue: ";
-	//for (const auto& name : nameSet) {
-	//	std::cout << name << " ";
+	//if (!nameSet.empty()) {
+	//	std::cout << "Event Queue: ";
+	//	for (const auto& name : nameSet) {
+	//		std::cout << name << " ";
+	//	}
+	//	std::cout << std::endl;
 	//}
+
 	if (nameSet.empty()) return false;
 	if (ep.evaluate(nameSet)) return true;
 
