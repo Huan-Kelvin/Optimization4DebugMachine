@@ -17,7 +17,10 @@ namespace NCL {
 
 			void ReturnToLastState();
 
+			void TakeDamage(float damage);
+
 			float GetHealth() const { return health; }
+			void HealthChange(float delta) { health += delta; }
 
 			void BlockTransition();
 

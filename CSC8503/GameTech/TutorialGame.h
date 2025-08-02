@@ -47,9 +47,9 @@ namespace NCL {
 
 			void UpdateKeys();
 
-			void InitWorld();
+			void InitWorld(int idx);
 
-			void InitGameExamples();
+			void InitGameExamples(int idx);
 
 			void InitSphereGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing, float radius);
 			void InitMixedGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing);
@@ -143,6 +143,8 @@ namespace NCL {
 
 			SharedStateMachine* shared1;
 			SharedStateMachine* shared2;
+
+			int curModel = -1;
 		};
 	}
 }

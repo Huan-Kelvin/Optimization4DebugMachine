@@ -82,7 +82,7 @@ void TutorialGame::InitialiseAssets() {
 	loadFunc("DogPBR.msh", &MonsterMesh);
 	loadFunc("TurtleShell.msh", &PetMesh);
 
-	basicTex = (OGLTexture*)TextureLoader::LoadAPITexture("nyan.png");
+	basicTex = (OGLTexture*)TextureLoader::LoadAPITexture("checkerboard.png");
 	basicShader = new OGLShader("GameTechVert.glsl", "GameTechFrag.glsl");
 
 	redDragonTex= (OGLTexture*)TextureLoader::LoadAPITexture("AlbedoDragon.png");
@@ -128,7 +128,7 @@ void TutorialGame::UpdateGame(float dt) {
 void TutorialGame::UpdateKeys() {
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F1)) {
 		EventSystem::getInstance()->Reset();
-		InitWorld(); //We can reset the simulation at any time with F1
+		InitWorld(curModel); //We can reset the simulation at any time with F1
 		selectionObject = nullptr;
 		lockedObject = nullptr;
 		initEventHandler();
@@ -138,10 +138,10 @@ void TutorialGame::UpdateKeys() {
 		InitCamera(); //F2 will reset the camera to a specific default place
 	}
 
-	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::G)) {
-		useGravity = !useGravity; //Toggle gravity!
-		physics->UseGravity(useGravity);
-	}
+	//if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::G)) {
+	//	useGravity = !useGravity; //Toggle gravity!
+	//	physics->UseGravity(useGravity);
+	//}
 	//Running certain physics updates in a consistent order might cause some
 	//bias in the calculations - the same objects might keep 'winning' the constraint
 	//allowing the other one to stretch too much etc. Shuffling the order so that it
@@ -325,12 +325,12 @@ void NCL::CSC8503::TutorialGame::MoveCameraToMenu()
 	lockedObject = nullptr;
 }
 
-void TutorialGame::InitWorld() {
+void TutorialGame::InitWorld(int idx) {
 	world->ClearAndErase();
 	physics->Clear();
 //	BridgeConstraintTest();
-	InitMixedGridWorld(5, 5, 3.5f, 3.5f);
-	InitGameExamples();
+	//InitMixedGridWorld(5, 5, 3.5f, 3.5f);
+	InitGameExamples(idx);
 	InitDefaultFloor();
 	//testStateObject = AddStateObjectToWorld(Vector3(10, 10, 5));
 
@@ -372,7 +372,7 @@ A single function to add a large immoveable cube to the bottom of our world
 GameObject* TutorialGame::AddFloorToWorld(const Vector3& position) {
 	GameObject* floor = new GameObject();
 
-	Vector3 floorSize = Vector3(100, 2, 100);
+	Vector3 floorSize = Vector3(200, 2, 200);
 	AABBVolume* volume = new AABBVolume(floorSize);
 	floor->SetBoundingVolume((CollisionVolume*)volume);
 	floor->GetTransform()
@@ -503,16 +503,38 @@ void TutorialGame::InitDefaultFloor() {
 	AddFloorToWorld(Vector3(0, -2, 0));
 }
 
-void TutorialGame::InitGameExamples() {
-	localPlayer = dynamic_cast<NCL::CSC8599::Player*>(AddPlayerToWorld(Vector3(-10, 5, 0)));
-	_monster = dynamic_cast<NCL::CSC8599::Monster*>(AddMonsterToWorld(Vector3(-50, 8, 50)));
+void TutorialGame::InitGameExamples(int idx) {
+	switch (idx)
+	{
+	case 0:
+		localPlayer = dynamic_cast<NCL::CSC8599::Player*>(AddPlayerToWorld(Vector3(-10, 18, 0)));
+		_monster = dynamic_cast<NCL::CSC8599::Monster*>(AddMonsterToWorld(Vector3(-50, 16, 50)));
+
+		AddCubeToWorld(Vector3(-30, 8, 25), Vector3(5, 5, 5), 0);
+		test_obj = new TestObj("testObj");
+		test_obj->GetTransform()
+			.SetPosition(Vector3(-30, 8, 25))
+			.SetScale(Vector3(5, 5, 5));
+
+		break;
+	case1:
+		break;
+	case 2:
+		break;
+	default:
+		break;
+	}
+
+
+
+	//localPlayer = dynamic_cast<NCL::CSC8599::Player*>(AddPlayerToWorld(Vector3(-10, 5, 0)));
+	//_monster = dynamic_cast<NCL::CSC8599::Monster*>(AddMonsterToWorld(Vector3(-50, 8, 50)));
 	//AddDragonToWorld(Vector3(-50, 10, 0));
-	_pet = dynamic_cast<NCL::CSC8599::Pet*>(AddPetToWorld(Vector3(-15, 5, 0), localPlayer));
-	localPlayer->set_pet(_pet);
+	//_pet = dynamic_cast<NCL::CSC8599::Pet*>(AddPetToWorld(Vector3(-15, 5, 0), localPlayer));
+	//localPlayer->set_pet(_pet);
 	//AddBonusToWorld(Vector3(10, 5, 0));
 
-	test_obj = new TestObj("testObj");
-	EventSystem::getInstance()->PushEvent("test1", 0);
+	//EventSystem::getInstance()->PushEvent("test1", 0);
 
 	auto envT = new Environment();
 	envT->first = "DebugT";
@@ -523,7 +545,7 @@ void TutorialGame::InitGameExamples() {
 }
 
 GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
-	float meshSize = 3.0f;
+	float meshSize = 3.0f * 4;
 	float inverseMass = 0.5f;
 	Vector3 offset = Vector3(-4.5 * meshSize, 1 * meshSize, -9.5 * meshSize);
 	//GameObject* character = new GameObject();
@@ -554,7 +576,7 @@ GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
 }
 
 GameObject* TutorialGame::AddMonsterToWorld(const Vector3& position) {
-	float meshSize =6.0f;
+	float meshSize = 6.0f * 2;
 	float inverseMass = 0.5f;
 	Vector3 offset = Vector3(4*meshSize, 2 * meshSize, -4.5 * meshSize);
 	auto* character = new Monster();
@@ -677,9 +699,9 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 			{
 				MoveCameraToMenu();
 				std::vector<std::string> text;
-				text.emplace_back("Scenarios A and B");
+				text.emplace_back("Scenarios A");
+				text.emplace_back("Scenarios B");
 				text.emplace_back("Scenarios C");
-				text.emplace_back("Scenarios Test");
 
 				if (selected < 0)selected = 0;
 				if (selected >= text.size())selected = text.size() - 1;
@@ -721,14 +743,14 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 
 			UpdateKeys();
 
-			if (useGravity) {
-				Debug::Print("(G)ravity on", Vector2(5, 95));
-			}
-			else {
-				Debug::Print("(G)ravity off", Vector2(5, 95));
-			}
+			//if (useGravity) {
+			//	Debug::Print("(G)ravity on", Vector2(5, 95));
+			//}
+			//else {
+			//	Debug::Print("(G)ravity off", Vector2(5, 95));
+			//}
 
-			SelectObject();
+			//SelectObject();
 			//MoveSelectedObject();
 			//physics->Update(dt);
 
@@ -801,7 +823,7 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 		[this]()->bool
 		{
 			gameReset(0);
-			localPlayer->set_user_controller(new PlayerAIController(localPlayer));
+			//localPlayer->set_user_controller(new PlayerAIController(localPlayer));
 			return true;
 		},
 		"GameReset"
@@ -840,6 +862,8 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 		},
 		""
 	));
+	
+	auto startTime = std::chrono::high_resolution_clock::now();
 
 	//debug_state_machine = new DebugStateMachine();
 
@@ -899,6 +923,12 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 	//test_state_machine->AddComponent("DebugT2", DebugT);
 	//shared2 = StateMachineParser::getInstance()->parseTest(formula);
 	//shared2->AddStatemachine(test_state_machine);
+	auto endTime = std::chrono::high_resolution_clock::now();
+	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
+	double milliseconds = duration.count() * 0.001;
+
+	std::cout << "\n[Test Output] debug_state_machine build up time (ms): \t" << milliseconds << "\n\n";
+
 }
 
 void NCL::CSC8503::TutorialGame::gameReset(int model)
@@ -907,23 +937,24 @@ void NCL::CSC8503::TutorialGame::gameReset(int model)
 	EventSystem::getInstance()->Reset();
 	AdaptiveDebugSystem::getInstance()->Clear();
 	initEventHandler();
-	InitWorld();
+	InitWorld(model);
 
-	if (model == 0)
-	{
-		localPlayer->set_user_controller(new PlayerAIController(localPlayer));
-		localPlayer->GetTransform().SetPosition(Vector3(-50, 8, 35));
-		_pet->GetTransform().SetPosition(Vector3(-50, 8, 70));
-		_monster->useStateMachine = false;
-	}
-	else if (model == 1)
-	{
-		localPlayer->set_user_controller(new PlayerController());
-	}
-	else if (model == 2)
-	{
+	//switch (model)
+	//{
+	//case 0:
+	//	localPlayer->set_user_controller(new PlayerAIController(localPlayer));
+	//	localPlayer->GetTransform().SetPosition(Vector3(-50, 8, 35));
+	//	_pet->GetTransform().SetPosition(Vector3(-50, 8, 70));
+	//	_monster->useStateMachine = false;
+	//	break;
+	//case 1:
+	//	localPlayer->set_user_controller(new PlayerController());
+	//	break;
+	//default:
+	//	break;
+	//}
 
-	}
+	curModel = model;
 	EventSystem::getInstance()->PushEvent("GameStart", 0);
 }
 

@@ -12,14 +12,14 @@
 NCL::CSC8599::Character::Character()
 	:state_machine_(nullptr),
 	target(nullptr),
-	user_controller_(new UserController()),
+	//user_controller_(new UserController()),
 	timer(new GameTimer)
 {
 	init_state_machine();
 }
 void NCL::CSC8599::Character::update(float dt)
 {
-	user_controller_->update(dt);
+	//user_controller_->update(dt);
 	state_machine_->Update(dt);
 }
 std::string NCL::CSC8599::Character::print()

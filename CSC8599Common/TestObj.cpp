@@ -18,6 +18,8 @@ TestObj::TestObj(string name) :GameObject(name) {
 
 void TestObj::update(float dt) {
 	if(state_machine) state_machine->Update(dt);
+	
+	TestObjType::Instance().showHUD(transform, std::to_string(static_cast<int>(health)));
 
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::M))
 	{
@@ -133,4 +135,9 @@ void TestObj::ReturnToLastState() {
 void TestObj::BlockTransition() {
 	std::cout << "BlockTransition" << std::endl;
 	state_machine->BlockTransition();
+}
+
+void TestObj::TakeDamage(float damage)
+{
+	TestObjType::Instance().takeDamage(*this, damage);
 }

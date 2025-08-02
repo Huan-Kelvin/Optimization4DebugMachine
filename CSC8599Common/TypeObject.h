@@ -1,5 +1,7 @@
 #pragma once
 #include "SharedStateMachine.h"
+#include "../CSC8503/CSC8503Common/GameWorld.h"
+#include "TestObj.h"
 
 namespace NCL {
     namespace CSC8599 {
@@ -50,6 +52,7 @@ namespace NCL {
                 delete state_machine;
                 state_machine = nullptr;
             }
+
         protected:
             CharacterType() = default;
             static SharedStateMachine* state_machine;
@@ -71,11 +74,30 @@ namespace NCL {
             void Update(float dt) override {
                 CharacterType::Update(dt);
             }
-
             void Reset() override {
                 CharacterType::Reset();
                 InitStateMachine();
             }
+
+            void showHUD(Transform trans, std::string text, const float height = 7, Vector4 color = Vector4(1, 1, 1, 1))
+            {
+				auto viewMatrix = GameWorld::Get()->GetMainCamera()->BuildViewMatrix();
+				auto projectMatrix = GameWorld::Get()->GetMainCamera()->BuildProjectionMatrix();
+
+                Matrix4 local = trans.GetMatrix();
+                local.SetPositionVector({ 0, 0, 0 });
+
+                Vector3 up = local * Vector4(0, 1, 0, 1.0f);
+                Vector3 left = local * Vector4(-1, 0, 0, 1.0f);
+                Vector3 worldPos = trans.GetPosition();
+                Vector3 clip = projectMatrix * viewMatrix * worldPos;
+                Vector2 canvas;
+                canvas.x = (clip.x + 2.0f) * 25.0f - 1.0f * text.size();
+                canvas.y = (1.0f - clip.y) * 50.0f - height;
+                Debug::Print(text, canvas, color);
+            }
+
+            void takeDamage(TestObj& obj, float amount) { obj.HealthChange(-amount); }
 
         private:
 			CSC8599::StateTransition* t1;
