@@ -281,11 +281,12 @@ NCL::CSC8599::StateMachine* StateMachineParser::parse2(ltlf& formula)
 
 SharedStateMachine* StateMachineParser::parseTest(ltlf& formula)
 {
+    std::cout << std::endl;
     if (ltlfStateMachines.find(formula) != ltlfStateMachines.end()) {
-        std::cout << "Found existing state machine for formula: " << formula << std::endl;
+        //std::cout << "Found existing state machine for formula: " << formula << std::endl;
         return ltlfStateMachines[formula];
     }
-    std::cout << "Creating new state machine for formula: " << formula << std::endl;
+    //std::cout << "Creating new state machine for formula: " << formula << std::endl;
 
     std::stringstream s;
     // Representing the formula as per online syntax 

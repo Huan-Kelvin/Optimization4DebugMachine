@@ -150,12 +150,12 @@ void DeviceType::InitStateMachine()
 		}, "test1"));
 	state_machine->AddTransition(new CSC8599::StateTransition(stateA, end, [this]()->bool
 		{
-			std::cout << "Device is destroyed!" << std::endl;
+			std::cout << "\n\tA device is being destroyed!" << std::endl;
 			return true;
 		}, "test3"));
 	state_machine->AddTransition(new CSC8599::StateTransition(stateB, end, [this]()->bool
 		{
-			std::cout << "Device is destroyed!" << std::endl;
+			std::cout << "\n\tA device is being destroyed!" << std::endl;
 			return true;
 		}, "test3"));
 	state_machine->AddTransition(new CSC8599::StateTransition(end, init, [this]()->bool

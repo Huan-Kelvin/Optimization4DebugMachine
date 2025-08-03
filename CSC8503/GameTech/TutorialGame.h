@@ -155,6 +155,7 @@ namespace NCL {
 
 			int curModel = -1;
 			void initDebugStateMachine();
+			void Clear();
 		};
 	}
 }

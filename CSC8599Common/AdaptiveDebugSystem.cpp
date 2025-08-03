@@ -61,6 +61,7 @@ void NCL::CSC8599::AdaptiveDebugSystem::update(float dt)
 void NCL::CSC8599::AdaptiveDebugSystem::Clear()
 {
 	env_container_.clear();
+	statemachines.clear();
 }
 
 void NCL::CSC8599::AdaptiveDebugSystem::adjust(Path path, StateMachine* state_machine)

@@ -13,6 +13,8 @@ namespace NCL {
 			StateMachine* parse2(ltlf& formula);
 			SharedStateMachine* parseTest(ltlf& formula);
 			static StateMachineParser* getInstance();
+
+			void Clear() { ltlfStateMachines.clear(); }
 		private:
 			static StateMachineParser* uniqueInstance;
 			StateMachineParser();

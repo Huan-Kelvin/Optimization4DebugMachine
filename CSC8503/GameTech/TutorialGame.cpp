@@ -111,6 +111,14 @@ TutorialGame::~TutorialGame() {
 	delete world;
 }
 
+void TutorialGame::Clear() {
+	AdaptiveDebugSystem::getInstance()->Clear();
+	StateMachineParser::getInstance()->Clear();
+	world->ClearAndErase();
+	delete shared1;
+	delete shared2;
+}
+
 void TutorialGame::UpdateGame(float dt) {
 	game_state_machine->Update(dt);
 
@@ -890,7 +898,7 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 		game_state_machine->GetComponent("end"),
 		[this]()->bool
 		{
-			world->ClearAndErase();
+			Clear();
 			return true;
 		}, "quit"
 	));
