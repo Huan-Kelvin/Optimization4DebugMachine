@@ -114,9 +114,6 @@ TutorialGame::~TutorialGame() {
 void TutorialGame::UpdateGame(float dt) {
 	game_state_machine->Update(dt);
 
-	//shared1->Update(dt);
-	//shared2->Update(dt);
-
 	EventSystem::getInstance()->Update(dt);
 
 	renderer->Update(dt);
@@ -522,9 +519,11 @@ void TutorialGame::InitGameExamples(int idx) {
 
 		//test_obj = dynamic_cast<NCL::CSC8599::TestObj*>(AddTestObjToWorld("testObj", Vector3(-30, 8, 25)));
 
-		player = new ExtendCharacter(&DeviceType::Instance(), "device");
+		device = new ExtendCharacter(&DeviceType::Instance(), "device");
 		AddCubeToWorld(Vector3(-30, 8, 25), Vector3(5, 5, 5), 0);
-		player->GetTransform().SetPosition(Vector3(-30, 8, 25));
+		device->GetTransform().SetPosition(Vector3(-30, 8, 25));
+		
+		initDebugStateMachine();
 
 		break;
 	case1:
@@ -546,12 +545,12 @@ void TutorialGame::InitGameExamples(int idx) {
 
 	//EventSystem::getInstance()->PushEvent("test1", 0);
 
-	auto envT = new Environment();
-	envT->first = "DebugT";
+	//auto envT = new Environment();
+	//envT->first = "DebugT";
 	//envT->second.emplace_back(test_obj->get_state_machine());
-	envT->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(test_state_machine->GetComponent("DebugT1")));
+	//envT->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(test_state_machine->GetComponent("DebugT1")));
 	//envT->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(test_state_machine->GetComponent("DebugT2")));
-	AdaptiveDebugSystem::getInstance()->insert(envT);
+	//AdaptiveDebugSystem::getInstance()->insert(envT);
 }
 
 GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
@@ -812,13 +811,16 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 				Debug::Print("(F4)Debug state machine on", Vector2(5, 5));
 				if (debug_state_machine) debug_state_machine->Update(dt);
 				if (test_state_machine) test_state_machine->Update(dt);
+
+				if (shared1) shared1->Update(dt);
+				//if (shared2) shared2->Update(dt);
 			}
 			else
 			{
 				Debug::Print("(F4)Debug state machine off", Vector2(5, 5));
 			}
-			TypeObject::UpdateAll(dt);
 			AdaptiveDebugSystem::getInstance()->update(dt);
+			TypeObject::UpdateAll(dt);
 			world->UpdateWorld(dt);
 		}));
 
@@ -923,9 +925,9 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 	//debug_state_machine->AddComponent("DebugA", DebugA);
 	//debug_state_machine->AddComponent("DebugB", DebugB);
 	//debug_state_machine->AddComponent("DebugC", DebugC);
-
-
-	test_state_machine = new DebugStateMachine();
+}
+void TutorialGame::initDebugStateMachine() {
+	auto startTime = std::chrono::high_resolution_clock::now();
 	auto formula = ltlf::Act("");;
 	//formula =
 	//	ltlf::And(
@@ -940,30 +942,26 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 	formula =
 		ltlf::Box(ltlf::Implies(
 			ltlf::Act("test2"),
-			ltlf::Next(ltlf::Act("test1")))
+			ltlf::Next(ltlf::Neg(ltlf::Act("test3"))))
 		);
-			
-		
-	auto DebugT = StateMachineParser::getInstance()->parse2(formula);
-	test_state_machine->AddComponent("DebugT1", DebugT);
-/*	shared1 = StateMachineParser::getInstance()->parseTest(formula);
-	shared1->AddStatemachine(test_state_machine);*/
+	shared1 = StateMachineParser::getInstance()->parseTest(formula);
+	shared1->AddStatemachine(device);
 
 	formula =
 		ltlf::Box(ltlf::Implies(
-			ltlf::Act("test2"),
-			ltlf::Next(ltlf::Act("test1")))
+			ltlf::Act("test1"),
+			ltlf::Next(ltlf::Neg(ltlf::Act("test3"))))
 		);
-	DebugT = StateMachineParser::getInstance()->parse2(formula);
-	//test_state_machine->AddComponent("DebugT2", DebugT);
 	//shared2 = StateMachineParser::getInstance()->parseTest(formula);
-	//shared2->AddStatemachine(test_state_machine);
+	//shared2->AddStatemachine(device);
+
+	AdaptiveDebugSystem::getInstance()->insert(shared1);
+	//AdaptiveDebugSystem::getInstance()->insert(shared2);
+
 	auto endTime = std::chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
 	double milliseconds = duration.count() * 0.001;
-
 	std::cout << "\n[Test Output] debug_state_machine build up time (ms): \t" << milliseconds << "\n\n";
-
 }
 
 void NCL::CSC8503::TutorialGame::gameReset(int model)

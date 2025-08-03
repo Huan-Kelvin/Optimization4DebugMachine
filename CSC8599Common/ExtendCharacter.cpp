@@ -31,3 +31,7 @@ void ExtendCharacter::update(float dt)
 SharedStateMachine* ExtendCharacter::GetStateMachine() const {
 	return typeObject->GetStateMachine();
 }
+
+void ExtendCharacter::BlockTrans() {
+	typeObject->BlockTrans(this);
+}

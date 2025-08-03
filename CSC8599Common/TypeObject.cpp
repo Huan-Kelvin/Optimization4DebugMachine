@@ -3,7 +3,6 @@
 #include "TypeObject.h"
 #include "State.h"
 #include "StateTransition.h"
-#include "TestObj.h"
 #include "../Common/Window.h"
 
 using namespace NCL;
@@ -133,28 +132,34 @@ void DeviceType::InitStateMachine()
 	state_machine->AddComponent("Hostile", stateB);
 	state_machine->AddComponent("Destroyed", end);
 
-	state_machine->AddTransition(new CSC8599::StateTransition(init, stateA, [this, stateA]()->bool
+	state_machine->AddTransition(new CSC8599::StateTransition(init, stateA, [this]()->bool
 		{
 			return true;
 		}, "test1"));
-	state_machine->AddTransition(new CSC8599::StateTransition(init, stateB, [this, stateB]()->bool
+	state_machine->AddTransition(new CSC8599::StateTransition(init, stateB, [this]()->bool
 		{
 			return true;
 		}, "test2"));
-	state_machine->AddTransition(new CSC8599::StateTransition(stateA, stateB, [this, stateA]()->bool
+	state_machine->AddTransition(new CSC8599::StateTransition(stateA, stateB, [this]()->bool
 		{
 			return true;
 		}, "test2"));
-	state_machine->AddTransition(new CSC8599::StateTransition(stateB, stateA, [this, stateB]()->bool
+	state_machine->AddTransition(new CSC8599::StateTransition(stateB, stateA, [this]()->bool
 		{
 			return true;
 		}, "test1"));
-	state_machine->AddTransition(new CSC8599::StateTransition(stateA, end, [this, stateB]()->bool
+	state_machine->AddTransition(new CSC8599::StateTransition(stateA, end, [this]()->bool
 		{
+			std::cout << "Device is destroyed!" << std::endl;
 			return true;
 		}, "test3"));
-	state_machine->AddTransition(new CSC8599::StateTransition(stateB, end, [this, stateB]()->bool
+	state_machine->AddTransition(new CSC8599::StateTransition(stateB, end, [this]()->bool
 		{
+			std::cout << "Device is destroyed!" << std::endl;
 			return true;
 		}, "test3"));
+	state_machine->AddTransition(new CSC8599::StateTransition(end, init, [this]()->bool
+		{
+			return true;
+		}, "test0"));
 }

@@ -2,6 +2,7 @@
 #include "AbstractStateMachine.h"
 #include <unordered_map>
 #include "../CSC8503/CSC8503Common/GameObject.h"
+#include <unordered_set>
 
 using namespace NCL::CSC8503;
 namespace NCL {
@@ -79,9 +80,10 @@ namespace NCL {
 				return activeComponentsObj.find(object) != activeComponentsObj.end();
 			}
 
-			GameObject* GetCurUpdateObject() const {
-				return updatingObject;
-			}
+			GameObject* GetCurUpdateObject() const { return updatingObject; }
+
+			void BlockObject(GameObject* obj) { blocks.insert(obj); }
+			void TempReset(GameObject* obj) { activeComponentsObj[obj] = enterComponent; }
 
 		protected:
 			ActiveMapSM  activeComponentsSM;
@@ -93,6 +95,8 @@ namespace NCL {
 			AbstractComponent* enterComponent;
 
 			GameObject* updatingObject = nullptr;
+
+			std::unordered_set<GameObject*> blocks;
 		};
 	}
 }

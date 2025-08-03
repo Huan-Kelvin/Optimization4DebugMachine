@@ -240,7 +240,7 @@ NCL::CSC8599::StateMachine* StateMachineParser::parse2(ltlf& formula)
             auto trans = new StateTransition(startNode->second, destNode->second,
                 [j]()->bool
                 {
-                    std::cout << "Transitioning (parse2 - run) : " << j.first.toString(j.first) << std::endl;
+                    //std::cout << "Transitioning (parse2 - run) : " << j.first.toString(j.first) << std::endl;
                     return true;
                 }, j.first);
 
@@ -355,11 +355,11 @@ SharedStateMachine* StateMachineParser::parseTest(ltlf& formula)
             auto trans = new StateTransition(startNode->second, destNode->second,
                 [j]()->bool
                 {
-                    std::cout << "Transitioning (parse2 - run) : " << j.first.toString(j.first) << std::endl;
+                    std::cout << "Transitioning (parseTest - run) : " << j.first.toString(j.first) << std::endl;
                     return true;
                 }, j.first);
 
-            //std::cout << "Transitioning (parse2 - build) : " << j.first.toString(j.first) << std::endl;
+            //std::cout << "Transitioning (parseTest - build) : " << j.first.toString(j.first) << std::endl;
 
             parsedEdges.emplace_back(trans);
             bool skip = false;

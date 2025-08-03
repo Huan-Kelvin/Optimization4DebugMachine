@@ -9,6 +9,7 @@
 namespace NCL {
 	namespace CSC8599
 	{
+		class TypeObject;
 		class ExtendCharacter :public CSC8503::GameObject
 		{
 		public:
@@ -18,6 +19,8 @@ namespace NCL {
 			SharedStateMachine* GetStateMachine() const;
 
 			void SetTag(string newTag) { tag = newTag; }
+
+			void BlockTrans();
 
 		private:
 			CharacterType* typeObject = nullptr;

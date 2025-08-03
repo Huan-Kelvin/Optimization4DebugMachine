@@ -152,6 +152,7 @@ namespace NCL {
 			SharedStateMachine* shared2;
 
 			int curModel = -1;
+			void initDebugStateMachine();
 		};
 	}
 }

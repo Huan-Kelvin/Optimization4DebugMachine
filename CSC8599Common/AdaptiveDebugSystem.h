@@ -4,6 +4,8 @@
 #include <vector>
 
 #include "StateMachine.h"
+#include "SharedStateMachine.h"
+
 /*
  * 自适应系统
  *
@@ -21,6 +23,9 @@ namespace NCL {
 		using Path = std::stack<State*>;
 		using Environment = std::pair<std::string,std::vector<StateMachine*>>;
 		using EnvContainer = std::vector<Environment*>;
+
+		using deadlockMap = std::map<SharedStateMachine*, GameObject*>;
+
 		class AdaptiveDebugSystem
 		{
 			friend std::ostream& operator<<(std::ostream& os, const AdaptiveDebugSystem& obj)
@@ -49,6 +54,7 @@ namespace NCL {
 			void insert(Environment* env);
 			void update(float dt);
 			void Clear();
+			void insert(SharedStateMachine* sm) { statemachines.emplace_back(sm); }
 		protected:
 			EnvContainer env_container_;
 		private:
@@ -57,6 +63,9 @@ namespace NCL {
 			void adjust(Path path, StateMachine* state_machine);
 			Environment* find_deadlock_env();
 			Path re_plan(StateMachine* state_machine);
+
+			bool find_deadlock_sm(std::vector<deadlockMap>& output);
+			std::vector<SharedStateMachine*> statemachines;
 		};
 	}
 }

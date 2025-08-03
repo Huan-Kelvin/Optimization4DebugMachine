@@ -7,6 +7,9 @@
 #include "StateMachine.h"
 #include "StateTransition.h"
 #include <iostream>
+#include "TypeObject.h"
+#include "ExtendCharacter.h"
+
 AdaptiveDebugSystem* AdaptiveDebugSystem::instance=nullptr;
 struct Node
 {
@@ -31,6 +34,20 @@ void AdaptiveDebugSystem::insert(Environment* env)
 
 void NCL::CSC8599::AdaptiveDebugSystem::update(float dt)
 {
+	std::vector<deadlockMap> result;
+	find_deadlock_sm(result);
+	for (auto& deadlock : result) {
+		for (auto& pair : deadlock) {
+			SharedStateMachine* ltlf = pair.first;
+			GameObject* obj = pair.second;
+			if (auto cha = dynamic_cast<ExtendCharacter*>(obj)) {
+				cha->BlockTrans();
+				ltlf->TempReset(obj);
+				std::cout << "Blocking transitions for object: " << obj->GetName() << std::endl;
+			}
+		}
+	}
+
 	const auto env = find_deadlock_env();
 	if (env == nullptr)return;
 	for(const auto i:env->second)
@@ -38,10 +55,6 @@ void NCL::CSC8599::AdaptiveDebugSystem::update(float dt)
 		const auto path = re_plan(i);
 		adjust(path,i);
 	}
-	//if (env->first == "DebugT") {
-	//	dynamic_cast<TestObj*>(GameWorld::Get()->find_game_object("testObj"))->BlockTransition();
-	//	return;
-	//}
 	EventSystem::getInstance()->PushEvent("fix_"+env->first,0);
 }
 
@@ -121,6 +134,47 @@ Environment* AdaptiveDebugSystem::find_deadlock_env()
 		}
 	}
 	return nullptr;
+}
+
+bool NCL::CSC8599::AdaptiveDebugSystem::find_deadlock_sm(std::vector<deadlockMap>& output)
+{
+	std::vector<deadlockMap> list;
+
+	for (auto sm : statemachines) {
+		const auto exp = sm->get_exp_component();
+		for (auto& objMap : sm->get_active_component_obj()) {
+			auto active = objMap.second;
+
+			if (exp == nullptr)
+				continue;
+			if (active == exp)
+				continue;
+			auto range = sm->get_transitions(active);
+			bool HasOutGoing = false;
+
+			if (active) {
+				for (auto& i = range.first; i != range.second; ++i)
+				{
+					if (i->second->enable && i->second->GetSourceState() != i->second->GetDestinationState())
+					{
+						HasOutGoing = true;
+
+						//break;
+					}
+					//std::cout << "HasOutGoing = "<< HasOutGoing <<" : "
+					//	<< i->second->GetTriggerEP().toString(i->second->GetTriggerEP()) << std::endl;
+				}
+				//std::cout << std::endl << std::endl;
+			}
+			if (!HasOutGoing)
+			{
+				std::cout << "Deadlock found in : " << objMap.first->GetName() << std::endl;
+				list.push_back({ {sm,objMap.first} });
+			}
+		}
+	}
+	output = list;
+	return list.size() != 0;
 }
 
 NCL::CSC8599::Path NCL::CSC8599::AdaptiveDebugSystem::re_plan(StateMachine* state_machine)

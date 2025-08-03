@@ -5,6 +5,7 @@
 
 namespace NCL {
     namespace CSC8599 {
+		class ExtendCharacter;
         class TypeObject {
         public:
             TypeObject() {
@@ -75,6 +76,10 @@ namespace NCL {
 
             float GetMaxHealth() const { return maxHealth; }
 
+            virtual void BlockTrans(ExtendCharacter* cha) { 
+                state_machine->BlockObject((GameObject*)cha); 
+            }
+
         protected:
             CharacterType() = default;
 
@@ -139,6 +144,7 @@ namespace NCL {
                 InitStateMachine();
             }
 			//void takeDamage(TestObj& obj, float amount, GameObject* source = nullptr) { obj.HealthChange(-amount); }
+
         protected:
             void InitStateMachine() override;
 

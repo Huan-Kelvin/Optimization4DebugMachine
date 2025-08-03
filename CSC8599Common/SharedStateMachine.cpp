@@ -25,6 +25,11 @@ void  SharedStateMachine::Update(float dt) {
 	}
 	for (auto& it : activeComponentsObj)
 	{
+		if (blocks.find(it.first) != blocks.end()) {
+			std::cout << "Blocking transitions for object: " << it.first->GetName() << std::endl;
+			continue;
+		}
+
 		if (it.second == nullptr)return;
 		it.second->Update(dt);
 		//getInstance the transition set starting from this state node;
@@ -42,7 +47,9 @@ void  SharedStateMachine::Update(float dt) {
 		}
 	}
 	updatingObject = nullptr;
+	blocks.clear();
 }
+
 std::string SharedStateMachine::Print(int index)
 {
 	std::string buffer("[SharedStateMachine]\n");
