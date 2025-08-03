@@ -213,7 +213,8 @@ void TutorialGame::UpdateKeys() {
 		{KeyboardKeys::NUM0, "test0"},
 		{KeyboardKeys::NUM1, "test1"},
 		{KeyboardKeys::NUM2, "test2"},
-		{KeyboardKeys::NUM3, "test3"}
+		{KeyboardKeys::NUM3, "test3"},
+		{KeyboardKeys::NUM4, "test4"}
 	};
 	std::function<bool(KeyboardKeys)> keyCheck;
 	if (ctrlHeld) {
@@ -224,6 +225,20 @@ void TutorialGame::UpdateKeys() {
 	}
 	for (const auto& [key, eventName] : keyEvents) {
 		if (keyCheck(key)) EventSystem::getInstance()->PushEvent(eventName, 0);
+	}
+
+	switch (curModel)
+	{
+	case 0:
+		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::Z)) {
+			test_obj->TakeDamage(10,"friendly");
+		}
+		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::M)) {
+			test_obj->TakeDamage(10,"hostile");
+		}
+		break;
+	default:
+		break;
 	}
 }
 
@@ -510,11 +525,7 @@ void TutorialGame::InitGameExamples(int idx) {
 		localPlayer = dynamic_cast<NCL::CSC8599::Player*>(AddPlayerToWorld(Vector3(-10, 18, 0)));
 		_monster = dynamic_cast<NCL::CSC8599::Monster*>(AddMonsterToWorld(Vector3(-50, 16, 50)));
 
-		AddCubeToWorld(Vector3(-30, 8, 25), Vector3(5, 5, 5), 0);
-		test_obj = new TestObj("testObj");
-		test_obj->GetTransform()
-			.SetPosition(Vector3(-30, 8, 25))
-			.SetScale(Vector3(5, 5, 5));
+		test_obj = dynamic_cast<NCL::CSC8599::TestObj*>(AddTestObjToWorld("testObj", Vector3(-30, 8, 25)));
 
 		break;
 	case1:
@@ -669,6 +680,31 @@ GameObject* TutorialGame::AddBonusToWorld(const Vector3& position) {
 	world->AddGameObject(apple);
 
 	return apple;
+}
+
+GameObject* NCL::CSC8503::TutorialGame::AddTestObjToWorld(string name, const Vector3& position)
+{
+	auto dimensions = Vector3(5, 5, 5);
+	AddCubeToWorld(Vector3(-30, 8, 25), Vector3(5, 5, 5), 0);
+	auto cube = new TestObj(name);
+
+	AABBVolume* volume = new AABBVolume(dimensions);
+
+	cube->SetBoundingVolume((CollisionVolume*)volume);
+
+	cube->GetTransform()
+		.SetPosition(Vector3(-30, 8, 25))
+		.SetScale(Vector3(5, 5, 5));
+
+	cube->SetRenderObject(new RenderObject(&cube->GetTransform(), cubeMesh, basicTex, basicShader));
+	cube->SetPhysicsObject(new PhysicsObject(&cube->GetTransform(), cube->GetBoundingVolume()));
+
+	cube->GetPhysicsObject()->SetInverseMass(0);
+	cube->GetPhysicsObject()->InitCubeInertia();
+
+	//world->AddGameObject(cube);
+
+	return cube;
 }
 
 StateGameObject* NCL::CSC8503::TutorialGame::AddStateObjectToWorld(const Vector3& position)

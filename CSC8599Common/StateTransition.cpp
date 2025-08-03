@@ -1,3 +1,4 @@
+#pragma once
 #include "pch.h"
 #include "StateTransition.h"
 bool NCL::CSC8599::StateTransition::CanTransition() const

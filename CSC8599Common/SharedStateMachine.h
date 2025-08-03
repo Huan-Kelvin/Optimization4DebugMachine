@@ -79,6 +79,10 @@ namespace NCL {
 				return activeComponentsObj.find(object) != activeComponentsObj.end();
 			}
 
+			GameObject* GetCurUpdateObject() const {
+				return updatingObject;
+			}
+
 		protected:
 			ActiveMapSM  activeComponentsSM;
 			ActiveMapObj  activeComponentsObj;
@@ -87,6 +91,8 @@ namespace NCL {
 			TransitionContainer allTransitions;
 
 			AbstractComponent* enterComponent;
+
+			GameObject* updatingObject = nullptr;
 		};
 	}
 }

@@ -14,19 +14,23 @@ using namespace CSC8599;
 TestObj::TestObj(string name) :GameObject(name) {
 	init_state_machine();
 	GameWorld::Get()->AddGameObject(this);
+	health = TestObjType::Instance().maxHealth;
 }
 
 void TestObj::update(float dt) {
 	if(state_machine) state_machine->Update(dt);
 	
+	TestObjType::Instance().showHUD(transform, tag, 10);
 	TestObjType::Instance().showHUD(transform, std::to_string(static_cast<int>(health)));
 
+	/*
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::M))
 	{
 		//new TestObj("testObj2");
 		auto name = TestObjType::Instance().GetStateMachine()->GetCurStateName(this);
 		std::cout << "name : " << name << std::endl;
 	}
+	*/
 }
 SharedStateMachine* TestObj::get_shared_state_machine() const {
 	return TestObjType::Instance().GetStateMachine();
@@ -137,7 +141,13 @@ void TestObj::BlockTransition() {
 	state_machine->BlockTransition();
 }
 
-void TestObj::TakeDamage(float damage)
+void TestObj::TakeDamage(float damage, string source)
 {
-	TestObjType::Instance().takeDamage(*this, damage);
+	if (source == tag) return;
+	TestObjType::Instance().takeDamage(*this, damage/*, source*/);
+	if (health <= 0)
+	{
+		health = TestObjType::Instance().maxHealth;
+		tag = source;
+	}
 }

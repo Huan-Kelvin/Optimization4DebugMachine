@@ -88,6 +88,17 @@ void TestObjType::InitStateMachine()
 			//std::cout << "Check health of testObj : "
 			//	<< dynamic_cast<CSC8599::TestObj*>(GameWorld::Get()->find_game_object("testObj"))->GetHealth() << std::endl;
 			//lastState = stateA;
+
+			//auto event = EventSystem::getInstance()->HasHappened("test3");
+			//for (auto& it : event->vArg)
+			//{
+			//	std::cout << "Check name "<< it << std::endl;
+			//	if (it == state_machine->GetCurUpdateObject()->GetName()) {
+			//		return true;
+			//	}
+			//}
+			//return false;
+
 			return true;
 		}, "test3"));
 

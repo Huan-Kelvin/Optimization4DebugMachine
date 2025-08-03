@@ -33,6 +33,7 @@ void  SharedStateMachine::Update(float dt) {
 		for (auto& i = range.first; i != range.second; ++i)
 		{
 			if (!i->second->enable)continue;
+			updatingObject = it.first;
 			if (i->second->CanTransition())
 			{
 				std::cout << it.first->GetName() << " : Transitioning from " << GetStateName(it.second) << " to " << GetStateName(i->second->GetDestinationState()) << std::endl;
@@ -40,6 +41,7 @@ void  SharedStateMachine::Update(float dt) {
 			}
 		}
 	}
+	updatingObject = nullptr;
 }
 std::string SharedStateMachine::Print(int index)
 {

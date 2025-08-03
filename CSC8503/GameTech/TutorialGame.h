@@ -74,6 +74,8 @@ namespace NCL {
 			GameObject* AddPetToWorld(const Vector3& position,Character* owner);
 			GameObject* AddBonusToWorld(const Vector3& position);
 
+			GameObject* AddTestObjToWorld(string name, const Vector3& position);
+
 			StateGameObject* AddStateObjectToWorld(const Vector3& position);
 			StateGameObject* testStateObject;
 

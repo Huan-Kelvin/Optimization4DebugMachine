@@ -1,8 +1,10 @@
 #pragma once
 #include "../CSC8503/CSC8503Common/GameObject.h"
+#include "../CSC8503/CSC8503Common/Debug.h"
 #include "StateMachine.h"
 #include "SharedStateMachine.h"
 #include "State.h"
+
 namespace NCL {
 	namespace CSC8599
 	{
@@ -17,7 +19,7 @@ namespace NCL {
 
 			void ReturnToLastState();
 
-			void TakeDamage(float damage);
+			void TakeDamage(float damage, string source = "");
 
 			float GetHealth() const { return health; }
 			void HealthChange(float delta) { health += delta; }
@@ -28,7 +30,8 @@ namespace NCL {
 			StateMachine* state_machine = nullptr;
 			void init_state_machine();
 
-			float health = 100.0f;
+			float health;
+			string tag = "Neutral";
 
 			CSC8599::StateTransition* t1;
 			CSC8599::StateTransition* t2;
