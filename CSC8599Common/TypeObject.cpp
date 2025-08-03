@@ -110,3 +110,51 @@ void TestObjType::InitStateMachine()
 
 	state_machine->AddTransition(t2);
 }
+
+void DeviceType::InitStateMachine()
+{
+	auto init = new State([this](float dt)->void
+		{
+
+		});
+	auto stateA = new State([this](float dt)->void
+		{
+
+		});
+	auto stateB = new State([this](float dt)->void
+		{
+
+		});
+	auto end = new State([this](float dt)->void
+		{
+		});
+	state_machine = new SharedStateMachine("Neutral", init, end);
+	state_machine->AddComponent("Friendly", stateA);
+	state_machine->AddComponent("Hostile", stateB);
+	state_machine->AddComponent("Destroyed", end);
+
+	state_machine->AddTransition(new CSC8599::StateTransition(init, stateA, [this, stateA]()->bool
+		{
+			return true;
+		}, "test1"));
+	state_machine->AddTransition(new CSC8599::StateTransition(init, stateB, [this, stateB]()->bool
+		{
+			return true;
+		}, "test2"));
+	state_machine->AddTransition(new CSC8599::StateTransition(stateA, stateB, [this, stateA]()->bool
+		{
+			return true;
+		}, "test2"));
+	state_machine->AddTransition(new CSC8599::StateTransition(stateB, stateA, [this, stateB]()->bool
+		{
+			return true;
+		}, "test1"));
+	state_machine->AddTransition(new CSC8599::StateTransition(stateA, end, [this, stateB]()->bool
+		{
+			return true;
+		}, "test3"));
+	state_machine->AddTransition(new CSC8599::StateTransition(stateB, end, [this, stateB]()->bool
+		{
+			return true;
+		}, "test3"));
+}

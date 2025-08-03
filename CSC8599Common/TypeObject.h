@@ -49,8 +49,10 @@ namespace NCL {
             }
 
             virtual void Reset() override {
-                delete state_machine;
-                state_machine = nullptr;
+                if (state_machine) {
+                    delete state_machine;
+                    state_machine = nullptr;
+                }
             }
 
             void showHUD(Transform trans, std::string text, const float height = 7, Vector4 color = Vector4(1, 1, 1, 1))
@@ -71,15 +73,22 @@ namespace NCL {
                 Debug::Print(text, canvas, color);
             }
 
+            float GetMaxHealth() const { return maxHealth; }
+
         protected:
             CharacterType() = default;
+
+            virtual void InitStateMachine() = 0;
+
             static SharedStateMachine* state_machine;
+            float maxHealth = 10;
         };
 
         class TestObjType : public CharacterType {
         public:
             TestObjType() {
-                InitStateMachine();
+                maxHealth = 100;
+                Reset();
             }
             TestObjType(const TestObjType&) = delete;
             TestObjType& operator=(const TestObjType&) = delete;
@@ -99,15 +108,43 @@ namespace NCL {
 
             void takeDamage(TestObj& obj, float amount, GameObject* source = nullptr) { obj.HealthChange(-amount); }
 
+        protected:
+            void InitStateMachine() override;
 
-            const float maxHealth = 100;
         private:
-			CSC8599::StateTransition* t1;
-			CSC8599::StateTransition* t2;
-			CSC8599::StateTransition* t3;
-
-            void InitStateMachine();
+            CSC8599::StateTransition* t1;
+            CSC8599::StateTransition* t2;
+            CSC8599::StateTransition* t3;
         };
-	}
+
+        class DeviceType : public CharacterType
+        {
+        public:
+            DeviceType() {
+                maxHealth = 100;
+                Reset();
+            }
+            DeviceType(const DeviceType&) = delete;
+            DeviceType& operator=(const DeviceType&) = delete;
+
+            static DeviceType& Instance() {
+                static DeviceType instance;
+                return instance;
+			}
+            void Update(float dt) override {
+                CharacterType::Update(dt);
+            }
+            void Reset() override {
+                CharacterType::Reset();
+                InitStateMachine();
+            }
+			//void takeDamage(TestObj& obj, float amount, GameObject* source = nullptr) { obj.HealthChange(-amount); }
+        protected:
+            void InitStateMachine() override;
+
+        private:
+
+        };
+    }
 }
 

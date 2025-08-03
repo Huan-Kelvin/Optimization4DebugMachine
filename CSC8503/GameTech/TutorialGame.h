@@ -5,8 +5,10 @@
 #include "../../CSC8599Common/EventSystem.h"
 #include "../../CSC8599Common/DebugStateMachine.h"
 #include "../../CSC8599Common/AdaptiveDebugSystem.h"
+
 #include "../../CSC8599Common/TestObj.h"
 #include "../../CSC8599Common/SharedStateMachine.h"
+#include "../../CSC8599Common/ExtendCharacter.h"
 
 namespace NCL
 {
@@ -124,6 +126,9 @@ namespace NCL {
 
 			DebugStateMachine* test_state_machine = nullptr;
 			TestObj* test_obj = nullptr;
+			ExtendCharacter* device = nullptr;
+			ExtendCharacter* player = nullptr;
+			ExtendCharacter* enemy = nullptr;
 
 			//Game State Machine
 			NCL::CSC8599::StateMachine* game_state_machine = nullptr;

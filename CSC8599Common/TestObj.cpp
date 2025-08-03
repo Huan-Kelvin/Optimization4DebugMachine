@@ -14,7 +14,7 @@ using namespace CSC8599;
 TestObj::TestObj(string name) :GameObject(name) {
 	init_state_machine();
 	GameWorld::Get()->AddGameObject(this);
-	health = TestObjType::Instance().maxHealth;
+	health = TestObjType::Instance().GetMaxHealth();
 }
 
 void TestObj::update(float dt) {
@@ -137,7 +137,7 @@ void TestObj::ReturnToLastState() {
 }
 
 void TestObj::BlockTransition() {
-	std::cout << "BlockTransition" << std::endl;
+	//std::cout << "BlockTransition" << std::endl;
 	state_machine->BlockTransition();
 }
 
@@ -147,7 +147,7 @@ void TestObj::TakeDamage(float damage, string source)
 	TestObjType::Instance().takeDamage(*this, damage/*, source*/);
 	if (health <= 0)
 	{
-		health = TestObjType::Instance().maxHealth;
+		health = TestObjType::Instance().GetMaxHealth();
 		tag = source;
 	}
 }

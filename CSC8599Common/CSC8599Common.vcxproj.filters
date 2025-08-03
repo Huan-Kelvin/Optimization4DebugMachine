@@ -90,6 +90,9 @@
     <ClInclude Include="TypeObject.h">
       <Filter>Extend</Filter>
     </ClInclude>
+    <ClInclude Include="ExtendCharacter.h">
+      <Filter>Extend</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Character.cpp">
@@ -153,6 +156,9 @@
       <Filter>Extend</Filter>
     </ClCompile>
     <ClCompile Include="TypeObject.cpp">
+      <Filter>Extend</Filter>
+    </ClCompile>
+    <ClCompile Include="ExtendCharacter.cpp">
       <Filter>Extend</Filter>
     </ClCompile>
   </ItemGroup>

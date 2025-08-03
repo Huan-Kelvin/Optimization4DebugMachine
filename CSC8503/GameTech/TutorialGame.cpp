@@ -230,12 +230,7 @@ void TutorialGame::UpdateKeys() {
 	switch (curModel)
 	{
 	case 0:
-		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::Z)) {
-			test_obj->TakeDamage(10,"friendly");
-		}
-		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::M)) {
-			test_obj->TakeDamage(10,"hostile");
-		}
+
 		break;
 	default:
 		break;
@@ -525,7 +520,11 @@ void TutorialGame::InitGameExamples(int idx) {
 		localPlayer = dynamic_cast<NCL::CSC8599::Player*>(AddPlayerToWorld(Vector3(-10, 18, 0)));
 		_monster = dynamic_cast<NCL::CSC8599::Monster*>(AddMonsterToWorld(Vector3(-50, 16, 50)));
 
-		test_obj = dynamic_cast<NCL::CSC8599::TestObj*>(AddTestObjToWorld("testObj", Vector3(-30, 8, 25)));
+		//test_obj = dynamic_cast<NCL::CSC8599::TestObj*>(AddTestObjToWorld("testObj", Vector3(-30, 8, 25)));
+
+		player = new ExtendCharacter(&DeviceType::Instance(), "device");
+		AddCubeToWorld(Vector3(-30, 8, 25), Vector3(5, 5, 5), 0);
+		player->GetTransform().SetPosition(Vector3(-30, 8, 25));
 
 		break;
 	case1:
@@ -685,7 +684,7 @@ GameObject* TutorialGame::AddBonusToWorld(const Vector3& position) {
 GameObject* NCL::CSC8503::TutorialGame::AddTestObjToWorld(string name, const Vector3& position)
 {
 	auto dimensions = Vector3(5, 5, 5);
-	AddCubeToWorld(Vector3(-30, 8, 25), Vector3(5, 5, 5), 0);
+	AddCubeToWorld(position, Vector3(5, 5, 5), 0);
 	auto cube = new TestObj(name);
 
 	AABBVolume* volume = new AABBVolume(dimensions);
@@ -693,7 +692,7 @@ GameObject* NCL::CSC8503::TutorialGame::AddTestObjToWorld(string name, const Vec
 	cube->SetBoundingVolume((CollisionVolume*)volume);
 
 	cube->GetTransform()
-		.SetPosition(Vector3(-30, 8, 25))
+		.SetPosition(position)
 		.SetScale(Vector3(5, 5, 5));
 
 	cube->SetRenderObject(new RenderObject(&cube->GetTransform(), cubeMesh, basicTex, basicShader));
@@ -948,7 +947,7 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 	auto DebugT = StateMachineParser::getInstance()->parse2(formula);
 	test_state_machine->AddComponent("DebugT1", DebugT);
 /*	shared1 = StateMachineParser::getInstance()->parseTest(formula);
-	shared1->AddStatemachine(test_state_machine)*/;
+	shared1->AddStatemachine(test_state_machine);*/
 
 	formula =
 		ltlf::Box(ltlf::Implies(
@@ -1015,14 +1014,14 @@ void NCL::CSC8503::TutorialGame::initEventHandler()
 		{
 			std::cout << "fix_DebugT" << std::endl;
 
-			auto obj = dynamic_cast<CSC8599::TestObj*>(world->find_game_object("testObj"));
+			auto obj = dynamic_cast<CSC8599::ExtendCharacter*>(world->find_game_object("device"));
 			//obj->ReturnToLastState();
 
 			//auto state_machine = obj->get_state_machine();
 			//state_machine->SetActiveComponent(state_machine->GetComponent("init"));
 
-			auto state_machine = obj->get_shared_state_machine();
-			state_machine->SetActiveComponent(obj, state_machine->GetComponent("init"));
+			auto state_machine = obj->GetStateMachine();
+			state_machine->SetActiveComponent(obj, state_machine->GetComponent("Neutral"));
 
 			return true;
 		});
