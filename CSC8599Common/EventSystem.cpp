@@ -22,6 +22,7 @@ extern EVENT_DEFINE g_Events[] =
 	{"arrival",true},
 	{"dragon_die",true},
 
+	{"quit"},
 	{"test0"},
 	{"test1"},
 	{"test2"},

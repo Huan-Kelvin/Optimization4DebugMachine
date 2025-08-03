@@ -41,6 +41,8 @@ namespace NCL {
 			/// <param name="dt">时间步数</param>
 			virtual void UpdateGame(float dt);
 
+			bool running = true;
+
 		protected:
 			void InitialiseAssets();
 

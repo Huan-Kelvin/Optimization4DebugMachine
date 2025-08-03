@@ -230,11 +230,11 @@ void LockMouseToWindow(Window* w) {
 }
 
 int main() {
-	Window*w = Window::CreateGameWindow("CSC8503 Game technology!", 1280, 720);
+	Window* w = Window::CreateGameWindow("CSC8503 Game technology!", 1280, 720);
 
 	if (!w->HasInitialised()) {
 		return -1;
-	}	
+	}
 	srand(time(0));
 	LockMouseToWindow(w);
 
@@ -245,7 +245,7 @@ int main() {
 	//TestBehaviourTree();
 	//TestPushdownAutomata(w);
 
-	while (w->UpdateWindow() && !Window::GetKeyboard()->KeyDown(KeyboardKeys::ESCAPE)) {
+	while (w->UpdateWindow() && g->running) {
 		float dt = w->GetTimer()->GetTimeDeltaSeconds();
 		if (dt > 0.1f) {
 			std::cout << "Skipping large time delta" << std::endl;
@@ -269,7 +269,7 @@ int main() {
 		w->SetTitle("Gametech frame time:" + std::to_string(1000.0f * dt));
 
 		g->UpdateGame(dt);
-		
+
 		//DisplayPathfinding();
 	}
 	Window::DestroyGameWindow();

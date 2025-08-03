@@ -123,6 +123,10 @@ void TutorialGame::UpdateGame(float dt) {
 }
 
 void TutorialGame::UpdateKeys() {
+	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::ESCAPE)) {
+		EventSystem::getInstance()->PushEvent("quit", 0);
+	}
+
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F1)) {
 		EventSystem::getInstance()->Reset();
 		InitWorld(curModel); //We can reset the simulation at any time with F1
@@ -739,6 +743,7 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 
 				if (selected < 0)selected = 0;
 				if (selected >= text.size())selected = text.size() - 1;
+				if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::ESCAPE)) { running = false; }
 				if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::DOWN)) {
 					selected++;
 				}
@@ -826,6 +831,7 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 
 	game_state_machine->AddComponent("end", new NCL::CSC8599::State([this](float dt)->void
 		{
+			/*
 			if (win + lose == total)
 			{
 				renderer->DrawString("win:" + std::to_string(win), Vector2(45, 50));
@@ -840,7 +846,8 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 			{
 				EventSystem::getInstance()->PushEvent("GameReset", 0);
 			}
-
+			*/
+			EventSystem::getInstance()->PushEvent("GameInit", 0);
 		}));
 
 	game_state_machine->AddTransition(new CSC8599::StateTransition(
@@ -883,21 +890,9 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 		game_state_machine->GetComponent("end"),
 		[this]()->bool
 		{
-			if (EventSystem::getInstance()->HasHappened("player_die"))
-			{
-				lose++;
-				return true;
-			}
-			else if (EventSystem::getInstance()->HasHappened("MonsterDie"))
-			{
-				win++;
-				return true;
-			}
-			else
-				return false;
-
-		},
-		""
+			world->ClearAndErase();
+			return true;
+		}, "quit"
 	));
 	
 	auto startTime = std::chrono::high_resolution_clock::now();
