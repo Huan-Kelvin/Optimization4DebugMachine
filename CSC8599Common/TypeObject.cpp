@@ -196,21 +196,25 @@ void DeviceType::InitStateMachine()
 		}, "test1"));
 	state_machine->AddTransition(new CSC8599::StateTransition(stateA, end, [this]()->bool
 		{
+			auto& name = state_machine->GetCurUpdateObject()->GetName();
 			auto event = EventSystem::getInstance()->HasHappened("test3");
-			if (event && event->vArg.size() == 1
-				&& event->vArg[0] != state_machine->GetCurUpdateObject()->GetName()) return false;
-
-			std::cout << "\n\tA device is being destroyed!" << std::endl;
-			return true;
+			if (event && event->vArg.size() == 1 && event->vArg[0] == name)
+			{
+				std::cout << "\n\t" << name << " is being destroyed!" << std::endl;
+				return true;
+			}
+			return false;
 		}, "test3"));
 	state_machine->AddTransition(new CSC8599::StateTransition(stateB, end, [this]()->bool
 		{
+			auto& name = state_machine->GetCurUpdateObject()->GetName();
 			auto event = EventSystem::getInstance()->HasHappened("test3");
-			if (event && event->vArg.size() == 1
-				&& event->vArg[0] != state_machine->GetCurUpdateObject()->GetName()) return false;
-
-			std::cout << "\n\tA device is being destroyed!" << std::endl;
-			return true;
+			if (event && event->vArg.size() == 1 && event->vArg[0] == name)
+			{
+				std::cout << "\n\t" << name << " is being destroyed!" << std::endl;
+				return true;
+			}
+			return false;
 		}, "test3"));
 	state_machine->AddTransition(new CSC8599::StateTransition(end, init, [this]()->bool
 		{

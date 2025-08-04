@@ -261,6 +261,7 @@ void TutorialGame::UpdateKeys() {
 	switch (curModel)
 	{
 	case 0:
+		if(curSimulation == -1) Debug::Print("Press Num1 to start", Vector2(5, 95));
 		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUM1)) {
 			if (curSimulation == -1) {
 				ResetGame();
@@ -294,13 +295,15 @@ void TutorialGame::UpdateKeys() {
 			}
 		}
 
+		if (curSimulation == -1) Debug::Print("Press Num1 to start", Vector2(5, 95));
+		else if(curSimulation == 2) Debug::Print("Press Num1 to end", Vector2(5, 95));
 		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUM1)) {
 			if (curSimulation == -1) {
 				ResetGame();
 				curSimulation = 2;
 			}
 			else {
-				ResetGame();
+				//ResetGame();
 				curSimulation = -1;
 			}
 		}
@@ -334,13 +337,20 @@ void TutorialGame::UpdateSimulation(int idx)
 		break;
 	}
 	case 2: {
-		for(int i = 0; i < deviceList.size(); ++i) {
-				if (GetRandom(1) == 1) deviceList[i]->TakeDamage(GetRandom(2), "player");
-				else deviceList[i]->TakeDamage(GetRandom(2), "enemy");
-				if (deviceList[i]->GetCurHealth() <= 0 /*&& GetRandom(1) == 1*/) {
-					EventSystem::getInstance()->PushEvent("test3", 1, deviceList[i]->GetName());
+		auto isFinish = true;
+		for (auto dv : deviceList) {
+			if (dv->GetStateMachine()->GetCurStateName(dv) != "Destroyed") {
+				isFinish = false;
+
+				if (GetRandom(1) == 1) dv->TakeDamage(GetRandom(2), "player");
+				else dv->TakeDamage(GetRandom(2), "enemy");
+				if (dv->GetCurHealth() <= 0 /*&& GetRandom(1) == 1*/) {
+					EventSystem::getInstance()->PushEvent("test3", 1, dv->GetName());
 				}
+			}
 		}
+
+		if (isFinish) curSimulation = -1;
 		break;
 	}
 	default:
@@ -644,11 +654,11 @@ void TutorialGame::InitGameExamples(int idx) {
 
 		break;
 	case 1:
-		player = dynamic_cast<ExtendCharacter*>(AddPlayerToWorld(Vector3(-10, 18, 0)));
-		enemy = dynamic_cast<ExtendCharacter*>(AddMonsterToWorld(Vector3(-50, 16, 50)));
+		player = dynamic_cast<ExtendCharacter*>(AddPlayerToWorld(Vector3(20, 18, 0)));
+		enemy = dynamic_cast<ExtendCharacter*>(AddMonsterToWorld(Vector3(20, 16, 70)));
 		for (int i = 0; i < 3; i++)
 		{
-			for (int j = 0; j < 1; j++)
+			for (int j = 0; j < 5; j++)
 			{
 				deviceList.push_back(new ExtendCharacter(&DeviceType::Instance(), "device" + std::to_string(id)));
 				AddCubeToWorld(Vector3(-60 + i * delta, 8,  j * delta), Vector3(5, 5, 5), 0);
