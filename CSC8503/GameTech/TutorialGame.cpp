@@ -114,6 +114,7 @@ TutorialGame::~TutorialGame() {
 void TutorialGame::Clear() {
 	AdaptiveDebugSystem::getInstance()->Clear();
 	StateMachineParser::getInstance()->Clear();
+	TypeObject::ResetAll();
 	world->ClearAndErase();
 	delete shared1;
 	delete shared2;

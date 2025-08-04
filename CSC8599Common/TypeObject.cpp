@@ -13,7 +13,7 @@ std::vector<TypeObject*> TypeObject::instances;
 
 void CharacterType::takeDamage(ExtendCharacter* obj, float amount, GameObject* source)
 {
-	obj->HealthChange(-amount);
+	if (obj->GetCurHealth() > 0) obj->HealthChange(-amount);
 }
 
 void TestObjType::InitStateMachine()
