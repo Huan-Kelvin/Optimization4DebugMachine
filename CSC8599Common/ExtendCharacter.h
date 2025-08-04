@@ -22,6 +22,10 @@ namespace NCL {
 
 			void BlockTrans();
 
+			void TakeDamage(float damage, string source = "");
+			void HealthChange(float delta) { curHealth += delta; }
+			float GetCurHealth() const { return curHealth; }
+
 		private:
 			CharacterType* typeObject = nullptr;
 

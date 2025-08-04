@@ -41,7 +41,7 @@ namespace NCL {
         public:
             virtual ~CharacterType() = default;
 
-            static SharedStateMachine* GetStateMachine() {
+            SharedStateMachine* GetStateMachine() {
                 return state_machine;
             }
 
@@ -79,13 +79,14 @@ namespace NCL {
             virtual void BlockTrans(ExtendCharacter* cha) { 
                 state_machine->BlockObject((GameObject*)cha); 
             }
+            void takeDamage(ExtendCharacter* obj, float amount, GameObject* source = nullptr);
 
         protected:
             CharacterType() = default;
 
             virtual void InitStateMachine() = 0;
 
-            static SharedStateMachine* state_machine;
+            SharedStateMachine* state_machine = nullptr;
             float maxHealth = 10;
         };
 
@@ -144,6 +145,35 @@ namespace NCL {
                 InitStateMachine();
             }
 			//void takeDamage(TestObj& obj, float amount, GameObject* source = nullptr) { obj.HealthChange(-amount); }
+
+        protected:
+            void InitStateMachine() override;
+
+        private:
+
+        };
+
+        class PlayerType : public CharacterType
+        {
+        public:
+            PlayerType() {
+                maxHealth = 100;
+                Reset();
+            }
+            PlayerType(const PlayerType&) = delete;
+            PlayerType& operator=(const PlayerType&) = delete;
+
+            static PlayerType& Instance() {
+                static PlayerType instance;
+                return instance;
+			}
+            void Update(float dt) override {
+                CharacterType::Update(dt);
+            }
+            void Reset() override {
+                CharacterType::Reset();
+                InitStateMachine();
+            }
 
         protected:
             void InitStateMachine() override;

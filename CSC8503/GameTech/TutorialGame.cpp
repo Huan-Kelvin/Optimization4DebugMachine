@@ -239,6 +239,11 @@ void TutorialGame::UpdateKeys() {
 	switch (curModel)
 	{
 	case 0:
+		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::Z)) {
+			player->TakeDamage(10, "");
+		}
+		break;
+	case 1:
 
 		break;
 	default:
@@ -523,9 +528,13 @@ void TutorialGame::InitDefaultFloor() {
 }
 
 void TutorialGame::InitGameExamples(int idx) {
+	int delta = 30;
 	switch (idx)
 	{
 	case 0:
+		player = new ExtendCharacter(&PlayerType::Instance(), "player");
+		player->GetTransform().SetPosition(Vector3(-10, 18, 0));
+
 		localPlayer = dynamic_cast<NCL::CSC8599::Player*>(AddPlayerToWorld(Vector3(-10, 18, 0)));
 		_monster = dynamic_cast<NCL::CSC8599::Monster*>(AddMonsterToWorld(Vector3(-50, 16, 50)));
 
@@ -534,11 +543,20 @@ void TutorialGame::InitGameExamples(int idx) {
 		device = new ExtendCharacter(&DeviceType::Instance(), "device");
 		AddCubeToWorld(Vector3(-30, 8, 25), Vector3(5, 5, 5), 0);
 		device->GetTransform().SetPosition(Vector3(-30, 8, 25));
-		
+
 		initDebugStateMachine();
 
 		break;
-	case1:
+	case 1:
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 5; j++)
+			{
+				device = new ExtendCharacter(&DeviceType::Instance(), "device");
+				AddCubeToWorld(Vector3(-60 + i * delta, 8,  j * delta), Vector3(5, 5, 5), 0);
+				device->GetTransform().SetPosition(Vector3(-60 + i * delta, 8, j * delta));
+			}
+		}
 		break;
 	case 2:
 		break;

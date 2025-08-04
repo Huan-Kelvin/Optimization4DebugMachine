@@ -4,13 +4,17 @@
 #include "State.h"
 #include "StateTransition.h"
 #include "../Common/Window.h"
-
+#include "ExtendCharacter.h"
 using namespace NCL;
 using namespace NCL::CSC8503;
 using namespace NCL::CSC8599;
 
-SharedStateMachine* CharacterType::state_machine = nullptr;
 std::vector<TypeObject*> TypeObject::instances;
+
+void CharacterType::takeDamage(ExtendCharacter* obj, float amount, GameObject* source)
+{
+	obj->HealthChange(-amount);
+}
 
 void TestObjType::InitStateMachine()
 {
@@ -162,4 +166,33 @@ void DeviceType::InitStateMachine()
 		{
 			return true;
 		}, "test0"));
+}
+
+void PlayerType::InitStateMachine()
+{
+	auto init = new State([this](float dt)->void
+		{
+
+		});
+	auto stateA = new State([this](float dt)->void
+		{
+
+		});
+	auto end = new State([this](float dt)->void
+		{
+
+		});
+
+	state_machine = new SharedStateMachine("init", init, end);
+	state_machine->AddComponent("idle", stateA);
+	state_machine->AddComponent("dead", end);
+
+	state_machine->AddTransition(new CSC8599::StateTransition(init, stateA, [this]()->bool
+		{
+			return true;
+		}, ""));
+	state_machine->AddTransition(new CSC8599::StateTransition(stateA, end, [this]()->bool
+		{
+			return dynamic_cast<ExtendCharacter*>(state_machine->GetCurUpdateObject())->GetCurHealth() <= 0;
+		}, ""));
 }

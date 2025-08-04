@@ -35,3 +35,7 @@ SharedStateMachine* ExtendCharacter::GetStateMachine() const {
 void ExtendCharacter::BlockTrans() {
 	typeObject->BlockTrans(this);
 }
+
+void ExtendCharacter::TakeDamage(float damage, string source) {
+	typeObject->takeDamage(this, damage, GameWorld::Get()->find_game_object(source));
+}

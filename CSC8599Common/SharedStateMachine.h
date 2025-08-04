@@ -57,7 +57,7 @@ namespace NCL {
 						return GetStateName(t.second);
 					}
 				}
-				return "";
+				return "UnknownStateName";
 			}
 
 			AbstractComponent* get_exp_component() const
