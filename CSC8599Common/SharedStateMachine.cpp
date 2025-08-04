@@ -113,6 +113,7 @@ std::string SharedStateMachine::Print(int index)
 
 void SharedStateMachine::AddTransition(StateTransition* t) {
 	allTransitions.insert(std::make_pair(t->GetSourceState(), t));
+	t->SetOwner(this);
 }
 
 void SharedStateMachine::GetActiveComponentArr(std::vector<std::string>& arr)

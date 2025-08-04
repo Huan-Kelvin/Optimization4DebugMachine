@@ -131,6 +131,7 @@ namespace NCL {
 			ExtendCharacter* device = nullptr;
 			ExtendCharacter* player = nullptr;
 			ExtendCharacter* enemy = nullptr;
+			vector<ExtendCharacter*> deviceList;
 
 			//Game State Machine
 			NCL::CSC8599::StateMachine* game_state_machine = nullptr;
@@ -154,7 +155,7 @@ namespace NCL {
 			SharedStateMachine* shared2;
 
 			int curModel = -1;
-			void initDebugStateMachine();
+			void initDebugStateMachine(vector<ExtendCharacter*> list);
 			void Clear();
 			void UpdateSimulation(int idx);
 			int curSimulation = -1;

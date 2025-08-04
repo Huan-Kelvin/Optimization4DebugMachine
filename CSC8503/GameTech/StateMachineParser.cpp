@@ -353,12 +353,34 @@ SharedStateMachine* StateMachineParser::parseTest(ltlf& formula)
             auto temp = easy_prop();
             if (j.first == easy_prop("other") && startNode != destNode) temp = easy_prop("");
             else temp = j.first;
-            auto trans = new StateTransition(startNode->second, destNode->second,
-                [j]()->bool
+            auto trans = new StateTransition(startNode->second, destNode->second, nullptr, j.first);
+            auto func = [trans, j]()->bool
                 {
-                    std::cout << "Transitioning (parseTest - run) : " << j.first.toString(j.first) << std::endl;
-                    return true;
-                }, j.first);
+                    //std::cout << "Transitioning (parseTest - run) : " << j.first.toString(j.first) << std::endl;
+                    auto& name = trans->GetOwner()->GetCurUpdateObject()->GetName();
+                    //std::cout << "Owner : " << name << std::endl;
+                    if (j.first.casusu == easy_prop::E_P_ATOM) {
+                        auto eventList = EventSystem::getInstance()->HasHappened(j.first);
+                        for (auto event : eventList)
+                        {
+                            if (event){
+								if (event->vArg.size() == 0) return true;
+                                for (auto& it : event->vArg)
+                                {
+                                    if (it == name) {
+                                        //std::cout << "Event found: " << it << std::endl;
+                                        return true;
+                                    }
+								}
+                            }
+                        }
+                    }
+                    else {
+						//Todo : for mixed events, check if all of the atom events match
+                    }
+                    return false;
+                };
+			trans->SetFunction(func);
 
             //std::cout << "Transitioning (parseTest - build) : " << j.first.toString(j.first) << std::endl;
 

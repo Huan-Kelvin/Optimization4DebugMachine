@@ -145,6 +145,7 @@ namespace NCL {
                 InitStateMachine();
             }
 			
+            void BlockTrans(ExtendCharacter* cha) override;
             void takeDamage(ExtendCharacter* obj, float amount, GameObject* source = nullptr) override;
 
         protected:

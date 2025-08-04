@@ -36,15 +36,13 @@ void NCL::CSC8599::AdaptiveDebugSystem::update(float dt)
 {
 	std::vector<deadlockMap> result;
 	find_deadlock_sm(result);
-	for (auto& deadlock : result) {
-		for (auto& pair : deadlock) {
-			SharedStateMachine* ltlf = pair.first;
-			GameObject* obj = pair.second;
-			if (auto cha = dynamic_cast<ExtendCharacter*>(obj)) {
-				cha->BlockTrans();
-				ltlf->TempReset(obj);
-				std::cout << "Blocking transitions for object: " << obj->GetName() << std::endl;
-			}
+	for (auto& pair : result) {
+		SharedStateMachine* ltlf = pair.first;
+		GameObject* obj = pair.second;
+		if (auto cha = dynamic_cast<ExtendCharacter*>(obj)) {
+			cha->BlockTrans();
+			ltlf->TempReset(obj);
+			std::cout << "Fixing transitions for object: " << obj->GetName() << std::endl;
 		}
 	}
 
@@ -144,6 +142,7 @@ bool NCL::CSC8599::AdaptiveDebugSystem::find_deadlock_sm(std::vector<deadlockMap
 	for (auto sm : statemachines) {
 		const auto exp = sm->get_exp_component();
 		for (auto& objMap : sm->get_active_component_obj()) {
+			auto obj = objMap.first;
 			auto active = objMap.second;
 
 			if (exp == nullptr)
@@ -169,8 +168,9 @@ bool NCL::CSC8599::AdaptiveDebugSystem::find_deadlock_sm(std::vector<deadlockMap
 			}
 			if (!HasOutGoing)
 			{
-				std::cout << "Deadlock found in : " << objMap.first->GetName() << std::endl;
-				list.push_back({ {sm,objMap.first} });
+				std::cout << "Deadlock found in : " << obj->GetName() << std::endl;
+
+				list.push_back({ sm,obj });
 			}
 		}
 	}

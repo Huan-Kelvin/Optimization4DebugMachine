@@ -2,6 +2,8 @@
 #include "AbstractComponent.h"
 #include "EventSystem.h"
 #include "../CSC8503/GameTech/easy_prop.h"
+#include "SharedStateMachine.h"
+
 using namespace NCL::CSC8599;
 namespace NCL {
 	namespace CSC8599 {
@@ -34,6 +36,13 @@ namespace NCL {
 			//const std::string& GetTrigger() const { return trigger; }
 			const easy_prop& GetTriggerEP() const { return trigger_ep; }
 
+			void SetOwner(SharedStateMachine* owner) { this->owner = owner; }
+			SharedStateMachine* GetOwner() const { return owner; }
+
+			void SetFunction(StateTransitionFunction f) {
+				transitionFunction = std::move(f);
+			}
+
 		protected:
 			AbstractComponent* sourceState;
 			AbstractComponent* destinationState;
@@ -42,6 +51,7 @@ namespace NCL {
 			
 			easy_prop trigger_ep;
 
+			SharedStateMachine* owner = nullptr;
 		};
 	}
 }

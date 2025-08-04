@@ -54,7 +54,7 @@ namespace NCL {
 				return instance;
 			}
 			EVENT* HasHappened(const std::string&);
-			bool HasHappened(const easy_prop&);
+			std::list<EVENT*>  HasHappened(const easy_prop&);
 			void Reset();
 		private:
 			static EventSystem* instance;

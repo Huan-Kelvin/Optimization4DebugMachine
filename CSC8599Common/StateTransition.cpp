@@ -10,7 +10,7 @@ bool NCL::CSC8599::StateTransition::CanTransition() const
 	//	return transitionFunction();
 	//}
 
-	if (trigger_ep.empty() || event_ep) {
+	if (trigger_ep.empty() || !event_ep.empty()) {
 		return transitionFunction();
 	}
 

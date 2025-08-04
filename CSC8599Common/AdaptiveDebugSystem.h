@@ -24,7 +24,7 @@ namespace NCL {
 		using Environment = std::pair<std::string,std::vector<StateMachine*>>;
 		using EnvContainer = std::vector<Environment*>;
 
-		using deadlockMap = std::map<SharedStateMachine*, GameObject*>;
+		using deadlockMap = std::pair<SharedStateMachine*, GameObject*>;
 
 		class AdaptiveDebugSystem
 		{

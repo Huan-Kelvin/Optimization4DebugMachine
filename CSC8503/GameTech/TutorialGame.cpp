@@ -124,8 +124,16 @@ void TutorialGame::Clear() {
 	TypeObject::ResetAll();
 	world->ClearAndErase();
 	curSimulation = -1;
-	delete shared1;
-	delete shared2;
+	deviceList.clear();
+
+	if (shared1) {
+		delete shared1;
+		shared1 = nullptr;
+	}
+	if (shared2) {
+		delete shared2;
+		shared2 = nullptr;
+	}
 }
 
 void TutorialGame::UpdateGame(float dt) {
@@ -216,16 +224,16 @@ void TutorialGame::UpdateKeys() {
 		//std::cout << "Shared2:" << std::endl;
 		//std::cout << shared2->Print(0) << std::endl;
 
-		if (shared2->IsActive(test_obj->get_state_machine())) {
-			std::cout << "test_obj is active!" << std::endl;
-			std::cout << test_obj->get_state_machine() << std::endl;
-		}
-		else
-		{
-			std::cout << "test_obj is not active!" << std::endl;
-			shared1->AddStatemachine(test_obj->get_state_machine());
-			shared2->AddStatemachine(test_obj->get_state_machine());
-		}
+		//if (shared2->IsActive(test_obj->get_state_machine())) {
+		//	std::cout << "test_obj is active!" << std::endl;
+		//	std::cout << test_obj->get_state_machine() << std::endl;
+		//}
+		//else
+		//{
+		//	std::cout << "test_obj is not active!" << std::endl;
+		//	shared1->AddStatemachine(test_obj->get_state_machine());
+		//	shared2->AddStatemachine(test_obj->get_state_machine());
+		//}
 	}
 
 	/*
@@ -261,7 +269,41 @@ void TutorialGame::UpdateKeys() {
 		}
 		break;
 	case 1:
+		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::Z)) {
+			deviceList[0]->TakeDamage(30, "player");
+			if(deviceList[0]->GetCurHealth() <= 0&& deviceList[0]->GetStateMachine()->GetCurStateName(deviceList[0]) !="Neutral") {
+				EventSystem::getInstance()->PushEvent("test3", 1, deviceList[0]->GetName());
+			}
+		}
+		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::X)) {
+			deviceList[1]->TakeDamage(30, "player");
+			if (deviceList[1]->GetCurHealth() <= 0 && deviceList[1]->GetStateMachine()->GetCurStateName(deviceList[1]) != "Neutral") {
+				EventSystem::getInstance()->PushEvent("test3", 1, deviceList[1]->GetName());
+			}
+		}
+		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::N)) {
+			deviceList[1]->TakeDamage(30, "enemy");
+			if (deviceList[1]->GetCurHealth() <= 0 && deviceList[1]->GetStateMachine()->GetCurStateName(deviceList[1]) != "Neutral") {
+				EventSystem::getInstance()->PushEvent("test3", 1, deviceList[1]->GetName());
+			}
+		}
+		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::M)) {
+			deviceList[0]->TakeDamage(30, "enemy");
+			if (deviceList[0]->GetCurHealth() <= 0 && deviceList[0]->GetStateMachine()->GetCurStateName(deviceList[0]) != "Neutral") {
+				EventSystem::getInstance()->PushEvent("test3", 1, deviceList[0]->GetName());
+			}
+		}
 
+		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUM1)) {
+			if (curSimulation == -1) {
+				ResetGame();
+				curSimulation = 2;
+			}
+			else {
+				ResetGame();
+				curSimulation = -1;
+			}
+		}
 		break;
 	default:
 		break;
@@ -274,22 +316,33 @@ void TutorialGame::UpdateSimulation(int idx)
 	{
 	case -1:
 		break;
-	case 1:
+	case 1: {
 		if (player->GetCurHealth() <= 0 || enemy->GetCurHealth() <= 0) curSimulation = -1;
 
-		if (GetRandom(2) == 2) player->TakeDamage(1, "enemy");
+		if (GetRandom(3) == 3) player->TakeDamage(1, "enemy");
 		else if (device->GetCurHealth() > 0) {
 			device->TakeDamage(1, "enemy");
-			if (device->GetCurHealth() <= 0) EventSystem::getInstance()->PushEvent("test3", 0);
+			if (device->GetCurHealth() <= 0 && GetRandom(1) == 1) EventSystem::getInstance()->PushEvent("test3", 0);
 		}
 
-		if(GetRandom(2) == 2) enemy->TakeDamage(1, "player");
+		if (GetRandom(3) == 3) enemy->TakeDamage(1, "player");
 		else if (device->GetCurHealth() > 0) {
 			device->TakeDamage(1, "player");
-			if (device->GetCurHealth() <= 0) EventSystem::getInstance()->PushEvent("test3", 0);
+			if (device->GetCurHealth() <= 0 && GetRandom(1) == 1) EventSystem::getInstance()->PushEvent("test3", 0);
 		}
 
 		break;
+	}
+	case 2: {
+		for(int i = 0; i < deviceList.size(); ++i) {
+				if (GetRandom(1) == 1) deviceList[i]->TakeDamage(GetRandom(2), "player");
+				else deviceList[i]->TakeDamage(GetRandom(2), "enemy");
+				if (deviceList[i]->GetCurHealth() <= 0 /*&& GetRandom(1) == 1*/) {
+					EventSystem::getInstance()->PushEvent("test3", 1, deviceList[i]->GetName());
+				}
+		}
+		break;
+	}
 	default:
 		break;
 	}
@@ -572,6 +625,7 @@ void TutorialGame::InitDefaultFloor() {
 
 void TutorialGame::InitGameExamples(int idx) {
 	int delta = 30;
+	int id = 0;
 	switch (idx)
 	{
 	case 0:
@@ -584,20 +638,24 @@ void TutorialGame::InitGameExamples(int idx) {
 		device = new ExtendCharacter(&DeviceType::Instance(), "device");
 		AddCubeToWorld(Vector3(-30, 8, 25), Vector3(5, 5, 5), 0);
 		device->GetTransform().SetPosition(Vector3(-30, 8, 25));
-
-		initDebugStateMachine();
+		
+		deviceList.push_back(device);
+		initDebugStateMachine(deviceList);
 
 		break;
 	case 1:
+		player = dynamic_cast<ExtendCharacter*>(AddPlayerToWorld(Vector3(-10, 18, 0)));
+		enemy = dynamic_cast<ExtendCharacter*>(AddMonsterToWorld(Vector3(-50, 16, 50)));
 		for (int i = 0; i < 3; i++)
 		{
-			for (int j = 0; j < 5; j++)
+			for (int j = 0; j < 1; j++)
 			{
-				device = new ExtendCharacter(&DeviceType::Instance(), "device");
+				deviceList.push_back(new ExtendCharacter(&DeviceType::Instance(), "device" + std::to_string(id)));
 				AddCubeToWorld(Vector3(-60 + i * delta, 8,  j * delta), Vector3(5, 5, 5), 0);
-				device->GetTransform().SetPosition(Vector3(-60 + i * delta, 8, j * delta));
+				deviceList[id++]->GetTransform().SetPosition(Vector3(-60 + i * delta, 8, j * delta));
 			}
 		}
+		initDebugStateMachine(deviceList);
 		break;
 	case 2:
 		break;
@@ -948,6 +1006,7 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 		{
 			lose = 0;
 			win = 0;
+			useDebugSM = false;
 			return true;
 		},
 		"GameInit"
@@ -989,7 +1048,7 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 	//debug_state_machine->AddComponent("DebugB", DebugB);
 	//debug_state_machine->AddComponent("DebugC", DebugC);
 }
-void TutorialGame::initDebugStateMachine() {
+void TutorialGame::initDebugStateMachine(vector<ExtendCharacter*> list) {
 	auto startTime = std::chrono::high_resolution_clock::now();
 	auto formula = ltlf::Act("");;
 	//formula =
@@ -1008,7 +1067,6 @@ void TutorialGame::initDebugStateMachine() {
 			ltlf::Next(ltlf::Neg(ltlf::Act("test3"))))
 		);
 	shared1 = StateMachineParser::getInstance()->parseTest(formula);
-	shared1->AddStatemachine(device);
 
 	formula =
 		ltlf::Box(ltlf::Implies(
@@ -1016,7 +1074,12 @@ void TutorialGame::initDebugStateMachine() {
 			ltlf::Next(ltlf::Neg(ltlf::Act("test3"))))
 		);
 	shared2 = StateMachineParser::getInstance()->parseTest(formula);
-	shared2->AddStatemachine(device);
+
+	for(auto obj : list)
+	{
+		shared1->AddStatemachine(obj);
+		shared2->AddStatemachine(obj);
+	}
 
 	AdaptiveDebugSystem::getInstance()->insert(shared1);
 	AdaptiveDebugSystem::getInstance()->insert(shared2);

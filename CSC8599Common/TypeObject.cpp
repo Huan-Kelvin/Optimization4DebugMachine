@@ -114,6 +114,20 @@ void TestObjType::InitStateMachine()
 	state_machine->AddTransition(t2);
 }
 
+void NCL::CSC8599::DeviceType::BlockTrans(ExtendCharacter* cha)
+{
+	state_machine->BlockObject((GameObject*)cha);
+	if (state_machine->GetCurStateName(cha) == "Friendly")
+	{
+		state_machine->SetActiveComponent(cha, state_machine->GetComponent("Hostile"));
+		cha->ResetHealth();
+	}
+	else if (state_machine->GetCurStateName(cha) == "Hostile") {
+		state_machine->SetActiveComponent(cha, state_machine->GetComponent("Friendly"));
+		cha->ResetHealth();
+	}
+}
+
 void DeviceType::takeDamage(ExtendCharacter* obj, float amount, GameObject* source)
 {
 	if (state_machine->GetCurStateName(obj) == "Destroyed") return;
@@ -124,9 +138,9 @@ void DeviceType::takeDamage(ExtendCharacter* obj, float amount, GameObject* sour
 
 	if (obj->GetCurHealth() <= 0) {
 		if (source->GetName() == "player")
-			EventSystem::getInstance()->PushEvent("test1", 0);
+			EventSystem::getInstance()->PushEvent("test1", 1, obj->GetName());
 		else if (source->GetName() == "enemy")
-			EventSystem::getInstance()->PushEvent("test2", 0);
+			EventSystem::getInstance()->PushEvent("test2", 1, obj->GetName());
 	}
 }
 
@@ -154,37 +168,55 @@ void DeviceType::InitStateMachine()
 
 	state_machine->AddTransition(new CSC8599::StateTransition(init, stateA, [this]()->bool
 		{
-			dynamic_cast<ExtendCharacter*>(state_machine->GetCurUpdateObject())->ResetHealth();
+			auto obj = dynamic_cast<ExtendCharacter*>(state_machine->GetCurUpdateObject());
+			if (obj->GetCurHealth() > 0) return false;
+			obj->ResetHealth();
 			return true;
 		}, "test1"));
 	state_machine->AddTransition(new CSC8599::StateTransition(init, stateB, [this]()->bool
 		{
-			dynamic_cast<ExtendCharacter*>(state_machine->GetCurUpdateObject())->ResetHealth();
+			auto obj = dynamic_cast<ExtendCharacter*>(state_machine->GetCurUpdateObject());
+			if (obj->GetCurHealth() > 0) return false;
+			obj->ResetHealth();
 			return true;
 		}, "test2"));
 	state_machine->AddTransition(new CSC8599::StateTransition(stateA, stateB, [this]()->bool
 		{
-			dynamic_cast<ExtendCharacter*>(state_machine->GetCurUpdateObject())->ResetHealth();
+			auto obj = dynamic_cast<ExtendCharacter*>(state_machine->GetCurUpdateObject());
+			if (obj->GetCurHealth() > 0) return false;
+			obj->ResetHealth();
 			return true;
 		}, "test2"));
 	state_machine->AddTransition(new CSC8599::StateTransition(stateB, stateA, [this]()->bool
 		{
-			dynamic_cast<ExtendCharacter*>(state_machine->GetCurUpdateObject())->ResetHealth();
+			auto obj = dynamic_cast<ExtendCharacter*>(state_machine->GetCurUpdateObject());
+			if (obj->GetCurHealth() > 0) return false;
+			obj->ResetHealth();
 			return true;
 		}, "test1"));
 	state_machine->AddTransition(new CSC8599::StateTransition(stateA, end, [this]()->bool
 		{
+			auto event = EventSystem::getInstance()->HasHappened("test3");
+			if (event && event->vArg.size() == 1
+				&& event->vArg[0] != state_machine->GetCurUpdateObject()->GetName()) return false;
+
 			std::cout << "\n\tA device is being destroyed!" << std::endl;
 			return true;
 		}, "test3"));
 	state_machine->AddTransition(new CSC8599::StateTransition(stateB, end, [this]()->bool
 		{
+			auto event = EventSystem::getInstance()->HasHappened("test3");
+			if (event && event->vArg.size() == 1
+				&& event->vArg[0] != state_machine->GetCurUpdateObject()->GetName()) return false;
+
 			std::cout << "\n\tA device is being destroyed!" << std::endl;
 			return true;
 		}, "test3"));
 	state_machine->AddTransition(new CSC8599::StateTransition(end, init, [this]()->bool
 		{
-			dynamic_cast<ExtendCharacter*>(state_machine->GetCurUpdateObject())->ResetHealth();
+			auto obj = dynamic_cast<ExtendCharacter*>(state_machine->GetCurUpdateObject());
+			if (obj->GetCurHealth() > 0) return false;
+			obj->ResetHealth();
 			return true;
 		}, "test0"));
 }

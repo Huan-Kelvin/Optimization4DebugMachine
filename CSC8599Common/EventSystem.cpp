@@ -127,11 +127,12 @@ EVENT* NCL::CSC8599::EventSystem::HasHappened(const std::string& name)
 	}
 	return nullptr;
 }
-bool NCL::CSC8599::EventSystem::HasHappened(const easy_prop& ep) {
+std::list<EVENT*> NCL::CSC8599::EventSystem::HasHappened(const easy_prop& ep) {
+	std::list<EVENT*> result;
 
 	//std::cout << "============================================================="<< std::endl;
 	//std::cout << "Checking event: "<< std::endl;
-	if (ep.empty()) return false;
+	if (ep.empty()) return result;
 
 	//std::set<std::string> eventSet = ep.getAtoms(ep);
 	//for (const auto& name : eventSet) {
@@ -150,8 +151,8 @@ bool NCL::CSC8599::EventSystem::HasHappened(const easy_prop& ep) {
 	//	std::cout << std::endl;
 	//}
 
-	if (nameSet.empty()) return false;
-	if (ep.evaluate(nameSet)) return true;
+	if (nameSet.empty()) return result;
+	if (ep.evaluate(nameSet)) return eventQueue;
 
 	nameSet.clear();
 	for (auto event : eventQueueDelay) {
@@ -161,8 +162,9 @@ bool NCL::CSC8599::EventSystem::HasHappened(const easy_prop& ep) {
 	//for (const auto& name : nameSet) {
 	//	std::cout << name << " ";
 	//}
-	if (nameSet.empty()) return false;
-	return ep.evaluate(nameSet);
+	if (nameSet.empty()) return result;
+	if (ep.evaluate(nameSet)) return eventQueueDelay;
+	return result;
 }
 
 
