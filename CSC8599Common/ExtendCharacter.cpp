@@ -35,6 +35,7 @@ void ExtendCharacter::BlockTrans() {
 
 void ExtendCharacter::TakeDamage(float damage, string source) {
 	typeObject->takeDamage(this, damage, GameWorld::Get()->find_game_object(source));
+	sourseObj = GameWorld::Get()->find_game_object(source);
 }
 
 void ExtendCharacter::ResetHealth()

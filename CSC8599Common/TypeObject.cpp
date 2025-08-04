@@ -117,12 +117,12 @@ void TestObjType::InitStateMachine()
 void NCL::CSC8599::DeviceType::BlockTrans(ExtendCharacter* cha)
 {
 	state_machine->BlockObject((GameObject*)cha);
-	if (state_machine->GetCurStateName(cha) == "Friendly")
+	if (cha->sourseObj->GetName()=="enemy")
 	{
 		state_machine->SetActiveComponent(cha, state_machine->GetComponent("Hostile"));
 		cha->ResetHealth();
 	}
-	else if (state_machine->GetCurStateName(cha) == "Hostile") {
+	else if (cha->sourseObj->GetName() == "player") {
 		state_machine->SetActiveComponent(cha, state_machine->GetComponent("Friendly"));
 		cha->ResetHealth();
 	}

@@ -270,6 +270,7 @@ void TutorialGame::UpdateKeys() {
 		}
 		break;
 	case 1:
+		/*
 		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::Z)) {
 			deviceList[0]->TakeDamage(30, "player");
 			if(deviceList[0]->GetCurHealth() <= 0&& deviceList[0]->GetStateMachine()->GetCurStateName(deviceList[0]) !="Neutral") {
@@ -294,6 +295,7 @@ void TutorialGame::UpdateKeys() {
 				EventSystem::getInstance()->PushEvent("test3", 1, deviceList[0]->GetName());
 			}
 		}
+		*/
 
 		if (curSimulation == -1) Debug::Print("Press Num1 to start", Vector2(5, 95));
 		else if(curSimulation == 2) Debug::Print("Press Num1 to end", Vector2(5, 95));
@@ -322,16 +324,18 @@ void TutorialGame::UpdateSimulation(int idx)
 	case 1: {
 		if (player->GetCurHealth() <= 0 || enemy->GetCurHealth() <= 0) curSimulation = -1;
 
-		if (GetRandom(3) == 3) player->TakeDamage(1, "enemy");
+		if (GetRandom(4) == 4) player->TakeDamage(1, "enemy");
 		else if (device->GetCurHealth() > 0) {
 			device->TakeDamage(1, "enemy");
-			if (device->GetCurHealth() <= 0 && GetRandom(1) == 1) EventSystem::getInstance()->PushEvent("test3", 0);
+			if (device->GetCurHealth() <= 0 && GetRandom(1) < 1) 
+				EventSystem::getInstance()->PushEvent("test3", 1, device->GetName());
 		}
 
-		if (GetRandom(3) == 3) enemy->TakeDamage(1, "player");
+		if (GetRandom(4) == 4) enemy->TakeDamage(1, "player");
 		else if (device->GetCurHealth() > 0) {
 			device->TakeDamage(1, "player");
-			if (device->GetCurHealth() <= 0 && GetRandom(1) == 1) EventSystem::getInstance()->PushEvent("test3", 0);
+			if (device->GetCurHealth() <= 0 && GetRandom(1) < 1)
+				EventSystem::getInstance()->PushEvent("test3", 1, device->GetName());
 		}
 
 		break;
@@ -1076,6 +1080,9 @@ void TutorialGame::initDebugStateMachine(vector<ExtendCharacter*> list) {
 			ltlf::Act("test2"),
 			ltlf::Next(ltlf::Neg(ltlf::Act("test3"))))
 		);
+	formula =
+		ltlf::Box(ltlf::Neg(ltlf::Act("test3")));
+
 	shared1 = StateMachineParser::getInstance()->parseTest(formula);
 
 	formula =
@@ -1092,7 +1099,7 @@ void TutorialGame::initDebugStateMachine(vector<ExtendCharacter*> list) {
 	}
 
 	AdaptiveDebugSystem::getInstance()->insert(shared1);
-	AdaptiveDebugSystem::getInstance()->insert(shared2);
+	//AdaptiveDebugSystem::getInstance()->insert(shared2);
 
 	auto endTime = std::chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);

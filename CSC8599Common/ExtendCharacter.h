@@ -27,11 +27,13 @@ namespace NCL {
 			void ResetHealth();
 			float GetCurHealth() const { return curHealth; }
 			
+			GameObject* sourseObj = nullptr;
 		private:
 			CharacterType* typeObject = nullptr;
 
 			string tag;
 			float curHealth;
+
 		};
 	}
 }
