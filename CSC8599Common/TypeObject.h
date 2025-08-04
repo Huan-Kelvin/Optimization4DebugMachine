@@ -79,7 +79,7 @@ namespace NCL {
             virtual void BlockTrans(ExtendCharacter* cha) { 
                 state_machine->BlockObject((GameObject*)cha); 
             }
-            void takeDamage(ExtendCharacter* obj, float amount, GameObject* source = nullptr);
+            virtual void takeDamage(ExtendCharacter* obj, float amount, GameObject* source = nullptr);
 
         protected:
             CharacterType() = default;
@@ -144,7 +144,8 @@ namespace NCL {
                 CharacterType::Reset();
                 InitStateMachine();
             }
-			//void takeDamage(TestObj& obj, float amount, GameObject* source = nullptr) { obj.HealthChange(-amount); }
+			
+            void takeDamage(ExtendCharacter* obj, float amount, GameObject* source = nullptr) override;
 
         protected:
             void InitStateMachine() override;

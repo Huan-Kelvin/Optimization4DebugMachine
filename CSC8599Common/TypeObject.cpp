@@ -114,6 +114,22 @@ void TestObjType::InitStateMachine()
 	state_machine->AddTransition(t2);
 }
 
+void DeviceType::takeDamage(ExtendCharacter* obj, float amount, GameObject* source)
+{
+	if (state_machine->GetCurStateName(obj) == "Destroyed") return;
+	if (source->GetName() == "player" && state_machine->GetCurStateName(obj) == "Friendly")	return;
+	if (source->GetName() == "enemy" && state_machine->GetCurStateName(obj) == "Hostile")	return;
+
+	if (obj->GetCurHealth() > 0) obj->HealthChange(-amount);
+
+	if (obj->GetCurHealth() <= 0) {
+		if (source->GetName() == "player")
+			EventSystem::getInstance()->PushEvent("test1", 0);
+		else if (source->GetName() == "enemy")
+			EventSystem::getInstance()->PushEvent("test2", 0);
+	}
+}
+
 void DeviceType::InitStateMachine()
 {
 	auto init = new State([this](float dt)->void
@@ -138,18 +154,22 @@ void DeviceType::InitStateMachine()
 
 	state_machine->AddTransition(new CSC8599::StateTransition(init, stateA, [this]()->bool
 		{
+			dynamic_cast<ExtendCharacter*>(state_machine->GetCurUpdateObject())->ResetHealth();
 			return true;
 		}, "test1"));
 	state_machine->AddTransition(new CSC8599::StateTransition(init, stateB, [this]()->bool
 		{
+			dynamic_cast<ExtendCharacter*>(state_machine->GetCurUpdateObject())->ResetHealth();
 			return true;
 		}, "test2"));
 	state_machine->AddTransition(new CSC8599::StateTransition(stateA, stateB, [this]()->bool
 		{
+			dynamic_cast<ExtendCharacter*>(state_machine->GetCurUpdateObject())->ResetHealth();
 			return true;
 		}, "test2"));
 	state_machine->AddTransition(new CSC8599::StateTransition(stateB, stateA, [this]()->bool
 		{
+			dynamic_cast<ExtendCharacter*>(state_machine->GetCurUpdateObject())->ResetHealth();
 			return true;
 		}, "test1"));
 	state_machine->AddTransition(new CSC8599::StateTransition(stateA, end, [this]()->bool
@@ -164,6 +184,7 @@ void DeviceType::InitStateMachine()
 		}, "test3"));
 	state_machine->AddTransition(new CSC8599::StateTransition(end, init, [this]()->bool
 		{
+			dynamic_cast<ExtendCharacter*>(state_machine->GetCurUpdateObject())->ResetHealth();
 			return true;
 		}, "test0"));
 }

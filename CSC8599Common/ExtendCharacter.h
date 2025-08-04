@@ -24,8 +24,9 @@ namespace NCL {
 
 			void TakeDamage(float damage, string source = "");
 			void HealthChange(float delta) { curHealth += delta; }
+			void ResetHealth();
 			float GetCurHealth() const { return curHealth; }
-
+			
 		private:
 			CharacterType* typeObject = nullptr;
 

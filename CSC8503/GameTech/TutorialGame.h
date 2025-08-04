@@ -156,6 +156,9 @@ namespace NCL {
 			int curModel = -1;
 			void initDebugStateMachine();
 			void Clear();
+			void UpdateSimulation(int idx);
+			int curSimulation = -1;
+			void ResetGame();
 		};
 	}
 }

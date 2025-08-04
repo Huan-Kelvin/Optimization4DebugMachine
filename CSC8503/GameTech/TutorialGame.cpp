@@ -18,6 +18,7 @@
 #include "StateMachineParser.h"
 
 #include "../../CSC8599Common/TypeObject.h"
+#include <random>
 
 using namespace NCL;
 using namespace CSC8503;
@@ -54,7 +55,12 @@ TutorialGame::TutorialGame() {
 	//envB->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(debug_state_machine->GetComponent("DebugB")));
 	//AdaptiveDebugSystem::getInstance()->insert(envB);
 }
-
+static int GetRandom(int idx) {
+	static std::random_device rd;
+	static std::mt19937 gen(rd());
+	static std::uniform_int_distribution<> dist(0, idx);
+	return dist(gen);
+}
 /*
 
 Each of the little demo scenarios used in the game uses the same 2 meshes,
@@ -112,10 +118,12 @@ TutorialGame::~TutorialGame() {
 }
 
 void TutorialGame::Clear() {
+	EventSystem::getInstance()->Reset();
 	AdaptiveDebugSystem::getInstance()->Clear();
 	StateMachineParser::getInstance()->Clear();
 	TypeObject::ResetAll();
 	world->ClearAndErase();
+	curSimulation = -1;
 	delete shared1;
 	delete shared2;
 }
@@ -131,17 +139,20 @@ void TutorialGame::UpdateGame(float dt) {
 	renderer->Render();
 }
 
+void TutorialGame::ResetGame() {
+	Clear();
+	InitWorld(curModel); //We can reset the simulation at any time with F1
+	selectionObject = nullptr;
+	lockedObject = nullptr;
+	initEventHandler();
+}
 void TutorialGame::UpdateKeys() {
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::ESCAPE)) {
 		EventSystem::getInstance()->PushEvent("quit", 0);
 	}
 
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F1)) {
-		EventSystem::getInstance()->Reset();
-		InitWorld(curModel); //We can reset the simulation at any time with F1
-		selectionObject = nullptr;
-		lockedObject = nullptr;
-		initEventHandler();
+		ResetGame();
 	}
 
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F2)) {
@@ -217,6 +228,7 @@ void TutorialGame::UpdateKeys() {
 		}
 	}
 
+	/*
 	auto keyboard = Window::GetKeyboard();
 	bool ctrlHeld = keyboard->KeyDown(KeyboardKeys::CONTROL);
 	std::vector<std::pair<KeyboardKeys, std::string>> keyEvents = {
@@ -236,12 +248,16 @@ void TutorialGame::UpdateKeys() {
 	for (const auto& [key, eventName] : keyEvents) {
 		if (keyCheck(key)) EventSystem::getInstance()->PushEvent(eventName, 0);
 	}
+	*/
 
 	switch (curModel)
 	{
 	case 0:
-		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::Z)) {
-			player->TakeDamage(10, "");
+		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUM1)) {
+			if (curSimulation == -1) {
+				ResetGame();
+				curSimulation = 1;
+			}
 		}
 		break;
 	case 1:
@@ -250,8 +266,34 @@ void TutorialGame::UpdateKeys() {
 	default:
 		break;
 	}
+	UpdateSimulation(curSimulation);
 }
+void TutorialGame::UpdateSimulation(int idx)
+{
+	switch (idx)
+	{
+	case -1:
+		break;
+	case 1:
+		if (player->GetCurHealth() <= 0 || enemy->GetCurHealth() <= 0) curSimulation = -1;
 
+		if (GetRandom(2) == 2) player->TakeDamage(1, "enemy");
+		else if (device->GetCurHealth() > 0) {
+			device->TakeDamage(1, "enemy");
+			if (device->GetCurHealth() <= 0) EventSystem::getInstance()->PushEvent("test3", 0);
+		}
+
+		if(GetRandom(2) == 2) enemy->TakeDamage(1, "player");
+		else if (device->GetCurHealth() > 0) {
+			device->TakeDamage(1, "player");
+			if (device->GetCurHealth() <= 0) EventSystem::getInstance()->PushEvent("test3", 0);
+		}
+
+		break;
+	default:
+		break;
+	}
+}
 void TutorialGame::LockedObjectMovement() {
 	Matrix4 view = world->GetMainCamera()->BuildViewMatrix();
 	Matrix4 camWorld = view.Inverse();
@@ -533,11 +575,9 @@ void TutorialGame::InitGameExamples(int idx) {
 	switch (idx)
 	{
 	case 0:
-		player = new ExtendCharacter(&PlayerType::Instance(), "player");
-		player->GetTransform().SetPosition(Vector3(-10, 18, 0));
 
-		localPlayer = dynamic_cast<NCL::CSC8599::Player*>(AddPlayerToWorld(Vector3(-10, 18, 0)));
-		_monster = dynamic_cast<NCL::CSC8599::Monster*>(AddMonsterToWorld(Vector3(-50, 16, 50)));
+		player = dynamic_cast<ExtendCharacter*>(AddPlayerToWorld(Vector3(-10, 18, 0)));
+		enemy = dynamic_cast<ExtendCharacter*>(AddMonsterToWorld(Vector3(-50, 16, 50)));
 
 		//test_obj = dynamic_cast<NCL::CSC8599::TestObj*>(AddTestObjToWorld("testObj", Vector3(-30, 8, 25)));
 
@@ -590,7 +630,8 @@ GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
 	Vector3 offset = Vector3(-4.5 * meshSize, 1 * meshSize, -9.5 * meshSize);
 	//GameObject* character = new GameObject();
 	//Character* character = new Character();
-	const auto character = new NCL::CSC8599::Player();
+	const auto character = new ExtendCharacter(&PlayerType::Instance(), "player");
+
 
 	AABBVolume* volume = new AABBVolume(Vector3(0.3f, 0.85f, 0.3f) * meshSize);
 
@@ -608,7 +649,7 @@ GameObject* TutorialGame::AddPlayerToWorld(const Vector3& position) {
 	character->GetPhysicsObject()->SetInverseMass(inverseMass);
 	character->GetPhysicsObject()->InitSphereInertia();
 
-	world->AddGameObject(character);
+	//world->AddGameObject(character);
 
 	//lockedObject = character;
 
@@ -619,7 +660,7 @@ GameObject* TutorialGame::AddMonsterToWorld(const Vector3& position) {
 	float meshSize = 6.0f * 2;
 	float inverseMass = 0.5f;
 	Vector3 offset = Vector3(4*meshSize, 2 * meshSize, -4.5 * meshSize);
-	auto* character = new Monster();
+	auto* character = new ExtendCharacter(&PlayerType::Instance(), "enemy");
 
 	AABBVolume* volume = new AABBVolume(Vector3(0.3f, 0.9f, 0.3f) * meshSize);
 	character->SetBoundingVolume((CollisionVolume*)volume);
@@ -636,7 +677,7 @@ GameObject* TutorialGame::AddMonsterToWorld(const Vector3& position) {
 	character->GetPhysicsObject()->SetInverseMass(inverseMass);
 	character->GetPhysicsObject()->InitSphereInertia();
 
-	world->AddGameObject(character);
+	//world->AddGameObject(character);
 
 	return character;
 }
@@ -845,7 +886,7 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 				if (test_state_machine) test_state_machine->Update(dt);
 
 				if (shared1) shared1->Update(dt);
-				//if (shared2) shared2->Update(dt);
+				if (shared2) shared2->Update(dt);
 			}
 			else
 			{
@@ -974,11 +1015,11 @@ void TutorialGame::initDebugStateMachine() {
 			ltlf::Act("test1"),
 			ltlf::Next(ltlf::Neg(ltlf::Act("test3"))))
 		);
-	//shared2 = StateMachineParser::getInstance()->parseTest(formula);
-	//shared2->AddStatemachine(device);
+	shared2 = StateMachineParser::getInstance()->parseTest(formula);
+	shared2->AddStatemachine(device);
 
 	AdaptiveDebugSystem::getInstance()->insert(shared1);
-	//AdaptiveDebugSystem::getInstance()->insert(shared2);
+	AdaptiveDebugSystem::getInstance()->insert(shared2);
 
 	auto endTime = std::chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);

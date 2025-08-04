@@ -13,11 +13,8 @@ using namespace CSC8599;
 
 ExtendCharacter::ExtendCharacter(CharacterType* parentType, string name) :GameObject(name) {
 	typeObject = parentType;
-
 	typeObject->GetStateMachine()->AddStatemachine(this);
-
-	curHealth = typeObject->GetMaxHealth();
-
+	ResetHealth();
 	GameWorld::Get()->AddGameObject(this);
 }
 
@@ -38,4 +35,9 @@ void ExtendCharacter::BlockTrans() {
 
 void ExtendCharacter::TakeDamage(float damage, string source) {
 	typeObject->takeDamage(this, damage, GameWorld::Get()->find_game_object(source));
+}
+
+void ExtendCharacter::ResetHealth()
+{
+	curHealth = typeObject->GetMaxHealth();
 }
