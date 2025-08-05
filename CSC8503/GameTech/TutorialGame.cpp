@@ -1189,7 +1189,8 @@ void TutorialGame::initDebugStateMachine(vector<ExtendCharacter*> list, int rule
 	auto endTime = std::chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
 	double milliseconds = duration.count() * 0.001;
-	std::cout << "\n[Test Output] debug_state_machine build up time (ms): \t" << milliseconds << "\n\n";
+	std::cout << "\n[Test Output] debug_state_machine build up time (ms): \t" << milliseconds << std::endl;
+	std::cout << std::endl;
 }
 
 void NCL::CSC8503::TutorialGame::gameReset(int model)
