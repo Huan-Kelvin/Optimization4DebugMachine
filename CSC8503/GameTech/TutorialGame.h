@@ -154,8 +154,8 @@ namespace NCL {
 			SharedStateMachine* shared1;
 			SharedStateMachine* shared2;
 
-			int curModel = -1;
-			void initDebugStateMachine(vector<ExtendCharacter*> list);
+			int curMode = -1;
+			void initDebugStateMachine(vector<ExtendCharacter*> list, int ruleIdx = 0);
 			void Clear();
 			void UpdateSimulation(int idx);
 			int curSimulation = -1;

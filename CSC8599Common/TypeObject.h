@@ -183,6 +183,35 @@ namespace NCL {
         private:
 
         };
+
+        class voidType : public CharacterType
+        {
+        public:
+            voidType() {
+                maxHealth = 100;
+                Reset();
+            }
+            voidType(const voidType&) = delete;
+            voidType& operator=(const voidType&) = delete;
+
+            static voidType& Instance() {
+                static voidType instance;
+                return instance;
+            }
+            void Update(float dt) override {
+                CharacterType::Update(dt);
+            }
+            void Reset() override {
+                CharacterType::Reset();
+                InitStateMachine();
+            }
+
+        protected:
+            void InitStateMachine() override;
+
+        private:
+
+        };
     }
 }
 

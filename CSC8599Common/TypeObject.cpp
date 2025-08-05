@@ -253,3 +253,9 @@ void PlayerType::InitStateMachine()
 			return dynamic_cast<ExtendCharacter*>(state_machine->GetCurUpdateObject())->GetCurHealth() <= 0;
 		}, ""));
 }
+
+void NCL::CSC8599::voidType::InitStateMachine()
+{
+	auto init = new State([this](float dt)->void {});
+	state_machine = new SharedStateMachine("init", init, init);
+}

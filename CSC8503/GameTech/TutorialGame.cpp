@@ -58,7 +58,7 @@ TutorialGame::TutorialGame() {
 static int GetRandom(int idx) {
 	static std::random_device rd;
 	static std::mt19937 gen(rd());
-	static std::uniform_int_distribution<> dist(0, idx);
+	std::uniform_int_distribution<> dist(0, idx);
 	return dist(gen);
 }
 /*
@@ -149,7 +149,8 @@ void TutorialGame::UpdateGame(float dt) {
 
 void TutorialGame::ResetGame() {
 	Clear();
-	InitWorld(curModel); //We can reset the simulation at any time with F1
+	std::cout << "\n\n[======================= Game reset : mode - " << curMode << " =======================]" << std::endl;
+	InitWorld(curMode); //We can reset the simulation at any time with F1
 	selectionObject = nullptr;
 	lockedObject = nullptr;
 	initEventHandler();
@@ -258,7 +259,7 @@ void TutorialGame::UpdateKeys() {
 	}
 	*/
 
-	switch (curModel)
+	switch (curMode)
 	{
 	case 0:
 		if(curSimulation == -1) Debug::Print("Press Num1 to start", Vector2(5, 95));
@@ -310,6 +311,49 @@ void TutorialGame::UpdateKeys() {
 			}
 		}
 		break;
+	case 2: {
+		if (curSimulation == -1) {
+			Debug::Print("Press Num1 to start", Vector2(5, 90));
+			Debug::Print("Press Num2 to start", Vector2(5, 95));
+		}
+		else Debug::Print("Press Num0 to end", Vector2(5, 95));
+		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUM1)) {
+			if (curSimulation == -1) {
+				ResetGame();
+				curSimulation = 3;
+			}
+		}
+		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUM2)) {
+			if (curSimulation == -1) {
+				curMode = 3;
+				ResetGame();
+				curSimulation = 3;
+			}
+		}
+		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM0)) {
+			curSimulation = -1;
+		}
+		break;
+	}
+	case 3: {
+		if (curSimulation == -1) {
+			Debug::Print("Press Num1 to start", Vector2(5, 90));
+			Debug::Print("Press Num2 to start", Vector2(5, 95));
+		}
+		else Debug::Print("Press Num0 to end", Vector2(5, 95));
+		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUM2)) {
+			if (curSimulation == -1) {
+				curMode = 3;
+				ResetGame();
+				curSimulation = 3;
+			}
+		}
+		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM0)) {
+			curSimulation = -1;
+			curMode = 2;
+		}
+		break;
+	}
 	default:
 		break;
 	}
@@ -355,6 +399,10 @@ void TutorialGame::UpdateSimulation(int idx)
 		}
 
 		if (isFinish) curSimulation = -1;
+		break;
+	}
+	case 3: {
+			EventSystem::getInstance()->PushEvent("test4", 0);
 		break;
 	}
 	default:
@@ -672,6 +720,18 @@ void TutorialGame::InitGameExamples(int idx) {
 		initDebugStateMachine(deviceList);
 		break;
 	case 2:
+		for (int i = 0; i < 50; i++)
+		{
+			deviceList.push_back(new ExtendCharacter(&voidType::Instance(), "device" + std::to_string(i)));
+		}
+		initDebugStateMachine(deviceList, 2);
+		break;
+	case 3:
+		for (int i = 0; i < 50; i++)
+		{
+			deviceList.push_back(new ExtendCharacter(&voidType::Instance(), "device" + std::to_string(i)));
+		}
+		initDebugStateMachine(deviceList, 3);
 		break;
 	default:
 		break;
@@ -1062,45 +1122,70 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 	//debug_state_machine->AddComponent("DebugB", DebugB);
 	//debug_state_machine->AddComponent("DebugC", DebugC);
 }
-void TutorialGame::initDebugStateMachine(vector<ExtendCharacter*> list) {
+void TutorialGame::initDebugStateMachine(vector<ExtendCharacter*> list, int ruleIdx) {
 	auto startTime = std::chrono::high_resolution_clock::now();
-	auto formula = ltlf::Act("");;
-	//formula =
-	//	ltlf::And(
-	//		ltlf::Box(ltlf::Implies(
-	//			ltlf::Act("test1"),
-	//			ltlf::Next(ltlf::Act("test2")))
-	//		),
-	//		ltlf::Box(ltlf::Implies(
-	//			ltlf::Act("test3"),
-	//			ltlf::Next(ltlf::And(ltlf::Act("test1"), ltlf::Act("test0"))))
-	//		));
-	formula =
-		ltlf::Box(ltlf::Implies(
-			ltlf::Act("test2"),
-			ltlf::Next(ltlf::Neg(ltlf::Act("test3"))))
-		);
-	formula =
-		ltlf::Box(ltlf::Neg(ltlf::Act("test3")));
-
-	shared1 = StateMachineParser::getInstance()->parseTest(formula);
-
-	formula =
-		ltlf::Box(ltlf::Implies(
-			ltlf::Act("test1"),
-			ltlf::Next(ltlf::Neg(ltlf::Act("test3"))))
-		);
-	shared2 = StateMachineParser::getInstance()->parseTest(formula);
-
-	for(auto obj : list)
+	ltlf formula;
+	switch (ruleIdx)
 	{
-		shared1->AddStatemachine(obj);
-		shared2->AddStatemachine(obj);
+	case 0: {
+		formula = ltlf::Box(ltlf::Neg(ltlf::Act("test3")));
+		shared1 = StateMachineParser::getInstance()->parseTest(formula);
+
+		for (auto obj : list) shared1->AddStatemachine(obj);
+		AdaptiveDebugSystem::getInstance()->insert(shared1);
+		break;
 	}
+	case 1: {
+		formula =
+			ltlf::Box(ltlf::Implies(
+				ltlf::Act("test2"),
+				ltlf::Next(ltlf::Act("test1")))
+			);
+		shared1 = StateMachineParser::getInstance()->parseTest(formula);
 
-	AdaptiveDebugSystem::getInstance()->insert(shared1);
-	//AdaptiveDebugSystem::getInstance()->insert(shared2);
+		formula =
+			ltlf::Box(ltlf::Implies(
+				ltlf::Act("test1"),
+				ltlf::Next(ltlf::Act("test2")))
+			);
+		shared2 = StateMachineParser::getInstance()->parseTest(formula);
 
+		for (auto obj : list) {
+			shared1->AddStatemachine(obj);
+			shared2->AddStatemachine(obj);
+		}
+
+		AdaptiveDebugSystem::getInstance()->insert(shared1);
+		AdaptiveDebugSystem::getInstance()->insert(shared2);
+		break;
+	}
+	case 2: {
+		formula = ltlf::Box(ltlf::Neg(ltlf::Act("test4")));
+		shared1 = StateMachineParser::getInstance()->parseTest(formula);
+		for (auto obj : list) shared1->AddStatemachine(obj);
+		AdaptiveDebugSystem::getInstance()->insert(shared1);
+		break;
+	}
+	case 3: {
+		debug_state_machine = new DebugStateMachine();
+		for(int i = 0; i < list.size(); i++)
+		{
+			std::cout << "initDebugStateMachine: " << i << std::endl;
+			auto formula = ltlf::Box(ltlf::Act("test4", true));
+			auto sigmaAll = std::unordered_set<std::string>{ "test4" ,"other" };
+			auto Debug = StateMachineParser::getInstance()->parse(formula, sigmaAll);
+			debug_state_machine->AddComponent("Debug" + std::to_string(i), Debug);
+
+			auto env = new Environment();
+			env->first = "Debug" + std::to_string(i);
+			env->second.emplace_back(dynamic_cast<CSC8599::StateMachine*>(debug_state_machine->GetComponent("Debug" + std::to_string(i))));
+			AdaptiveDebugSystem::getInstance()->insert(env);
+		}
+		break;
+	}
+	default:
+		break;
+	}
 	auto endTime = std::chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
 	double milliseconds = duration.count() * 0.001;
@@ -1130,7 +1215,7 @@ void NCL::CSC8503::TutorialGame::gameReset(int model)
 	//	break;
 	//}
 
-	curModel = model;
+	curMode = model;
 	EventSystem::getInstance()->PushEvent("GameStart", 0);
 }
 

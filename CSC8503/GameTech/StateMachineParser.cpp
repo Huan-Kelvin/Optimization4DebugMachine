@@ -376,7 +376,24 @@ SharedStateMachine* StateMachineParser::parseTest(ltlf& formula)
                         }
                     }
                     else {
-						//Todo : for mixed events, check if all of the atom events match
+                        return false;
+						// for mixed events, check if all of the atom events match
+						auto atoms = easy_prop::getAtoms(j.first);
+                        for (auto& eventName : atoms)
+                        {
+                            auto event = EventSystem::getInstance()->HasHappened(eventName);
+                            if (event) {
+                                if (event->vArg.size() == 0) continue;
+                                for (auto& it : event->vArg)
+                                {
+                                    if (it == name) {
+                                        continue;
+                                    }
+                                }
+                                return false;
+                            }
+                        }
+						return true;
                     }
                     return false;
                 };
