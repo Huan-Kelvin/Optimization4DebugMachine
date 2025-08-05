@@ -159,7 +159,10 @@ namespace NCL {
 			void Clear();
 			void UpdateSimulation(int idx);
 			int curSimulation = -1;
-			void ResetGame();
+			void ResetGame(int idx = -1);
+
+			std::chrono::steady_clock::time_point startTime;
+			std::chrono::steady_clock::time_point endTime;
 		};
 	}
 }

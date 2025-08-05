@@ -47,7 +47,7 @@ std::unordered_set<std::string> evaluate_easy_prop_to_atoms(const easy_prop& pro
         return {};
     }
 }
-NCL::CSC8599::StateMachine* StateMachineParser::parse(ltlf& formula, std::unordered_set<std::string>& sigmaAll)
+NCL::CSC8599::StateMachine* StateMachineParser::parse(ltlf& formula, std::unordered_set<std::string>& sigmaAll, bool isOutput)
 {
     std::stringstream s;
     // Representing the formula as per online syntax 
@@ -88,8 +88,11 @@ NCL::CSC8599::StateMachine* StateMachineParser::parse(ltlf& formula, std::unorde
     result.makeDFAAsInTheory(sigmaAll);
 
     // Printing the result into the terminal in a graphviz syntax
-    result.dot(std::cout);
-    std::cout << std::endl;
+    if (isOutput)
+    {
+        result.dot(std::cout);
+        std::cout << std::endl;
+    }
 
     auto allNodes = result.getNodeIds();
     auto allEdges = result.getEdgeIds();

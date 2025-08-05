@@ -9,7 +9,7 @@ namespace NCL {
 		class StateMachineParser
 		{
 		public:
-			StateMachine* parse(ltlf& formula, std::unordered_set<std::string>& sigmaAll);
+			StateMachine* parse(ltlf& formula, std::unordered_set<std::string>& sigmaAll, bool isOutput = true);
 			StateMachine* parse2(ltlf& formula);
 			SharedStateMachine* parseTest(ltlf& formula);
 			static StateMachineParser* getInstance();

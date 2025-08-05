@@ -147,8 +147,9 @@ void TutorialGame::UpdateGame(float dt) {
 	renderer->Render();
 }
 
-void TutorialGame::ResetGame() {
+void TutorialGame::ResetGame(int idx) {
 	Clear();
+	curSimulation = idx;
 	std::cout << "\n\n[======================= Game reset : mode - " << curMode << " =======================]" << std::endl;
 	InitWorld(curMode); //We can reset the simulation at any time with F1
 	selectionObject = nullptr;
@@ -161,7 +162,7 @@ void TutorialGame::UpdateKeys() {
 	}
 
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F1)) {
-		ResetGame();
+		ResetGame(curSimulation);
 	}
 
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F2)) {
@@ -207,18 +208,18 @@ void TutorialGame::UpdateKeys() {
 		std::cout << *AdaptiveDebugSystem::getInstance() << std::endl;
 	}
 	if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::F5)) {
-		AbstractComponent* comp = test_state_machine->GetComponent("DebugT");
-		if (comp) {
-			CSC8599::StateMachine* sm = dynamic_cast<CSC8599::StateMachine*>(comp);
-			auto allTrans = sm->get_all_transitions();
-			for (auto& [srcState, trans] : allTrans) {
-				std::cout << "From: " << test_state_machine->GetStateName(srcState)
-					<< " ¡ú To: " << test_state_machine->GetStateName(trans->GetDestinationState())
-					<< " Condition: " << trans->GetTriggerEP().toString(trans->GetTriggerEP())
-					<< (trans->enable ? "" : " - Disabled")
-					<< std::endl;
-			}
-		}
+		//AbstractComponent* comp = test_state_machine->GetComponent("DebugT");
+		//if (comp) {
+		//	CSC8599::StateMachine* sm = dynamic_cast<CSC8599::StateMachine*>(comp);
+		//	auto allTrans = sm->get_all_transitions();
+		//	for (auto& [srcState, trans] : allTrans) {
+		//		std::cout << "From: " << test_state_machine->GetStateName(srcState)
+		//			<< " ¡ú To: " << test_state_machine->GetStateName(trans->GetDestinationState())
+		//			<< " Condition: " << trans->GetTriggerEP().toString(trans->GetTriggerEP())
+		//			<< (trans->enable ? "" : " - Disabled")
+		//			<< std::endl;
+		//	}
+		//}
 
 		//std::cout << "Shared1:" << std::endl;
 		//std::cout << shared1->Print(0) << std::endl;
@@ -265,8 +266,7 @@ void TutorialGame::UpdateKeys() {
 		if(curSimulation == -1) Debug::Print("Press Num1 to start", Vector2(5, 95));
 		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUM1)) {
 			if (curSimulation == -1) {
-				ResetGame();
-				curSimulation = 1;
+				ResetGame(1);
 			}
 		}
 		break;
@@ -302,32 +302,33 @@ void TutorialGame::UpdateKeys() {
 		else if(curSimulation == 2) Debug::Print("Press Num1 to end", Vector2(5, 95));
 		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUM1)) {
 			if (curSimulation == -1) {
-				ResetGame();
-				curSimulation = 2;
+				ResetGame(2);
+				startTime = std::chrono::steady_clock::now();
 			}
 			else {
-				//ResetGame();
+				endTime = std::chrono::steady_clock::now();
+				auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
+				double seconds = duration.count() * 0.001;
+				std::cout << "\n[Test Output] game time (s): \t" << seconds << std::endl;
 				curSimulation = -1;
 			}
 		}
 		break;
-	case 2: {
+	case 2: {	//improved
 		if (curSimulation == -1) {
-			Debug::Print("Press Num1 to start", Vector2(5, 90));
-			Debug::Print("Press Num2 to start", Vector2(5, 95));
+			Debug::Print("Press Num1 to start (improved)", Vector2(5, 90));
+			Debug::Print("Press Num2 to start (previous)", Vector2(5, 95));
 		}
 		else Debug::Print("Press Num0 to end", Vector2(5, 95));
 		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUM1)) {
 			if (curSimulation == -1) {
-				ResetGame();
-				curSimulation = 3;
+				ResetGame(3);
 			}
 		}
 		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUM2)) {
 			if (curSimulation == -1) {
 				curMode = 3;
-				ResetGame();
-				curSimulation = 3;
+				ResetGame(3);
 			}
 		}
 		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM0)) {
@@ -335,17 +336,16 @@ void TutorialGame::UpdateKeys() {
 		}
 		break;
 	}
-	case 3: {
+	case 3: {	//previous
 		if (curSimulation == -1) {
-			Debug::Print("Press Num1 to start", Vector2(5, 90));
-			Debug::Print("Press Num2 to start", Vector2(5, 95));
+			Debug::Print("Press Num1 to start (improved)", Vector2(5, 90));
+			Debug::Print("Press Num2 to start (previous)", Vector2(5, 95));
 		}
 		else Debug::Print("Press Num0 to end", Vector2(5, 95));
 		if (Window::GetKeyboard()->KeyPressed(KeyboardKeys::NUM2)) {
 			if (curSimulation == -1) {
 				curMode = 3;
-				ResetGame();
-				curSimulation = 3;
+				ResetGame(3);
 			}
 		}
 		if (Window::GetKeyboard()->KeyDown(KeyboardKeys::NUM0)) {
@@ -398,7 +398,13 @@ void TutorialGame::UpdateSimulation(int idx)
 			}
 		}
 
-		if (isFinish) curSimulation = -1;
+		if (isFinish) {
+			endTime = std::chrono::steady_clock::now();
+			auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
+			double seconds = duration.count() * 0.001;
+			std::cout << "\n[Test Output] game time (s): \t" << seconds << std::endl;
+			curSimulation = -1;
+		}
 		break;
 	}
 	case 3: {
@@ -1096,8 +1102,6 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 		}, "quit"
 	));
 	
-	auto startTime = std::chrono::high_resolution_clock::now();
-
 	//debug_state_machine = new DebugStateMachine();
 
 	//auto formula = ltlf::Box(ltlf::Implies(ltlf::Act("player_over_threat"),
@@ -1123,7 +1127,8 @@ void NCL::CSC8503::TutorialGame::initStateMachine()
 	//debug_state_machine->AddComponent("DebugC", DebugC);
 }
 void TutorialGame::initDebugStateMachine(vector<ExtendCharacter*> list, int ruleIdx) {
-	auto startTime = std::chrono::high_resolution_clock::now();
+	if (curSimulation == -1) return;
+	auto buildTime1 = std::chrono::high_resolution_clock::now();
 	ltlf formula;
 	switch (ruleIdx)
 	{
@@ -1170,10 +1175,10 @@ void TutorialGame::initDebugStateMachine(vector<ExtendCharacter*> list, int rule
 		debug_state_machine = new DebugStateMachine();
 		for(int i = 0; i < list.size(); i++)
 		{
-			std::cout << "initDebugStateMachine: " << i << std::endl;
+			//std::cout << "initDebugStateMachine: " << i << std::endl;
 			auto formula = ltlf::Box(ltlf::Act("test4", true));
 			auto sigmaAll = std::unordered_set<std::string>{ "test4" ,"other" };
-			auto Debug = StateMachineParser::getInstance()->parse(formula, sigmaAll);
+			auto Debug = StateMachineParser::getInstance()->parse(formula, sigmaAll, i == 0 ? true : false);
 			debug_state_machine->AddComponent("Debug" + std::to_string(i), Debug);
 
 			auto env = new Environment();
@@ -1186,8 +1191,8 @@ void TutorialGame::initDebugStateMachine(vector<ExtendCharacter*> list, int rule
 	default:
 		break;
 	}
-	auto endTime = std::chrono::high_resolution_clock::now();
-	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime);
+	auto buildTime2 = std::chrono::high_resolution_clock::now();
+	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(buildTime2 - buildTime1);
 	double milliseconds = duration.count() * 0.001;
 	std::cout << "\n[Test Output] debug_state_machine build up time (ms): \t" << milliseconds << std::endl;
 	std::cout << std::endl;
